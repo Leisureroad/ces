@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dapeng.ces.mapper.UserScoreMapper" >
+  <resultMap id="BaseResultMap" type="com.dapeng.ces.model.UserScore" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="gene_uuid" property="geneUuid" jdbcType="VARCHAR" />
+    <result column="score_uuid" property="scoreUuid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uuid, user_id, gene_uuid, score_uuid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_score
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_score
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from user_score
+  </delete>
+  <insert id="insert" parameterType="com.dapeng.ces.model.UserScore" >
+    insert into user_score (uuid, user_id, gene_uuid, 
+      score_uuid)
+    values (#{uuid,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{geneUuid,jdbcType=VARCHAR}, 
+      #{scoreUuid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dapeng.ces.model.UserScore" >
+    insert into user_score
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="geneUuid != null" >
+        gene_uuid,
+      </if>
+      <if test="scoreUuid != null" >
+        score_uuid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="geneUuid != null" >
+        #{geneUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="scoreUuid != null" >
+        #{scoreUuid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dapeng.ces.model.UserScore" >
+    update user_score
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="geneUuid != null" >
+        gene_uuid = #{geneUuid,jdbcType=VARCHAR},
+      </if>
+      <if test="scoreUuid != null" >
+        score_uuid = #{scoreUuid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dapeng.ces.model.UserScore" >
+    update user_score
+    set user_id = #{userId,jdbcType=VARCHAR},
+      gene_uuid = #{geneUuid,jdbcType=VARCHAR},
+      score_uuid = #{scoreUuid,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

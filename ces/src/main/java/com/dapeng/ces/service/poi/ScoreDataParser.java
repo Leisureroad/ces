@@ -12,20 +12,20 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.dapeng.ces.model.Gene;
-import com.dapeng.ces.model.Score;
-import com.dapeng.ces.model.User;
-import com.dapeng.ces.model.UserScore;
+import com.dapeng.ces.dto.GeneResult;
+import com.dapeng.ces.dto.ScoreResult;
+import com.dapeng.ces.dto.UserResult;
+import com.dapeng.ces.dto.UserScoreResult;
 import com.dapeng.ces.util.ExcelDataImporter;
 
 public class ScoreDataParser {
 
-	public static List<Score> parseExcelData(File file, int sheetNum) throws IOException {
+	public static List<ScoreResult> parseExcelData(File file, int sheetNum) throws IOException {
 		Workbook workbook = ExcelDataImporter.importDataFromExcel(file, sheetNum);
 		Sheet sheet = workbook.getSheetAt(sheetNum);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
-		List<Score> scoreList = new ArrayList<Score>();
+		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
 		int minRowIx = sheet.getFirstRowNum();
 		int maxRowIx = sheet.getLastRowNum();
 
@@ -34,7 +34,7 @@ public class ScoreDataParser {
 				continue;
 			if (rowIx == 83)
 				break;
-			Score score = new Score();
+			ScoreResult score = new ScoreResult();
 			Row row = sheet.getRow(rowIx);
 			int minColIx = row.getFirstCellNum();
 			int maxColIx = row.getLastCellNum();
@@ -148,7 +148,7 @@ public class ScoreDataParser {
 		return scoreList;
 	}
 
-	private static void getBasicProps(Score score, int colIx, CellValue cellValue) {
+	private static void getBasicProps(ScoreResult score, int colIx, CellValue cellValue) {
 		String score_id;
 		if (colIx == 0) {
 			score.setNumber(String.valueOf(cellValue.getNumberValue()));
@@ -170,13 +170,13 @@ public class ScoreDataParser {
 		}
 	}
 
-	public static UserScore calculateUserScore(String userKey, List<Score> scoreList) {
-		UserScore result = new UserScore();
+	public static UserScoreResult calculateUserScore(String userKey, List<ScoreResult> scoreList) {
+		UserScoreResult result = new UserScoreResult();
 		result.setUserKey(userKey);
-		List<Score> userScoreList = new ArrayList<Score>();
-		for (Score score : scoreList) {
+		List<ScoreResult> userScoreList = new ArrayList<ScoreResult>();
+		for (ScoreResult score : scoreList) {
 			if (getMatchedKey(userKey, score.getId())) {
-				Score oneScore = new Score();
+				ScoreResult oneScore = new ScoreResult();
 				oneScore = score;
 				userScoreList.add(oneScore);
 			}
@@ -204,13 +204,13 @@ public class ScoreDataParser {
 		return false;
 	}
 
-	public static void searchUserKey(String userName, List<User> userList, List<Score> scoreList) {
-		for (User user : userList) {
+	public static void searchUserKey(String userName, List<UserResult> userList, List<ScoreResult> scoreList) {
+		for (UserResult user : userList) {
 			if (user.getName().equals(userName)) {
-				List<Gene> genList = user.getGeneList();
-				for (Gene gene : genList) {
+				List<GeneResult> genList = user.getGeneList();
+				for (GeneResult gene : genList) {
 					String userKey = gene.getName() + gene.getValue();
-					UserScore userScore = calculateUserScore(userKey, scoreList);
+					UserScoreResult userScore = calculateUserScore(userKey, scoreList);
 					System.out.println("username: " + userName + ", userKey: " + userKey + ", " + userScore);
 				}
 			}

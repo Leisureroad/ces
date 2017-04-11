@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dapeng.ces.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.dapeng.ces.model.User" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="position_384" property="position384" jdbcType="VARCHAR" />
+    <result column="star" property="star" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BaseResultMap_User" type="com.dapeng.ces.dto.UserScoreNewResult" >
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="gene_name" property="geneName" jdbcType="VARCHAR" />
+    <result column="gene_type" property="geneType" jdbcType="VARCHAR" />
+    <result column="explosive_force" property="explosiveForce" jdbcType="VARCHAR" />
+    <result column="explosive_force_score" property="explosiveForceScore" jdbcType="DOUBLE" />
+    <result column="stamina" property="stamina" jdbcType="VARCHAR" />
+    <result column="stamina_score" property="staminaScore" jdbcType="DOUBLE" />
+    <result column="motion_sensitivity" property="motionSensitivity" jdbcType="VARCHAR" />
+    <result column="motion_sensitivity_score" property="motionSensitivityScore" jdbcType="DOUBLE" />
+    <result column="injury_recovery_ability" property="injuryRecoveryAbility" jdbcType="VARCHAR" />
+    <result column="injury_recovery_ability_score" property="injuryRecoveryAbilityScore" jdbcType="DOUBLE" />
+    <result column="injury_risk" property="injuryRisk" jdbcType="VARCHAR" />
+    <result column="injury_risk_score" property="injuryRiskScore" jdbcType="DOUBLE" />
+    <result column="obesity_risk" property="obesityRisk" jdbcType="VARCHAR" />
+    <result column="obesity_risk_score" property="obesityRiskScore" jdbcType="DOUBLE" />
+    <result column="fat_reducing_sensitivity" property="fatReducingSensitivity" jdbcType="VARCHAR" />
+    <result column="fat_reducing_sensitivity_score" property="fatReducingSensitivityScore" jdbcType="DOUBLE" />
+  </resultMap>
+  <resultMap id="BaseResultMap_Player" type="com.dapeng.ces.dto.UserScorePlayerResult" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="position_384" property="position384" jdbcType="VARCHAR" />
+    <result column="star" property="star" jdbcType="VARCHAR" />
+  	<collection property="userScoreNewResultList"
+		ofType="com.dapeng.ces.dto.UserScoreNewResult">
+	    <result column="user_id_1" property="userId" jdbcType="VARCHAR" />
+	    <result column="name_1" property="name" jdbcType="VARCHAR" />
+	    <result column="gene_name" property="geneName" jdbcType="VARCHAR" />
+	    <result column="gene_type" property="geneType" jdbcType="VARCHAR" />
+	    <result column="explosive_force" property="explosiveForce" jdbcType="VARCHAR" />
+	    <result column="explosive_force_score" property="explosiveForceScore" jdbcType="DOUBLE" />
+	    <result column="stamina" property="stamina" jdbcType="VARCHAR" />
+	    <result column="stamina_score" property="staminaScore" jdbcType="DOUBLE" />
+	    <result column="motion_sensitivity" property="motionSensitivity" jdbcType="VARCHAR" />
+	    <result column="motion_sensitivity_score" property="motionSensitivityScore" jdbcType="DOUBLE" />
+	    <result column="injury_recovery_ability" property="injuryRecoveryAbility" jdbcType="VARCHAR" />
+	    <result column="injury_recovery_ability_score" property="injuryRecoveryAbilityScore" jdbcType="DOUBLE" />
+	    <result column="injury_risk" property="injuryRisk" jdbcType="VARCHAR" />
+	    <result column="injury_risk_score" property="injuryRiskScore" jdbcType="DOUBLE" />
+	    <result column="obesity_risk" property="obesityRisk" jdbcType="VARCHAR" />
+	    <result column="obesity_risk_score" property="obesityRiskScore" jdbcType="DOUBLE" />
+	    <result column="fat_reducing_sensitivity" property="fatReducingSensitivity" jdbcType="VARCHAR" />
+	    <result column="fat_reducing_sensitivity_score" property="fatReducingSensitivityScore" jdbcType="DOUBLE" />
+	</collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uuid, user_id, name, position_384, star
+  </sql>
+  <select id="selectUserInfo" resultMap="BaseResultMap_User" parameterType="java.lang.String" >
+  	SELECT
+		u.user_id,
+		u.name,
+		s.gene_name,
+		s.gene_type,
+		s.explosive_force,
+		s.explosive_force_score,
+		s.stamina,
+		s.stamina_score,
+		s.motion_sensitivity,
+		s.motion_sensitivity_score,
+		s.injury_recovery_ability,
+		s.injury_recovery_ability_score,
+		s.injury_risk,
+		s.injury_risk_score,
+		s.obesity_risk,
+		s.obesity_risk_score,
+		s.fat_reducing_sensitivity,
+		s.fat_reducing_sensitivity_score
+	FROM
+		user u
+	LEFT JOIN user_score us ON u.user_id = us.user_id
+	LEFT JOIN score s ON s.uuid = us.score_uuid
+	WHERE u.name = #{name,jdbcType=VARCHAR}
+  </select>
+  <select id="selectUserPlayer" resultMap="BaseResultMap_Player" parameterType="java.lang.String" >
+  	SELECT
+		u.uuid,
+		u.user_id,
+		u.name,
+		u.position_384,
+		u.star,
+		us.user_id as user_id_1,
+		u.name as name_1,
+		s.gene_name,
+		s.gene_type,
+		s.explosive_force,
+		s.explosive_force_score,
+		s.stamina,
+		s.stamina_score,
+		s.motion_sensitivity,
+		s.motion_sensitivity_score,
+		s.injury_recovery_ability,
+		s.injury_recovery_ability_score,
+		s.injury_risk,
+		s.injury_risk_score,
+		s.obesity_risk,
+		s.obesity_risk_score,
+		s.fat_reducing_sensitivity,
+		s.fat_reducing_sensitivity_score
+	FROM
+		user u
+	LEFT JOIN user_score us ON u.user_id = us.user_id
+	LEFT JOIN score s ON s.uuid = us.score_uuid
+	WHERE u.star = #{star,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAllUser" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from user
+  </delete>
+  <insert id="insert" parameterType="com.dapeng.ces.model.User" >
+    insert into user (uuid, user_id, name, 
+      position_384, star)
+    values (#{uuid,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{position384,jdbcType=VARCHAR}, #{star,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dapeng.ces.model.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="position384 != null" >
+        position_384,
+      </if>
+      <if test="star != null" >
+        star,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="position384 != null" >
+        #{position384,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        #{star,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dapeng.ces.model.User" >
+    update user
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="position384 != null" >
+        position_384 = #{position384,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        star = #{star,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dapeng.ces.model.User" >
+    update user
+    set user_id = #{userId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      position_384 = #{position384,jdbcType=VARCHAR},
+      star = #{star,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>
