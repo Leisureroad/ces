@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.dapeng.ces.model.Score;
-import com.dapeng.ces.model.User;
+import com.dapeng.ces.dto.ScoreResult;
+import com.dapeng.ces.dto.UserResult;
 
 public class ScoreDataParserTest {
 
@@ -15,8 +15,8 @@ public class ScoreDataParserTest {
 	public void testParseExcelData() {
 		String scoreExcelFile = "./data/new.xls";
 		String userDataExcelFile = "./data/原始数据_mock.xls";
-		List<User> userList = null;
-		List<Score> scoreList = null;
+		List<UserResult> userList = null;
+		List<ScoreResult> scoreList = null;
 		try {
 			userList = UserDataParser.parseExcelData(new File(userDataExcelFile), 0);
 			scoreList = ScoreDataParser.parseExcelData(new File(scoreExcelFile), 0);

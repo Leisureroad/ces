@@ -14,21 +14,21 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.dapeng.ces.model.Gene;
-import com.dapeng.ces.model.User;
+import com.dapeng.ces.dto.GeneResult;
+import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.util.ExcelDataImporter;
 
 public class UserDataParser {
 
 	public static Map<Integer, String> geneDictionary = new HashMap<Integer, String>();
 
-	public static List<User> parseExcelData(File file, int sheetNum) throws IOException {
+	public static List<UserResult> parseExcelData(File file, int sheetNum) throws IOException {
 		Workbook workbook = ExcelDataImporter.importDataFromExcel(file, sheetNum);
 
 		Sheet sheet = workbook.getSheetAt(sheetNum);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
-		List<User> userList = new ArrayList<User>();
+		List<UserResult> userList = new ArrayList<UserResult>();
 		int minRowIx = sheet.getFirstRowNum();
 		int maxRowIx = sheet.getLastRowNum();
 		for (int rowIx = minRowIx; rowIx <= maxRowIx; rowIx++) {
@@ -60,8 +60,8 @@ public class UserDataParser {
 			}
 
 			if (rowIx >= 2) {
-				User user = new User();
-				List<Gene> geneList = new ArrayList<Gene>();
+				UserResult user = new UserResult();
+				List<GeneResult> geneList = new ArrayList<GeneResult>();
 				Row row = sheet.getRow(rowIx);
 				int minColIx = row.getFirstCellNum();
 				int maxColIx = row.getLastCellNum();
@@ -84,7 +84,7 @@ public class UserDataParser {
 						continue;
 					}
 					if (colIx >= 3) {
-						Gene gene = new Gene();
+						GeneResult gene = new GeneResult();
 						gene.setName(geneDictionary.get(Integer.valueOf(colIx)));
 						String value = cellValue.getStringValue();
 						if (value.length() == 1) {

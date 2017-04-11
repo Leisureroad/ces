@@ -1,0 +1,19 @@
+server:
+  port: 9000
+  context-path: /ces
+
+mybatis:
+  mapperLocations: classpath*:mapper/*.xml
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/ces?useUnicode=true&autoReconnect=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: yadong.zhang
+    password: Ds962464
+    driver-class-name: com.mysql.jdbc.Driver
+    minIdle: 1
+    maxActive: 20
+    initialSize: 1
+    timeBetweenEvictionRunsMillis: 3000
+    minEvictableIdleTimeMillis: 300000

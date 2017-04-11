@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dapeng.ces.mapper.ScoreMapper" >
+  <resultMap id="BaseResultMap" type="com.dapeng.ces.model.Score" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="score_id" property="scoreId" jdbcType="VARCHAR" />
+    <result column="number" property="number" jdbcType="VARCHAR" />
+    <result column="gene_code" property="geneCode" jdbcType="VARCHAR" />
+    <result column="gene_name" property="geneName" jdbcType="VARCHAR" />
+    <result column="gene_type" property="geneType" jdbcType="VARCHAR" />
+    <result column="explosive_force" property="explosiveForce" jdbcType="VARCHAR" />
+    <result column="explosive_force_score" property="explosiveForceScore" jdbcType="DOUBLE" />
+    <result column="stamina" property="stamina" jdbcType="VARCHAR" />
+    <result column="stamina_score" property="staminaScore" jdbcType="DOUBLE" />
+    <result column="motion_sensitivity" property="motionSensitivity" jdbcType="VARCHAR" />
+    <result column="motion_sensitivity_score" property="motionSensitivityScore" jdbcType="DOUBLE" />
+    <result column="injury_recovery_ability" property="injuryRecoveryAbility" jdbcType="VARCHAR" />
+    <result column="injury_recovery_ability_score" property="injuryRecoveryAbilityScore" jdbcType="DOUBLE" />
+    <result column="injury_risk" property="injuryRisk" jdbcType="VARCHAR" />
+    <result column="injury_risk_score" property="injuryRiskScore" jdbcType="DOUBLE" />
+    <result column="obesity_risk" property="obesityRisk" jdbcType="VARCHAR" />
+    <result column="obesity_risk_score" property="obesityRiskScore" jdbcType="DOUBLE" />
+    <result column="fat_reducing_sensitivity" property="fatReducingSensitivity" jdbcType="VARCHAR" />
+    <result column="fat_reducing_sensitivity_score" property="fatReducingSensitivityScore" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uuid, score_id, number, gene_code, gene_name, gene_type, explosive_force, explosive_force_score, 
+    stamina, stamina_score, motion_sensitivity, motion_sensitivity_score, injury_recovery_ability, 
+    injury_recovery_ability_score, injury_risk, injury_risk_score, obesity_risk, obesity_risk_score, 
+    fat_reducing_sensitivity, fat_reducing_sensitivity_score
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from score
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByScoreId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from score
+    where score_id = #{scoreId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from score
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from score
+  </delete>
+  <insert id="insert" parameterType="com.dapeng.ces.model.Score" >
+    insert into score (uuid, score_id, number, 
+      gene_code, gene_name, gene_type, 
+      explosive_force, explosive_force_score, stamina, 
+      stamina_score, motion_sensitivity, motion_sensitivity_score, 
+      injury_recovery_ability, injury_recovery_ability_score, 
+      injury_risk, injury_risk_score, obesity_risk, 
+      obesity_risk_score, fat_reducing_sensitivity, 
+      fat_reducing_sensitivity_score)
+    values (#{uuid,jdbcType=VARCHAR}, #{scoreId,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, 
+      #{geneCode,jdbcType=VARCHAR}, #{geneName,jdbcType=VARCHAR}, #{geneType,jdbcType=VARCHAR}, 
+      #{explosiveForce,jdbcType=VARCHAR}, #{explosiveForceScore,jdbcType=DOUBLE}, #{stamina,jdbcType=VARCHAR}, 
+      #{staminaScore,jdbcType=DOUBLE}, #{motionSensitivity,jdbcType=VARCHAR}, #{motionSensitivityScore,jdbcType=DOUBLE}, 
+      #{injuryRecoveryAbility,jdbcType=VARCHAR}, #{injuryRecoveryAbilityScore,jdbcType=DOUBLE}, 
+      #{injuryRisk,jdbcType=VARCHAR}, #{injuryRiskScore,jdbcType=DOUBLE}, #{obesityRisk,jdbcType=VARCHAR}, 
+      #{obesityRiskScore,jdbcType=DOUBLE}, #{fatReducingSensitivity,jdbcType=VARCHAR}, 
+      #{fatReducingSensitivityScore,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dapeng.ces.model.Score" >
+    insert into score
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="scoreId != null" >
+        score_id,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="geneCode != null" >
+        gene_code,
+      </if>
+      <if test="geneName != null" >
+        gene_name,
+      </if>
+      <if test="geneType != null" >
+        gene_type,
+      </if>
+      <if test="explosiveForce != null" >
+        explosive_force,
+      </if>
+      <if test="explosiveForceScore != null" >
+        explosive_force_score,
+      </if>
+      <if test="stamina != null" >
+        stamina,
+      </if>
+      <if test="staminaScore != null" >
+        stamina_score,
+      </if>
+      <if test="motionSensitivity != null" >
+        motion_sensitivity,
+      </if>
+      <if test="motionSensitivityScore != null" >
+        motion_sensitivity_score,
+      </if>
+      <if test="injuryRecoveryAbility != null" >
+        injury_recovery_ability,
+      </if>
+      <if test="injuryRecoveryAbilityScore != null" >
+        injury_recovery_ability_score,
+      </if>
+      <if test="injuryRisk != null" >
+        injury_risk,
+      </if>
+      <if test="injuryRiskScore != null" >
+        injury_risk_score,
+      </if>
+      <if test="obesityRisk != null" >
+        obesity_risk,
+      </if>
+      <if test="obesityRiskScore != null" >
+        obesity_risk_score,
+      </if>
+      <if test="fatReducingSensitivity != null" >
+        fat_reducing_sensitivity,
+      </if>
+      <if test="fatReducingSensitivityScore != null" >
+        fat_reducing_sensitivity_score,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="scoreId != null" >
+        #{scoreId,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode != null" >
+        #{geneCode,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName != null" >
+        #{geneName,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType != null" >
+        #{geneType,jdbcType=VARCHAR},
+      </if>
+      <if test="explosiveForce != null" >
+        #{explosiveForce,jdbcType=VARCHAR},
+      </if>
+      <if test="explosiveForceScore != null" >
+        #{explosiveForceScore,jdbcType=DOUBLE},
+      </if>
+      <if test="stamina != null" >
+        #{stamina,jdbcType=VARCHAR},
+      </if>
+      <if test="staminaScore != null" >
+        #{staminaScore,jdbcType=DOUBLE},
+      </if>
+      <if test="motionSensitivity != null" >
+        #{motionSensitivity,jdbcType=VARCHAR},
+      </if>
+      <if test="motionSensitivityScore != null" >
+        #{motionSensitivityScore,jdbcType=DOUBLE},
+      </if>
+      <if test="injuryRecoveryAbility != null" >
+        #{injuryRecoveryAbility,jdbcType=VARCHAR},
+      </if>
+      <if test="injuryRecoveryAbilityScore != null" >
+        #{injuryRecoveryAbilityScore,jdbcType=DOUBLE},
+      </if>
+      <if test="injuryRisk != null" >
+        #{injuryRisk,jdbcType=VARCHAR},
+      </if>
+      <if test="injuryRiskScore != null" >
+        #{injuryRiskScore,jdbcType=DOUBLE},
+      </if>
+      <if test="obesityRisk != null" >
+        #{obesityRisk,jdbcType=VARCHAR},
+      </if>
+      <if test="obesityRiskScore != null" >
+        #{obesityRiskScore,jdbcType=DOUBLE},
+      </if>
+      <if test="fatReducingSensitivity != null" >
+        #{fatReducingSensitivity,jdbcType=VARCHAR},
+      </if>
+      <if test="fatReducingSensitivityScore != null" >
+        #{fatReducingSensitivityScore,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dapeng.ces.model.Score" >
+    update score
+    <set >
+      <if test="scoreId != null" >
+        score_id = #{scoreId,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode != null" >
+        gene_code = #{geneCode,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName != null" >
+        gene_name = #{geneName,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType != null" >
+        gene_type = #{geneType,jdbcType=VARCHAR},
+      </if>
+      <if test="explosiveForce != null" >
+        explosive_force = #{explosiveForce,jdbcType=VARCHAR},
+      </if>
+      <if test="explosiveForceScore != null" >
+        explosive_force_score = #{explosiveForceScore,jdbcType=DOUBLE},
+      </if>
+      <if test="stamina != null" >
+        stamina = #{stamina,jdbcType=VARCHAR},
+      </if>
+      <if test="staminaScore != null" >
+        stamina_score = #{staminaScore,jdbcType=DOUBLE},
+      </if>
+      <if test="motionSensitivity != null" >
+        motion_sensitivity = #{motionSensitivity,jdbcType=VARCHAR},
+      </if>
+      <if test="motionSensitivityScore != null" >
+        motion_sensitivity_score = #{motionSensitivityScore,jdbcType=DOUBLE},
+      </if>
+      <if test="injuryRecoveryAbility != null" >
+        injury_recovery_ability = #{injuryRecoveryAbility,jdbcType=VARCHAR},
+      </if>
+      <if test="injuryRecoveryAbilityScore != null" >
+        injury_recovery_ability_score = #{injuryRecoveryAbilityScore,jdbcType=DOUBLE},
+      </if>
+      <if test="injuryRisk != null" >
+        injury_risk = #{injuryRisk,jdbcType=VARCHAR},
+      </if>
+      <if test="injuryRiskScore != null" >
+        injury_risk_score = #{injuryRiskScore,jdbcType=DOUBLE},
+      </if>
+      <if test="obesityRisk != null" >
+        obesity_risk = #{obesityRisk,jdbcType=VARCHAR},
+      </if>
+      <if test="obesityRiskScore != null" >
+        obesity_risk_score = #{obesityRiskScore,jdbcType=DOUBLE},
+      </if>
+      <if test="fatReducingSensitivity != null" >
+        fat_reducing_sensitivity = #{fatReducingSensitivity,jdbcType=VARCHAR},
+      </if>
+      <if test="fatReducingSensitivityScore != null" >
+        fat_reducing_sensitivity_score = #{fatReducingSensitivityScore,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dapeng.ces.model.Score" >
+    update score
+    set score_id = #{scoreId,jdbcType=VARCHAR},
+      number = #{number,jdbcType=VARCHAR},
+      gene_code = #{geneCode,jdbcType=VARCHAR},
+      gene_name = #{geneName,jdbcType=VARCHAR},
+      gene_type = #{geneType,jdbcType=VARCHAR},
+      explosive_force = #{explosiveForce,jdbcType=VARCHAR},
+      explosive_force_score = #{explosiveForceScore,jdbcType=DOUBLE},
+      stamina = #{stamina,jdbcType=VARCHAR},
+      stamina_score = #{staminaScore,jdbcType=DOUBLE},
+      motion_sensitivity = #{motionSensitivity,jdbcType=VARCHAR},
+      motion_sensitivity_score = #{motionSensitivityScore,jdbcType=DOUBLE},
+      injury_recovery_ability = #{injuryRecoveryAbility,jdbcType=VARCHAR},
+      injury_recovery_ability_score = #{injuryRecoveryAbilityScore,jdbcType=DOUBLE},
+      injury_risk = #{injuryRisk,jdbcType=VARCHAR},
+      injury_risk_score = #{injuryRiskScore,jdbcType=DOUBLE},
+      obesity_risk = #{obesityRisk,jdbcType=VARCHAR},
+      obesity_risk_score = #{obesityRiskScore,jdbcType=DOUBLE},
+      fat_reducing_sensitivity = #{fatReducingSensitivity,jdbcType=VARCHAR},
+      fat_reducing_sensitivity_score = #{fatReducingSensitivityScore,jdbcType=DOUBLE}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

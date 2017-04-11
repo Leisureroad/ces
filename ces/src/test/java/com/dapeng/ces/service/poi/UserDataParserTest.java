@@ -6,14 +6,14 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.dapeng.ces.model.User;
+import com.dapeng.ces.dto.UserResult;
 
 public class UserDataParserTest {
 
 	@Test
 	public void testParseExcelData() {
-		String path = "./data/原始数据_mock.xls";
-		List<User> list = null;
+		String path = "./data/原始数据2 (2).xls";
+		List<UserResult> list = null;
 		try {
 			list = UserDataParser.parseExcelData(new File(path), 0);
 			System.out.println(list);
