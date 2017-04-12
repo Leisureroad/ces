@@ -17,3 +17,5 @@ spring:
     initialSize: 1
     timeBetweenEvictionRunsMillis: 3000
     minEvictableIdleTimeMillis: 300000
+    
+rsgene: rs13266634,rs12722,rs1800012
