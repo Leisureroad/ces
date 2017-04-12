@@ -11,6 +11,7 @@
   <resultMap id="BaseResultMap_User" type="com.dapeng.ces.dto.UserScoreNewResult" >
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="gene_code" property="geneCode" jdbcType="VARCHAR" />
     <result column="gene_name" property="geneName" jdbcType="VARCHAR" />
     <result column="gene_type" property="geneType" jdbcType="VARCHAR" />
     <result column="explosive_force" property="explosiveForce" jdbcType="VARCHAR" />
@@ -38,6 +39,7 @@
 		ofType="com.dapeng.ces.dto.UserScoreNewResult">
 	    <result column="user_id_1" property="userId" jdbcType="VARCHAR" />
 	    <result column="name_1" property="name" jdbcType="VARCHAR" />
+	    <result column="gene_code" property="geneCode" jdbcType="VARCHAR" />
 	    <result column="gene_name" property="geneName" jdbcType="VARCHAR" />
 	    <result column="gene_type" property="geneType" jdbcType="VARCHAR" />
 	    <result column="explosive_force" property="explosiveForce" jdbcType="VARCHAR" />
@@ -62,7 +64,8 @@
   <select id="selectUserInfo" resultMap="BaseResultMap_User" parameterType="java.lang.String" >
   	SELECT
 		u.user_id,
-		u.name,
+		u.name,  
+		s.gene_code,
 		s.gene_name,
 		s.gene_type,
 		s.explosive_force,

@@ -7,6 +7,8 @@ public class UserScoreNewResult {
 	
 	private String gene_uuid;
 	
+	private String geneCode;
+	
     private String geneName;
 
     private String geneType;
@@ -39,200 +41,211 @@ public class UserScoreNewResult {
 
     private Double fatReducingSensitivityScore;
 
-    public String getUserId() {
-        return userId;
-    }
+	public String getUserId() {
+		return userId;
+	}
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getGene_uuid() {
-        return gene_uuid;
-    }
+	public String getGene_uuid() {
+		return gene_uuid;
+	}
 
-    public void setGene_uuid(String gene_uuid) {
-        this.gene_uuid = gene_uuid;
-    }
+	public void setGene_uuid(String gene_uuid) {
+		this.gene_uuid = gene_uuid;
+	}
 
-    public String getGeneName() {
-        return geneName;
-    }
+	public String getGeneCode() {
+		return geneCode;
+	}
 
-    public void setGeneName(String geneName) {
-        this.geneName = geneName;
-    }
+	public void setGeneCode(String geneCode) {
+		this.geneCode = geneCode;
+	}
 
-    public String getGeneType() {
-        return geneType;
-    }
+	public String getGeneName() {
+		return geneName;
+	}
 
-    public void setGeneType(String geneType) {
-        this.geneType = geneType;
-    }
+	public void setGeneName(String geneName) {
+		this.geneName = geneName;
+	}
 
-    public String getExplosiveForce() {
-        return explosiveForce;
-    }
+	public String getGeneType() {
+		return geneType;
+	}
 
-    public void setExplosiveForce(String explosiveForce) {
-        this.explosiveForce = explosiveForce;
-    }
+	public void setGeneType(String geneType) {
+		this.geneType = geneType;
+	}
 
-    public Double getExplosiveForceScore() {
-        return explosiveForceScore;
-    }
+	public String getExplosiveForce() {
+		return explosiveForce;
+	}
 
-    public void setExplosiveForceScore(Double explosiveForceScore) {
-        this.explosiveForceScore = explosiveForceScore;
-    }
+	public void setExplosiveForce(String explosiveForce) {
+		this.explosiveForce = explosiveForce;
+	}
 
-    public String getStamina() {
-        return stamina;
-    }
+	public Double getExplosiveForceScore() {
+		return explosiveForceScore;
+	}
 
-    public void setStamina(String stamina) {
-        this.stamina = stamina;
-    }
+	public void setExplosiveForceScore(Double explosiveForceScore) {
+		this.explosiveForceScore = explosiveForceScore;
+	}
 
-    public Double getStaminaScore() {
-        return staminaScore;
-    }
+	public String getStamina() {
+		return stamina;
+	}
 
-    public void setStaminaScore(Double staminaScore) {
-        this.staminaScore = staminaScore;
-    }
+	public void setStamina(String stamina) {
+		this.stamina = stamina;
+	}
 
-    public String getMotionSensitivity() {
-        return motionSensitivity;
-    }
+	public Double getStaminaScore() {
+		return staminaScore;
+	}
 
-    public void setMotionSensitivity(String motionSensitivity) {
-        this.motionSensitivity = motionSensitivity;
-    }
+	public void setStaminaScore(Double staminaScore) {
+		this.staminaScore = staminaScore;
+	}
 
-    public Double getMotionSensitivityScore() {
-        return motionSensitivityScore;
-    }
+	public String getMotionSensitivity() {
+		return motionSensitivity;
+	}
 
-    public void setMotionSensitivityScore(Double motionSensitivityScore) {
-        this.motionSensitivityScore = motionSensitivityScore;
-    }
+	public void setMotionSensitivity(String motionSensitivity) {
+		this.motionSensitivity = motionSensitivity;
+	}
 
-    public String getInjuryRecoveryAbility() {
-        return injuryRecoveryAbility;
-    }
+	public Double getMotionSensitivityScore() {
+		return motionSensitivityScore;
+	}
 
-    public void setInjuryRecoveryAbility(String injuryRecoveryAbility) {
-        this.injuryRecoveryAbility = injuryRecoveryAbility;
-    }
+	public void setMotionSensitivityScore(Double motionSensitivityScore) {
+		this.motionSensitivityScore = motionSensitivityScore;
+	}
 
-    public Double getInjuryRecoveryAbilityScore() {
-        return injuryRecoveryAbilityScore;
-    }
+	public String getInjuryRecoveryAbility() {
+		return injuryRecoveryAbility;
+	}
 
-    public void setInjuryRecoveryAbilityScore(Double injuryRecoveryAbilityScore) {
-        this.injuryRecoveryAbilityScore = injuryRecoveryAbilityScore;
-    }
+	public void setInjuryRecoveryAbility(String injuryRecoveryAbility) {
+		this.injuryRecoveryAbility = injuryRecoveryAbility;
+	}
 
-    public String getInjuryRisk() {
-        return injuryRisk;
-    }
+	public Double getInjuryRecoveryAbilityScore() {
+		return injuryRecoveryAbilityScore;
+	}
 
-    public void setInjuryRisk(String injuryRisk) {
-        this.injuryRisk = injuryRisk;
-    }
+	public void setInjuryRecoveryAbilityScore(Double injuryRecoveryAbilityScore) {
+		this.injuryRecoveryAbilityScore = injuryRecoveryAbilityScore;
+	}
 
-    public Double getInjuryRiskScore() {
-        return injuryRiskScore;
-    }
+	public String getInjuryRisk() {
+		return injuryRisk;
+	}
 
-    public void setInjuryRiskScore(Double injuryRiskScore) {
-        this.injuryRiskScore = injuryRiskScore;
-    }
+	public void setInjuryRisk(String injuryRisk) {
+		this.injuryRisk = injuryRisk;
+	}
 
-    public String getObesityRisk() {
-        return obesityRisk;
-    }
+	public Double getInjuryRiskScore() {
+		return injuryRiskScore;
+	}
 
-    public void setObesityRisk(String obesityRisk) {
-        this.obesityRisk = obesityRisk;
-    }
+	public void setInjuryRiskScore(Double injuryRiskScore) {
+		this.injuryRiskScore = injuryRiskScore;
+	}
 
-    public Double getObesityRiskScore() {
-        return obesityRiskScore;
-    }
+	public String getObesityRisk() {
+		return obesityRisk;
+	}
 
-    public void setObesityRiskScore(Double obesityRiskScore) {
-        this.obesityRiskScore = obesityRiskScore;
-    }
+	public void setObesityRisk(String obesityRisk) {
+		this.obesityRisk = obesityRisk;
+	}
 
-    public String getFatReducingSensitivity() {
-        return fatReducingSensitivity;
-    }
+	public Double getObesityRiskScore() {
+		return obesityRiskScore;
+	}
 
-    public void setFatReducingSensitivity(String fatReducingSensitivity) {
-        this.fatReducingSensitivity = fatReducingSensitivity;
-    }
+	public void setObesityRiskScore(Double obesityRiskScore) {
+		this.obesityRiskScore = obesityRiskScore;
+	}
 
-    public Double getFatReducingSensitivityScore() {
-        return fatReducingSensitivityScore;
-    }
+	public String getFatReducingSensitivity() {
+		return fatReducingSensitivity;
+	}
 
-    public void setFatReducingSensitivityScore(Double fatReducingSensitivityScore) {
-        this.fatReducingSensitivityScore = fatReducingSensitivityScore;
-    }
+	public void setFatReducingSensitivity(String fatReducingSensitivity) {
+		this.fatReducingSensitivity = fatReducingSensitivity;
+	}
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("UserScoreNewResult [userId=");
-        builder.append(userId);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", gene_uuid=");
-        builder.append(gene_uuid);
-        builder.append(", geneName=");
-        builder.append(geneName);
-        builder.append(", geneType=");
-        builder.append(geneType);
-        builder.append(", explosiveForce=");
-        builder.append(explosiveForce);
-        builder.append(", explosiveForceScore=");
-        builder.append(explosiveForceScore);
-        builder.append(", stamina=");
-        builder.append(stamina);
-        builder.append(", staminaScore=");
-        builder.append(staminaScore);
-        builder.append(", motionSensitivity=");
-        builder.append(motionSensitivity);
-        builder.append(", motionSensitivityScore=");
-        builder.append(motionSensitivityScore);
-        builder.append(", injuryRecoveryAbility=");
-        builder.append(injuryRecoveryAbility);
-        builder.append(", injuryRecoveryAbilityScore=");
-        builder.append(injuryRecoveryAbilityScore);
-        builder.append(", injuryRisk=");
-        builder.append(injuryRisk);
-        builder.append(", injuryRiskScore=");
-        builder.append(injuryRiskScore);
-        builder.append(", obesityRisk=");
-        builder.append(obesityRisk);
-        builder.append(", obesityRiskScore=");
-        builder.append(obesityRiskScore);
-        builder.append(", fatReducingSensitivity=");
-        builder.append(fatReducingSensitivity);
-        builder.append(", fatReducingSensitivityScore=");
-        builder.append(fatReducingSensitivityScore);
-        builder.append("]");
-        return builder.toString();
-    }
+	public Double getFatReducingSensitivityScore() {
+		return fatReducingSensitivityScore;
+	}
+
+	public void setFatReducingSensitivityScore(Double fatReducingSensitivityScore) {
+		this.fatReducingSensitivityScore = fatReducingSensitivityScore;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("UserScoreNewResult [userId=");
+		builder.append(userId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", gene_uuid=");
+		builder.append(gene_uuid);
+		builder.append(", geneCode=");
+		builder.append(geneCode);
+		builder.append(", geneName=");
+		builder.append(geneName);
+		builder.append(", geneType=");
+		builder.append(geneType);
+		builder.append(", explosiveForce=");
+		builder.append(explosiveForce);
+		builder.append(", explosiveForceScore=");
+		builder.append(explosiveForceScore);
+		builder.append(", stamina=");
+		builder.append(stamina);
+		builder.append(", staminaScore=");
+		builder.append(staminaScore);
+		builder.append(", motionSensitivity=");
+		builder.append(motionSensitivity);
+		builder.append(", motionSensitivityScore=");
+		builder.append(motionSensitivityScore);
+		builder.append(", injuryRecoveryAbility=");
+		builder.append(injuryRecoveryAbility);
+		builder.append(", injuryRecoveryAbilityScore=");
+		builder.append(injuryRecoveryAbilityScore);
+		builder.append(", injuryRisk=");
+		builder.append(injuryRisk);
+		builder.append(", injuryRiskScore=");
+		builder.append(injuryRiskScore);
+		builder.append(", obesityRisk=");
+		builder.append(obesityRisk);
+		builder.append(", obesityRiskScore=");
+		builder.append(obesityRiskScore);
+		builder.append(", fatReducingSensitivity=");
+		builder.append(fatReducingSensitivity);
+		builder.append(", fatReducingSensitivityScore=");
+		builder.append(fatReducingSensitivityScore);
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

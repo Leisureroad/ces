@@ -169,6 +169,9 @@ public class ExportExcel<T> {
 						patriarch.createPicture(anchor, workbook.addPicture(bsValue, HSSFWorkbook.PICTURE_TYPE_JPEG));
 					} else {
 						// 其它数据类型都当作字符串简单处理
+						if (value == null) {
+							value = "null";
+						}
 						textValue = value.toString();
 					}
 					// 如果不是图片数据，就利用正则表达式判断textValue是否全部由数字组成

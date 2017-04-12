@@ -30,15 +30,15 @@ public class ScoreDataParser {
 		int maxRowIx = sheet.getLastRowNum();
 
 		for (int rowIx = minRowIx; rowIx <= maxRowIx; rowIx++) {
-			if (rowIx == 0 || rowIx == 4 || rowIx == 23 || rowIx == 48 || rowIx == 64)
+			if (rowIx == 0 || rowIx == 10 || rowIx == 38 || rowIx == 60 || rowIx == 94)
 				continue;
-			if (rowIx == 83)
+			if (rowIx == 125)
 				break;
 			ScoreResult score = new ScoreResult();
 			Row row = sheet.getRow(rowIx);
 			int minColIx = row.getFirstCellNum();
 			int maxColIx = row.getLastCellNum();
-			if (rowIx >= 1 && rowIx <= 3) {
+			if (rowIx >= 1 && rowIx <= 9) {
 				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
 					Cell cell = row.getCell(new Integer(colIx));
 					CellValue cellValue = evaluator.evaluate(cell);
@@ -56,7 +56,7 @@ public class ScoreDataParser {
 					}
 				}
 			}
-			if (rowIx >= 5 && rowIx <= 22) {
+			if (rowIx >= 11 && rowIx <= 37) {
 				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
 					Cell cell = row.getCell(new Integer(colIx));
 					CellValue cellValue = evaluator.evaluate(cell);
@@ -72,17 +72,17 @@ public class ScoreDataParser {
 						score.setStaminaScore(Double.valueOf(cellValue.getNumberValue()));
 						continue;
 					}
-					if (colIx == 6) {
-						score.setMotionSensitivity(cellValue.getStringValue());
-						continue;
-					}
-					if (colIx == 7) {
-						score.setMotionSensitivityScore(Double.valueOf(cellValue.getNumberValue()));
-						continue;
-					}
+//					if (colIx == 6) {
+//						score.setMotionSensitivity(cellValue.getStringValue());
+//						continue;
+//					}
+//					if (colIx == 7) {
+//						score.setMotionSensitivityScore(Double.valueOf(cellValue.getNumberValue()));
+//						continue;
+//					}
 				}
 			}
-			if (rowIx >= 24 && rowIx <= 47) {
+			if (rowIx >= 39 && rowIx <= 59) {
 				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
 					Cell cell = row.getCell(new Integer(colIx));
 					CellValue cellValue = evaluator.evaluate(cell);
@@ -99,7 +99,7 @@ public class ScoreDataParser {
 					}
 				}
 			}
-			if (rowIx >= 49 && rowIx <= 63) {
+			if (rowIx >= 61 && rowIx <= 93) {
 				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
 					Cell cell = row.getCell(new Integer(colIx));
 					CellValue cellValue = evaluator.evaluate(cell);
@@ -117,7 +117,7 @@ public class ScoreDataParser {
 					}
 				}
 			}
-			if (rowIx >= 65 && rowIx <= 82) {
+			if (rowIx >= 95 && rowIx <= 124) {
 				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
 					Cell cell = row.getCell(new Integer(colIx));
 					CellValue cellValue = evaluator.evaluate(cell);
@@ -126,11 +126,11 @@ public class ScoreDataParser {
 					}
 					getBasicProps(score, colIx, cellValue);
 					if (colIx == 4) {
-						score.setFatReducingSensitivity(cellValue.getStringValue());
+						score.setObesityRisk(cellValue.getStringValue());
 						continue;
 					}
 					if (colIx == 5) {
-						score.setFatReducingSensitivityScore(Double.valueOf(cellValue.getNumberValue()));
+						score.setObesityRiskScore(Double.valueOf(cellValue.getNumberValue()));
 						continue;
 					}
 					if (colIx == 6) {
