@@ -297,4 +297,9 @@ public class PersistenceServiceImpl implements PersistenceService {
         }
         return result;
     }
+
+    @Override
+    public List<UserScoreNewResult> getUserScore(String userName) {
+        return userMapper.selectUserInfo(userName);
+    }
 }
