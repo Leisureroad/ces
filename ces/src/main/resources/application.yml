@@ -8,9 +8,9 @@ mybatis:
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/ces?useUnicode=true&autoReconnect=true&characterEncoding=UTF-8&allowMultiQueries=true
-    username: yadong.zhang
-    password: Ds962464
+    url: jdbc:mysql://localhost:3306/cesdb?useUnicode=true&autoReconnect=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: root
+    password: 123456
     driver-class-name: com.mysql.jdbc.Driver
     minIdle: 1
     maxActive: 20
