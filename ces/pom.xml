@@ -18,7 +18,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<start-class>com.pcitc.paas.eag.api.ApiApplication</start-class>
+		<start-class>com.dapeng.ces.Application</start-class>
 	</properties>
 
 	<dependencies>
@@ -115,4 +115,23 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+		<build>
+		<finalName>apicenter-service</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>${start-class}</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
