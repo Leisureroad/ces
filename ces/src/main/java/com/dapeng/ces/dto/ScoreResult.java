@@ -6,18 +6,25 @@ public class ScoreResult {
 	private String geneCode;
 	private String geneName;
 	private String geneType;
+	//爆发力
 	private String explosiveForce;
 	private Double explosiveForceScore;
+	//耐力
 	private String stamina;
 	private Double staminaScore;
+	
 	private String motionSensitivity;
 	private Double motionSensitivityScore;
+	//运动损伤的恢复能力
 	private String injuryRecoveryAbility;
 	private Double injuryRecoveryAbilityScore;
+	//韧带、关节损伤风险
 	private String injuryRisk;
 	private Double injuryRiskScore;
+	//肥胖风险
 	private String obesityRisk;
 	private Double obesityRiskScore;
+	//运动减脂敏感性
 	private String fatReducingSensitivity;
 	private Double fatReducingSensitivityScore;
 	public String getId() {

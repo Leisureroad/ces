@@ -30,6 +30,7 @@ import com.dapeng.ces.model.User;
 import com.dapeng.ces.model.UserScore;
 import com.dapeng.ces.service.poi.ScoreDataParser;
 import com.dapeng.ces.service.poi.UserDataParser;
+import com.dapeng.ces.service.poi.UserScoreDataExporter;
 import com.dapeng.ces.util.PrimaryKeyGenerator;
 
 @Service
@@ -47,7 +48,7 @@ public class PersistenceServiceImpl implements PersistenceService {
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override
     public List<UserResult> saveUserGene() {
-        String path = "./data/原始数据.xls";
+        String path = "./data/测试数据.xls";
         List<UserResult> list = null;
         try {
             list = UserDataParser.parseExcelData(new File(path), 0);
@@ -82,7 +83,7 @@ public class PersistenceServiceImpl implements PersistenceService {
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override
     public List<Score> saveScore() {
-        String scoreExcelFile = "./data/总体体质评估表.xls";
+        String scoreExcelFile = "./data/总体体质评估表+原始数据.xls";
         List<ScoreResult> scoreList = null;
         List<Score> list = null;
         try {
@@ -300,6 +301,13 @@ public class PersistenceServiceImpl implements PersistenceService {
 
     @Override
     public List<UserScoreNewResult> getUserScore(String userName) {
-        return userMapper.selectUserInfo(userName);
+    	List<UserScoreNewResult> result = userMapper.selectUserInfo(userName);
+    	UserScoreDataExporter exporter = new UserScoreDataExporter();
+    	try {
+			exporter.export2Excel(result, userName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        return result;
     }
 }
