@@ -28,6 +28,7 @@ import com.dapeng.ces.model.Gene;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.User;
 import com.dapeng.ces.model.UserScore;
+import com.dapeng.ces.service.freemarker.WordAction;
 import com.dapeng.ces.service.poi.ScoreDataParser;
 import com.dapeng.ces.service.poi.UserDataParser;
 import com.dapeng.ces.service.poi.UserScoreDataExporter;
@@ -303,9 +304,22 @@ public class PersistenceServiceImpl implements PersistenceService {
     @Override
     public List<UserScoreNewResult> getUserScore(String userName) {
     	List<UserScoreNewResult> result = userMapper.selectUserInfo(userName);
+    	
     	UserScoreDataExporter exporter = new UserScoreDataExporter();
     	try {
 			exporter.export2Excel(result, userName);
+			Map<String, Object> dataMap = new HashMap<String, Object>();
+			for (UserScoreNewResult userScoreNewResult : result) {
+				String geneCode = userScoreNewResult.getGeneCode();
+				String geneName = userScoreNewResult.getGeneName();
+				String geneType = getUserGeneType(userName, geneCode, geneName);
+				if (geneType != null) {
+					dataMap.put(geneCode + "_" + geneName, geneType);
+				}
+//				System.out.println("userName: " + userName + ", geneCode: " + geneCode + ", geneName: " + geneName + getUserGeneType(userName, geneCode, geneName));
+			}
+			WordAction action = new WordAction();
+			action.createWord(dataMap, userName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

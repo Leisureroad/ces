@@ -14,17 +14,17 @@ public class WordAction {
 	private String fileName; // 文件名称
 	private String fileOnlyName; // 文件唯一名称
 
-	public String createWord() {
+	public String createWord(Map<String, Object> dataMap, String userName) {
 		/** 用于组装word页面需要的数据 */
-		Map<String, Object> dataMap = new HashMap<String, Object>();
+//		Map<String, Object> dataMap = new HashMap<String, Object>();
 
 		/** 组装数据 */
-		dataMap.put("userName", "张三");
+//		dataMap.put("userName", "张三");
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-		dataMap.put("currDate", sdf.format(new Date()));
-
-		dataMap.put("content", "这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容");
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+//		dataMap.put("currDate", sdf.format(new Date()));
+//
+//		dataMap.put("content", "这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容这是其它内容");
 
 //		List<Map<String, Object>> newsList = new ArrayList<Map<String, Object>>();
 //		for (int i = 1; i <= 10; i++) {
@@ -37,24 +37,24 @@ public class WordAction {
 //		dataMap.put("newsList", newsList);
 
 		/** 文件名称，唯一字符串 */
-		Random r = new Random();
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS");
-		StringBuffer sb = new StringBuffer();
-		sb.append(sdf1.format(new Date()));
-		sb.append("_");
-		sb.append(r.nextInt(100));
+//		Random r = new Random();
+//		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS");
+//		StringBuffer sb = new StringBuffer();
+//		sb.append(sdf1.format(new Date()));
+//		sb.append("_");
+//		sb.append(r.nextInt(100));
 
 		// 文件路径
 		filePath = "./";
 
 		// 文件唯一名称
-		fileOnlyName = "用freemarker导出的Word文档_" + sb + ".doc";
+		fileOnlyName = "五维运动DNA检测报告_" + userName + ".doc";
 
 		// 文件名称
-		fileName = "用freemarker导出的Word文档.doc";
+//		fileName = "用freemarker导出的Word文档.doc";
 
 		/** 生成word */
-		WordUtil.createWord(dataMap, "news.ftl", filePath, fileOnlyName);
+		WordUtil.createWord(dataMap, "五维运动DNA检测报告.ftl", filePath, fileOnlyName);
 
 		return "createWordSuccess";
 	}
@@ -83,9 +83,9 @@ public class WordAction {
 		this.fileOnlyName = fileOnlyName;
 	}
 	
-	public static void main(String[] args) {
-		WordAction action = new WordAction();
-		action.createWord();
-	}
+//	public static void main(String[] args) {
+//		WordAction action = new WordAction();
+//		action.createWord();
+//	}
 
 }

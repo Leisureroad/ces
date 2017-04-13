@@ -121,7 +121,7 @@
 		</dependency>
 	</dependencies>
 		<build>
-		<finalName>apicenter-service</finalName>
+		<finalName>ces</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

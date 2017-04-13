@@ -8,6 +8,8 @@ public class UserScorePlayerResult {
     private String userId;
 
     private String name;
+    
+    private String sex;
 
     private String position384;
 
@@ -39,7 +41,15 @@ public class UserScorePlayerResult {
         this.name = name;
     }
 
-    public String getPosition384() {
+    public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getPosition384() {
         return position384;
     }
 
@@ -63,23 +73,24 @@ public class UserScorePlayerResult {
         this.userScoreNewResultList = userScoreNewResultList;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("UserScorePlayerResult [uuid=");
-        builder.append(uuid);
-        builder.append(", userId=");
-        builder.append(userId);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", position384=");
-        builder.append(position384);
-        builder.append(", star=");
-        builder.append(star);
-        builder.append(", userScoreNewResultList=");
-        builder.append(userScoreNewResultList);
-        builder.append("]");
-        return builder.toString();
-    }
-    
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("UserScorePlayerResult [uuid=");
+		builder.append(uuid);
+		builder.append(", userId=");
+		builder.append(userId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", sex=");
+		builder.append(sex);
+		builder.append(", position384=");
+		builder.append(position384);
+		builder.append(", star=");
+		builder.append(star);
+		builder.append(", userScoreNewResultList=");
+		builder.append(userScoreNewResultList);
+		builder.append("]");
+		return builder.toString();
+	}
 }
