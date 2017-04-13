@@ -1,6 +1,7 @@
 package com.dapeng.ces.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dapeng.ces.dto.UserScoreNewResult;
 import com.dapeng.ces.dto.UserScorePlayerResult;
@@ -27,4 +28,5 @@ public interface UserMapper {
     
     List<UserScorePlayerResult> selectUserPlayer(String star);
     
+    String getUserGeneType(Map<String, String> map);
 }

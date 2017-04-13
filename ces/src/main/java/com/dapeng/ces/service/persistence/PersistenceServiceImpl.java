@@ -311,4 +311,19 @@ public class PersistenceServiceImpl implements PersistenceService {
 		}
         return result;
     }
+
+    @Override
+    public String getUserGeneType(String userName, String geneCode, String geneName) {
+        String geneType = "";
+        Map<String, String> map = new HashMap<>();
+        map.put("userName", userName);
+        map.put("geneCode", geneCode);
+        map.put("geneName", geneName);
+        try {
+            geneType = userMapper.getUserGeneType(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return geneType;
+    }
 }
