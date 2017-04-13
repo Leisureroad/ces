@@ -12,7 +12,7 @@ public class UserDataParserTest {
 
 	@Test
 	public void testParseExcelData() {
-		String path = "./data/原始数据2 (2).xls";
+		String path = "./data/测试数据 (1).xls";
 		List<UserResult> list = null;
 		try {
 			list = UserDataParser.parseExcelData(new File(path), 0);

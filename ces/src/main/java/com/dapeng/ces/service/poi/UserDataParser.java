@@ -32,9 +32,9 @@ public class UserDataParser {
 		int minRowIx = sheet.getFirstRowNum();
 		int maxRowIx = sheet.getLastRowNum();
 		for (int rowIx = minRowIx; rowIx <= maxRowIx; rowIx++) {
-			if (rowIx == 0 || rowIx == 1)
+			if (rowIx == 0)
 				continue;
-			if (rowIx == 2) {
+			if (rowIx == 1) {
 				Row row = sheet.getRow(rowIx);
 				int minColIx = row.getFirstCellNum();
 				int maxColIx = row.getLastCellNum();
@@ -59,7 +59,7 @@ public class UserDataParser {
 				}
 			}
 
-			if (rowIx >= 3) {
+			if (rowIx >= 2) {
 				UserResult user = new UserResult();
 				List<GeneResult> geneList = new ArrayList<GeneResult>();
 				Row row = sheet.getRow(rowIx);
@@ -83,7 +83,11 @@ public class UserDataParser {
 						user.setName(cellValue.getStringValue());
 						continue;
 					}
-					if (colIx >= 3) {
+					if (colIx == 3) {
+						user.setSex(cellValue.getStringValue());
+						continue;
+					}
+					if (colIx >= 4) {
 						GeneResult gene = new GeneResult();
 						gene.setName(geneDictionary.get(Integer.valueOf(colIx)));
 						String value = cellValue.getStringValue();

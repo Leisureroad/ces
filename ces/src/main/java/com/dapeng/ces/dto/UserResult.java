@@ -5,6 +5,7 @@ import java.util.List;
 public class UserResult {
 	private String id;
 	private String name;
+	private String sex;
 	private String position_384;
 	private List<GeneResult> geneList;
 	public String getId() {
@@ -18,6 +19,12 @@ public class UserResult {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getSex() {
+		return sex;
+	}
+	public void setSex(String sex) {
+		this.sex = sex;
 	}
 	public String getPosition_384() {
 		return position_384;
@@ -34,10 +41,12 @@ public class UserResult {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("User [id=");
+		builder.append("UserResult [id=");
 		builder.append(id);
 		builder.append(", name=");
 		builder.append(name);
+		builder.append(", sex=");
+		builder.append(sex);
 		builder.append(", position_384=");
 		builder.append(position_384);
 		builder.append(", geneList=");
@@ -45,5 +54,4 @@ public class UserResult {
 		builder.append("]");
 		return builder.toString();
 	}
-	
 }

@@ -74,6 +74,7 @@ CREATE TABLE `user` (
   `uuid` varchar(32) NOT NULL,
   `user_id` varchar(100) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
+  `sex` varchar(20) DEFAULT NULL,
   `position_384` varchar(100) DEFAULT NULL,
   `star` varchar(1) DEFAULT NULL COMMENT '1运动员2用户数据',
   PRIMARY KEY (`uuid`)

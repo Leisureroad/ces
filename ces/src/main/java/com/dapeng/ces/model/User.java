@@ -6,6 +6,8 @@ public class User {
     private String userId;
 
     private String name;
+    
+    private String sex;
 
     private String position384;
 
@@ -35,7 +37,15 @@ public class User {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getPosition384() {
+    public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getPosition384() {
         return position384;
     }
 

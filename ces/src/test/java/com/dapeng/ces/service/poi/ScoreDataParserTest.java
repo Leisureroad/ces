@@ -13,8 +13,8 @@ public class ScoreDataParserTest {
 
 	@Test
 	public void testParseExcelData() {
-		String scoreExcelFile = "./data/总体体质评估表+原始数据.xls";
-		String userDataExcelFile = "./data/测试数据.xls";
+		String scoreExcelFile = "./data/总体体质评估表+原始数据2 (1).xls";
+		String userDataExcelFile = "./data/测试数据 (1).xls";
 		List<UserResult> userList = null;
 		List<ScoreResult> scoreList = null;
 		try {
@@ -23,7 +23,7 @@ public class ScoreDataParserTest {
 //			System.out.println(userList);
 			System.out.println(scoreList);
 //			System.out.println(scoreList.size());
-			ScoreDataParser.searchUserKey("王大鹏", userList, scoreList);
+			ScoreDataParser.searchUserKey("王大鹏*", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏2", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏3", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏4", userList, scoreList);

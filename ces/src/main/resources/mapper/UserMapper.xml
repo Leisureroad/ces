@@ -5,6 +5,7 @@
     <id column="uuid" property="uuid" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
     <result column="position_384" property="position384" jdbcType="VARCHAR" />
     <result column="star" property="star" jdbcType="VARCHAR" />
   </resultMap>
@@ -33,6 +34,7 @@
     <id column="uuid" property="uuid" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
     <result column="position_384" property="position384" jdbcType="VARCHAR" />
     <result column="star" property="star" jdbcType="VARCHAR" />
   	<collection property="userScoreNewResultList"
@@ -59,7 +61,7 @@
 	</collection>
   </resultMap>
   <sql id="Base_Column_List" >
-    uuid, user_id, name, position_384, star
+    uuid, user_id, name, sex, position_384, star
   </sql>
   <select id="selectUserInfo" resultMap="BaseResultMap_User" parameterType="java.lang.String" >
   	SELECT
@@ -93,6 +95,7 @@
 		u.uuid,
 		u.user_id,
 		u.name,
+		u.sex,
 		u.position_384,
 		u.star,
 		us.user_id as user_id_1,
@@ -139,10 +142,10 @@
     delete from user
   </delete>
   <insert id="insert" parameterType="com.dapeng.ces.model.User" >
-    insert into user (uuid, user_id, name, 
+    insert into user (uuid, user_id, name, sex,
       position_384, star)
     values (#{uuid,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{position384,jdbcType=VARCHAR}, #{star,jdbcType=VARCHAR})
+      #{sex,jdbcType=VARCHAR}, #{position384,jdbcType=VARCHAR}, #{star,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.dapeng.ces.model.User" >
     insert into user
@@ -155,6 +158,9 @@
       </if>
       <if test="name != null" >
         name,
+      </if>
+      <if test="sex != null" >
+        sex,
       </if>
       <if test="position384 != null" >
         position_384,
@@ -173,6 +179,9 @@
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
       <if test="position384 != null" >
         #{position384,jdbcType=VARCHAR},
       </if>
@@ -190,6 +199,9 @@
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
       <if test="position384 != null" >
         position_384 = #{position384,jdbcType=VARCHAR},
       </if>
@@ -203,6 +215,7 @@
     update user
     set user_id = #{userId,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
       position_384 = #{position384,jdbcType=VARCHAR},
       star = #{star,jdbcType=VARCHAR}
     where uuid = #{uuid,jdbcType=VARCHAR}

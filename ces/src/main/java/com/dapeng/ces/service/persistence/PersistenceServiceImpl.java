@@ -48,7 +48,7 @@ public class PersistenceServiceImpl implements PersistenceService {
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override
     public List<UserResult> saveUserGene() {
-        String path = "./data/测试数据.xls";
+        String path = "./data/测试数据 (1).xls";
         List<UserResult> list = null;
         try {
             list = UserDataParser.parseExcelData(new File(path), 0);
@@ -61,6 +61,7 @@ public class PersistenceServiceImpl implements PersistenceService {
                 user.setUuid(PrimaryKeyGenerator.getUuid32());
                 user.setUserId(userResult.getId());
                 user.setName(userResult.getName());
+                user.setSex(userResult.getSex());
                 user.setPosition384(userResult.getPosition_384());
                 user.setStar(userResult.getName().indexOf("*") > 0 ? "1" : "2");
                 userMapper.insertSelective(user);
@@ -83,7 +84,7 @@ public class PersistenceServiceImpl implements PersistenceService {
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override
     public List<Score> saveScore() {
-        String scoreExcelFile = "./data/总体体质评估表+原始数据.xls";
+        String scoreExcelFile = "./data/总体体质评估表+原始数据2 (1).xls";
         List<ScoreResult> scoreList = null;
         List<Score> list = null;
         try {

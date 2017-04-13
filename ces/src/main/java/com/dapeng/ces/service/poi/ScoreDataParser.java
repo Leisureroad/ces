@@ -30,9 +30,9 @@ public class ScoreDataParser {
 		int maxRowIx = sheet.getLastRowNum();
 
 		for (int rowIx = minRowIx; rowIx <= maxRowIx; rowIx++) {
-			if (rowIx == 0 || rowIx == 10 || rowIx == 38 || rowIx == 60 || rowIx == 94)
+			if (rowIx == 0 || rowIx == 10 || rowIx == 38 || rowIx == 60 || rowIx == 94 || rowIx == 110)
 				continue;
-			if (rowIx == 125)
+			if (rowIx == 141)
 				break;
 			ScoreResult score = new ScoreResult();
 			Row row = sheet.getRow(rowIx);
@@ -47,7 +47,7 @@ public class ScoreDataParser {
 					}
 					getBasicProps(score, colIx, cellValue);
 					if (colIx == 4) {
-						score.setExplosiveForce(cellValue.getStringValue());
+						score.setExplosiveForce(cellValue.getStringValue().trim());
 						continue;
 					}
 					if (colIx == 5) {
@@ -65,7 +65,7 @@ public class ScoreDataParser {
 					}
 					getBasicProps(score, colIx, cellValue);
 					if (colIx == 4) {
-						score.setStamina(cellValue.getStringValue());
+						score.setStamina(cellValue.getStringValue().trim());
 						continue;
 					}
 					if (colIx == 5) {
@@ -73,7 +73,7 @@ public class ScoreDataParser {
 						continue;
 					}
 //					if (colIx == 6) {
-//						score.setMotionSensitivity(cellValue.getStringValue());
+//						score.setMotionSensitivity(cellValue.getStringValue().trim());
 //						continue;
 //					}
 //					if (colIx == 7) {
@@ -90,7 +90,7 @@ public class ScoreDataParser {
 					}
 					getBasicProps(score, colIx, cellValue);
 					if (colIx == 4) {
-						score.setInjuryRecoveryAbility(cellValue.getStringValue());
+						score.setInjuryRecoveryAbility(cellValue.getStringValue().trim());
 						continue;
 					}
 					if (colIx == 5) {
@@ -108,7 +108,7 @@ public class ScoreDataParser {
 					}
 					getBasicProps(score, colIx, cellValue);
 					if (colIx == 4) {
-						score.setInjuryRisk(cellValue.getStringValue());
+						score.setInjuryRisk(cellValue.getStringValue().trim());
 						continue;
 					}
 					if (colIx == 5) {
@@ -117,7 +117,10 @@ public class ScoreDataParser {
 					}
 				}
 			}
-			if (rowIx >= 95 && rowIx <= 124) {
+			if (rowIx >= 95 && rowIx <= 109) {
+				continue;
+			}
+			if (rowIx >= 111 && rowIx <= 140) {
 				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
 					Cell cell = row.getCell(new Integer(colIx));
 					CellValue cellValue = evaluator.evaluate(cell);
@@ -126,7 +129,7 @@ public class ScoreDataParser {
 					}
 					getBasicProps(score, colIx, cellValue);
 					if (colIx == 4) {
-						score.setObesityRisk(cellValue.getStringValue());
+						score.setObesityRisk(cellValue.getStringValue().trim());
 						continue;
 					}
 					if (colIx == 5) {
@@ -134,7 +137,7 @@ public class ScoreDataParser {
 						continue;
 					}
 					if (colIx == 6) {
-						score.setFatReducingSensitivity(cellValue.getStringValue());
+						score.setFatReducingSensitivity(cellValue.getStringValue().trim());
 						continue;
 					}
 					if (colIx == 7) {
@@ -155,15 +158,15 @@ public class ScoreDataParser {
 			return;
 		}
 		if (colIx == 1) {
-			score.setGeneCode(cellValue.getStringValue());
+			score.setGeneCode(cellValue.getStringValue().trim());
 			return;
 		}
 		if (colIx == 2) {
-			score.setGeneName(cellValue.getStringValue());
+			score.setGeneName(cellValue.getStringValue().trim());
 			return;
 		}
 		if (colIx == 3) {
-			score.setGeneType(cellValue.getStringValue());
+			score.setGeneType(cellValue.getStringValue().trim());
 			score_id = score.getGeneName() + score.getGeneType();
 			score.setId(score_id);
 			return;
