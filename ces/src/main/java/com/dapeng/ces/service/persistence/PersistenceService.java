@@ -14,4 +14,5 @@ public interface PersistenceService {
     List<UserScore> saveUserScore();
     List<UserScoreNewResult> getUserScore(String userName);
     List<UserScorePlayerResult> userCompare(String userName,List<String> list);
+    String getUserGeneType(String userName,String geneCode,String geneName);
 }
