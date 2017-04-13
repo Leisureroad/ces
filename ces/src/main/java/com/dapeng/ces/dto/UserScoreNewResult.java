@@ -5,7 +5,9 @@ public class UserScoreNewResult {
 	
 	private String name;
 	
-	private String gene_uuid;
+	private String geneUuid;
+	
+	private String geneCode;
 	
     private String geneName;
 
@@ -55,12 +57,20 @@ public class UserScoreNewResult {
         this.name = name;
     }
 
-    public String getGene_uuid() {
-        return gene_uuid;
+    public String getGeneUuid() {
+        return geneUuid;
     }
 
-    public void setGene_uuid(String gene_uuid) {
-        this.gene_uuid = gene_uuid;
+    public void setGeneUuid(String geneUuid) {
+        this.geneUuid = geneUuid;
+    }
+
+    public String getGeneCode() {
+        return geneCode;
+    }
+
+    public void setGeneCode(String geneCode) {
+        this.geneCode = geneCode;
     }
 
     public String getGeneName() {
@@ -198,8 +208,8 @@ public class UserScoreNewResult {
         builder.append(userId);
         builder.append(", name=");
         builder.append(name);
-        builder.append(", gene_uuid=");
-        builder.append(gene_uuid);
+        builder.append(", geneUuid=");
+        builder.append(geneUuid);
         builder.append(", geneName=");
         builder.append(geneName);
         builder.append(", geneType=");
