@@ -188,7 +188,7 @@ public class ScoreDataParser {
 		return result;
 	}
 
-	private static boolean getMatchedKey(String userKey, String scoreId) {
+	public static boolean getMatchedKey(String userKey, String scoreId) {
 		if (userKey.equals(scoreId))
 			return true;
 		String newUserKey = userKey.replace("C", "G").replace("T", "A");

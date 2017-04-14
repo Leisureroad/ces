@@ -41,6 +41,11 @@
     from score
     where score_id = #{scoreId,jdbcType=VARCHAR}
   </select>
+  <select id="selectAllScore" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from score
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from score
     where uuid = #{uuid,jdbcType=VARCHAR}
