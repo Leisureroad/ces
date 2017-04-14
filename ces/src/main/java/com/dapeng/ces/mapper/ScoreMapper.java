@@ -1,5 +1,7 @@
 package com.dapeng.ces.mapper;
 
+import java.util.List;
+
 import com.dapeng.ces.model.Score;
 
 public interface ScoreMapper {
@@ -18,4 +20,6 @@ public interface ScoreMapper {
     int delete();
     
     Score selectByScoreId(String scoreId);
+    
+    List<Score> selectAllScore();
 }

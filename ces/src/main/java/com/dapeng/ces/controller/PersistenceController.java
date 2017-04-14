@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dapeng.ces.dto.UserCompareResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreNewResult;
-import com.dapeng.ces.dto.UserScorePlayerResult;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.UserScore;
 import com.dapeng.ces.service.persistence.PersistenceService;
@@ -53,7 +53,7 @@ public class PersistenceController {
     }
     
     @RequestMapping(value = "userCompare",method = RequestMethod.GET,produces = "application/json")
-    public List<UserScorePlayerResult> userCompare(@RequestParam("userName") String userName){
+    public List<UserCompareResult> userCompare(@RequestParam("userName") String userName){
         //获取对比的位点
         List<String> list = StringUtil.string2List(rsgene, ",");
         return persistenceService.userCompare(userName, list);

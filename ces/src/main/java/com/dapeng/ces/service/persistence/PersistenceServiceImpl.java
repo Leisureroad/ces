@@ -17,7 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dapeng.ces.dto.GeneResult;
 import com.dapeng.ces.dto.ScoreResult;
+import com.dapeng.ces.dto.UserCompareGene;
+import com.dapeng.ces.dto.UserCompareParam;
+import com.dapeng.ces.dto.UserCompareResult;
 import com.dapeng.ces.dto.UserResult;
+import com.dapeng.ces.dto.UserScoreCompareResult;
 import com.dapeng.ces.dto.UserScoreNewResult;
 import com.dapeng.ces.dto.UserScorePlayerResult;
 import com.dapeng.ces.mapper.GeneMapper;
@@ -195,56 +199,72 @@ public class PersistenceServiceImpl implements PersistenceService {
                 String geneUuid = gene.getUuid();
                 String name = gene.getName();
                 String value = gene.getValue();
-                Score score = scoreMapper.selectByScoreId(name + value);
-                if (score == null) {
+                List<Score> scoreList = scoreMapper.selectAllScore();
+                if(scoreList == null){
                     continue;
                 }
-                String scoreUuid = score.getUuid();
-                UserScore userScore = new UserScore();
-                userScore.setUuid(PrimaryKeyGenerator.getUuid32());
-                userScore.setUserId(userId);
-                userScore.setGeneUuid(geneUuid);
-                userScore.setScoreUuid(scoreUuid);
-                list.add(userScore);
-                userScoreMapper.insertSelective(userScore);
+                for (Score score : scoreList) {
+                    String scoreId = score.getScoreId();
+                    boolean result = ScoreDataParser.getMatchedKey(name + value, scoreId);
+                    if(!result){
+                        continue;
+                    }
+                    String scoreUuid = score.getUuid();
+                    UserScore userScore = new UserScore();
+                    userScore.setUuid(PrimaryKeyGenerator.getUuid32());
+                    userScore.setUserId(userId);
+                    userScore.setGeneUuid(geneUuid);
+                    userScore.setScoreUuid(scoreUuid);
+                    list.add(userScore);
+                    userScoreMapper.insertSelective(userScore);
+                }
             }
         }
         return list;
     }
 
     @Override
-    public List<UserScorePlayerResult> userCompare(String userName, List<String> list) {
-        List<UserScorePlayerResult> returnList = new ArrayList<>();
+    public List<UserCompareResult> userCompare(String userName, List<String> list) {
+        List<UserCompareResult> returnList = new ArrayList<>();
         // 获取用户的位点基因信息
         List<UserScoreNewResult> userInfoList = userMapper.selectUserInfo(userName);
         // 获取所有运动员的信息
         List<UserScorePlayerResult> userPlayerList = userMapper.selectUserPlayer("1");
-        Map<String, Integer> map = new HashMap<>();
+        // 对比用户和运动员信息，获取匹配的位点信息
+        Map<String, UserCompareParam> map = new HashMap<>();
         for (UserScoreNewResult userScoreNewResult : userInfoList) {
             String geneName = userScoreNewResult.getGeneName();// 用户的geneName
             String geneType = userScoreNewResult.getGeneType();
             for (UserScorePlayerResult userScorePlayerResult : userPlayerList) {
                 String userIdPlayer = userScorePlayerResult.getUserId();
-                Integer matchCount = map.get(userIdPlayer);
-                if (matchCount == null) {
-                    matchCount = 0;
+                UserCompareParam matchUser = map.get(userIdPlayer);
+                if (matchUser == null) {
+                    matchUser = new UserCompareParam();
+                    matchUser.setUserId(userIdPlayer);
+                    matchUser.setCount(0);
+                    matchUser.setUserCompareGeneList(new ArrayList<UserCompareGene>());
                 }
                 String geneTypePlayer = this.getGeneType(geneName, userScorePlayerResult);
                 if (isIncludeGeneName(list, geneName) && geneType.equals(geneTypePlayer)) {
-                    int count = matchCount.intValue() + 1;
-                    map.put(userIdPlayer, count);
+                    int count = matchUser.getCount().intValue() + 1;
+                    matchUser.setCount(count);
+                    UserCompareGene ucg = new UserCompareGene();
+                    ucg.setGeneName(geneName);
+                    ucg.setGeneType(geneTypePlayer);
+                    matchUser.getUserCompareGeneList().add(ucg);
+                    map.put(userIdPlayer, matchUser);
                 }
             }
         }
         System.out.println(map.size());
         // 遍历map，获取最大的value值
-        Iterator<Entry<String, Integer>> it = map.entrySet().iterator();
+        Iterator<Entry<String, UserCompareParam>> it = map.entrySet().iterator();
         int maxValue = 0;
         String maxKey = null;
         for(int i=0;i<map.size();i++){
-            Map.Entry<String, Integer> entry =(Map.Entry<String, Integer>)it.next();
-            int value = Integer.parseInt(entry.getValue().toString());
-            System.out.println(value);
+            Entry<String, UserCompareParam> entry = (Map.Entry<String, UserCompareParam>)it.next();
+            UserCompareParam userCom = entry.getValue();
+            int value = userCom.getCount();
             if(value > maxValue){
                 maxValue = value;
                 maxKey = entry.getKey().toString();
@@ -252,18 +272,42 @@ public class PersistenceServiceImpl implements PersistenceService {
         }
         System.out.println("maxValue"+maxValue);
         //获取重复的最大值
-        List<String> userIdList = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            if(maxValue == entry.getValue()){
-                System.out.println(entry.getKey());
-                userIdList.add(entry.getKey());
+        List<UserCompareParam> userIdList = new ArrayList<>();
+        for (Map.Entry<String, UserCompareParam> entry : map.entrySet()) {
+            UserCompareParam userCom = entry.getValue();
+            if(maxValue == userCom.getCount()){
+                userIdList.add(userCom);
             }
         }
-        for (String userId : userIdList) {
+        for (UserCompareParam userCompareParam : userIdList) {
             for (UserScorePlayerResult userScorePlayerResult : userPlayerList) {
-                if(userId.equals(userScorePlayerResult.getUserId())){
-                    returnList.add(userScorePlayerResult);
+                if(!userCompareParam.getUserId().equals(userScorePlayerResult.getUserId())){
+                    continue;
                 }
+                UserCompareResult ucr = new UserCompareResult();
+                ucr.setUserId(userScorePlayerResult.getUserId());
+                ucr.setName(userScorePlayerResult.getName());
+                ucr.setSex(userScorePlayerResult.getSex());
+                ucr.setRsTotal(list.size());
+                ucr.setRsMax(maxValue);
+                List<UserCompareGene> userCompareGeneList = userCompareParam.getUserCompareGeneList();//获取匹配的位点
+                List<UserScoreCompareResult> userScoreCompareList = new ArrayList<>();//返回的list集合
+                List<UserScoreNewResult> usrNew = userScorePlayerResult.getUserScoreNewResultList();
+                for (UserScoreNewResult userScoreNewResult : usrNew) {
+                    for (UserCompareGene userCompareGene : userCompareGeneList) {
+                        String geneName = userCompareGene.getGeneName();
+                        String geneType = userCompareGene.getGeneType();
+                        if(geneName.equals(userScoreNewResult.getGeneName()) && geneType.equals(userScoreNewResult.getGeneType())){
+                            UserScoreCompareResult uscr = new UserScoreCompareResult();
+                            uscr.setGeneCode(userScoreNewResult.getGeneCode());
+                            uscr.setGeneName(userScoreNewResult.getGeneName());
+                            uscr.setGeneType(userScoreNewResult.getGeneType());
+                            userScoreCompareList.add(uscr);
+                        }
+                    }
+                }
+                ucr.setUserScoreCompareList(userScoreCompareList);
+                returnList.add(ucr);
             }
         }
         return returnList;
