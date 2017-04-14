@@ -17,7 +17,7 @@ import freemarker.template.Template;
  */
 public class WordUtil {
    
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("deprecation")
 	public static void createWord(Map dataMap,String templateName,String filePath,String fileName){
         try {
         //创建配置实例 
@@ -27,8 +27,10 @@ public class WordUtil {
             configuration.setDefaultEncoding("UTF-8");
             
             //ftl模板文件统一放至 com.lun.template 包下面
-            configuration.setClassForTemplateLoading(WordUtil.class,"/template");
-            
+//            configuration.setD
+//            configuration.setClassForTemplateLoading(WordUtil.class,"~/template");
+//            configuration.setTemplateLoader(TemplateLoaderFactory);
+            configuration.setDirectoryForTemplateLoading(new File("./templates/"));
             //获取模板 
             Template template = configuration.getTemplate(templateName);
             

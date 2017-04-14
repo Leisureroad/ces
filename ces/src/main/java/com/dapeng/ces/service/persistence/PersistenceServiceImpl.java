@@ -316,6 +316,9 @@ public class PersistenceServiceImpl implements PersistenceService {
 				if (geneType != null) {
 					dataMap.put(geneCode + "_" + geneName, geneType);
 				}
+				else {
+					dataMap.put(geneCode + "_" + geneName, "未测试");
+				}
 //				System.out.println("userName: " + userName + ", geneCode: " + geneCode + ", geneName: " + geneName + getUserGeneType(userName, geneCode, geneName));
 			}
 			WordAction action = new WordAction();
