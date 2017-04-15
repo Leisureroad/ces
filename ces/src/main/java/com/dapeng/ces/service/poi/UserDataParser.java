@@ -23,7 +23,7 @@ public class UserDataParser {
 	public static Map<Integer, String> geneDictionary = new HashMap<Integer, String>();
 
 	public static List<UserResult> parseExcelData(File file, int sheetNum) throws IOException {
-		Workbook workbook = ExcelDataImporter.importDataFromExcel(file, sheetNum);
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(file);
 
 		Sheet sheet = workbook.getSheetAt(sheetNum);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();

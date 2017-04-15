@@ -8,21 +8,52 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import com.dapeng.ces.dto.UserScoreNewResult;
 import com.dapeng.ces.dto.UserScorePerItemResult;
 import com.dapeng.ces.util.ExportExcel;
 
+@Component
 public class UserScoreDataExporter {
+	@Value("${total-score.explosiveForceScore}")
+	private Double explosiveForceScore_percentage;
+	
+	@Value("${total-score.staminaScore}")
+	private Double staminaScore_percentage;
+	
+	@Value("${total-score.injuryRecoveryAbilityScore}")
+	private Double injuryRecoveryAbilityScore_percentage;
+	
+	@Value("${total-score.injuryRiskScore}")
+	private Double injuryRiskScore_percentage;
+	
+	@Value("${total-score.obesityRiskScore}")
+	private Double obesityRiskScore_percentage;
+	
+	@Value("${total-score.fatReducingSensitivityScore}")
+	private Double fatReducingSensitivityScore_percentage;
 
 	public void export2Excel(List<UserScoreNewResult> userScoreResult, String userName) throws IOException {
 		String[] headers = { "编号", "姓名", "uuid", "基因", "位点", "基因型", "爆发力", "爆发力得分", "耐力	", "耐力得分", "耐力运动敏感度", "耐力运动敏感度得分",
-				"运动损伤的恢复能力", "恢复能力得分", "韧带、关节损伤风险", "韧带、关节损伤风险得分", "肥胖风险", "肥胖风险得分", "运动减脂敏感性", "运动减肥敏感性得分" };
+				"运动损伤的恢复能力", "恢复能力得分", "韧带、关节损伤风险", "韧带、关节损伤风险得分", "肥胖风险", "肥胖风险得分", "运动减脂敏感性", "运动减肥敏感性得分"};
 		ExportExcel<UserScoreNewResult> ex = new ExportExcel<UserScoreNewResult>();
 		OutputStream out = new FileOutputStream(userName.replace("*","")+"_评分_原始数据.xls");
 		ex.exportExcel(headers, userScoreResult, out);
 		out.close();
-		String[] headers2 = { "编号", "姓名", "爆发力得分", "耐力得分", "恢复能力得分", "韧带、关节损伤风险得分", "肥胖风险得分",  "运动减肥敏感性得分"};
+		
+		String[] headers2 = { "编号", "姓名", "爆发力得分", "爆发力得分(百分制)", "耐力得分", "耐力得分(百分制)", "恢复能力得分", "恢复能力得分(百分制)", 
+				"韧带、关节损伤风险得分", "韧带、关节损伤风险得分(百分制)", "肥胖风险得分", "肥胖风险得分(百分制)", "运动减肥敏感性得分", "运动减肥敏感性得分(百分制)"};
 		ExportExcel<UserScorePerItemResult> ex2 = new ExportExcel<UserScorePerItemResult>();
+		List<UserScorePerItemResult> resultList = calculateCumulativeScore(userScoreResult, userName);
+		OutputStream out2 = new FileOutputStream(userName.replace("*","")+"_评分.xls");
+		ex2.exportExcel(headers2, resultList, out2);
+		out2.close();
+		System.out.println("excel导出成功！");
+	}
+
+	private List<UserScorePerItemResult> calculateCumulativeScore(List<UserScoreNewResult> userScoreResult, String userName) {
 		List<UserScorePerItemResult> resultList = new ArrayList<UserScorePerItemResult>();
 		Map<String, Double> resultMap = new HashMap<String, Double>();
 		String userIdOutput = "";
@@ -31,7 +62,6 @@ public class UserScoreDataExporter {
 			userIdOutput = userId;
 			Double explosiveForceScore = userScoreNewResult.getExplosiveForceScore();
 			Double staminaScore = userScoreNewResult.getStaminaScore();
-//			Double motionSensitivityScore = userScoreNewResult.getMotionSensitivityScore();
 			Double injuryRecoveryAbilityScore = userScoreNewResult.getInjuryRecoveryAbilityScore();
 			Double injuryRiskScore = userScoreNewResult.getInjuryRiskScore();
 			Double obesityRiskScore = userScoreNewResult.getObesityRiskScore();
@@ -52,14 +82,6 @@ public class UserScoreDataExporter {
 				resultMap.put("staminaScore", resultMap.get("staminaScore") + staminaScore);
 				continue;
 			}
-//			if (resultMap.get("motionSensitivityScore") == null && motionSensitivityScore != null) {
-//				resultMap.put("motionSensitivityScore", motionSensitivityScore);
-//				continue;
-//			}
-//			if (resultMap.get("motionSensitivityScore") != null && motionSensitivityScore != null) {
-//				resultMap.put("motionSensitivityScore", resultMap.get("motionSensitivityScore") + motionSensitivityScore);
-//				continue;
-//			}
 			if (resultMap.get("injuryRecoveryAbilityScore") == null && injuryRecoveryAbilityScore != null) {
 				resultMap.put("injuryRecoveryAbilityScore", injuryRecoveryAbilityScore);
 				continue;
@@ -98,16 +120,18 @@ public class UserScoreDataExporter {
 		userScorePerItemResult2.setName(userName);
 		userScorePerItemResult2.setExplosiveForceScore(resultMap.get("explosiveForceScore"));
 		userScorePerItemResult2.setStaminaScore(resultMap.get("staminaScore"));
-//		userScorePerItemResult2.setMotionSensitivityScore(resultMap.get("motionSensitivityScore"));
 		userScorePerItemResult2.setInjuryRecoveryAbilityScore(resultMap.get("injuryRecoveryAbilityScore"));
 		userScorePerItemResult2.setInjuryRiskScore(resultMap.get("injuryRiskScore"));
 		userScorePerItemResult2.setObesityRiskScore(resultMap.get("obesityRiskScore"));
 		userScorePerItemResult2.setFatReducingSensitivityScore(resultMap.get("fatReducingSensitivityScore"));
-		resultList.add(userScorePerItemResult2);
 		
-		OutputStream out2 = new FileOutputStream(userName.replace("*","")+"_评分.xls");
-		ex2.exportExcel(headers2, resultList, out2);
-		out2.close();
-		System.out.println("excel导出成功！");
+		userScorePerItemResult2.setExplosiveForceScore_percentage(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage * 100);
+		userScorePerItemResult2.setStaminaScore_percentage(resultMap.get("staminaScore") / staminaScore_percentage * 100);
+		userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage * 100);
+		userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage * 100);
+		userScorePerItemResult2.setObesityRiskScore_percentage(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage * 100);
+		userScorePerItemResult2.setFatReducingSensitivityScore_percentage(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage * 100);
+		resultList.add(userScorePerItemResult2);
+		return resultList;
 	}
 }

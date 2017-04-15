@@ -1,6 +1,5 @@
 package com.dapeng.ces.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class PersistenceController {
     private PersistenceService persistenceService;
     @Value("${rsgene}")
     private String rsgene;
-
+	
     @RequestMapping(value = "init",method = RequestMethod.GET,produces = "application/json")
     public boolean init(){
         persistenceService.saveUserGene();

@@ -18,7 +18,7 @@ import com.dapeng.ces.util.ExcelDataImporter;
 public class GeneFeatureDataParser {
 
 	public static List<GeneFeature> parseExcelData(File file, int sheetNum) throws IOException {
-		Workbook workbook = ExcelDataImporter.importDataFromExcel(file, sheetNum);
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(file);
 
 		Sheet sheet = workbook.getSheetAt(sheetNum);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();

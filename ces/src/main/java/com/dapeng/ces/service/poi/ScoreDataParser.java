@@ -20,8 +20,18 @@ import com.dapeng.ces.util.ExcelDataImporter;
 
 public class ScoreDataParser {
 
+	public static List<ScoreResult> parseExcelData() throws IOException {
+		List<ScoreResult> resultList = new ArrayList<ScoreResult>();
+		resultList.addAll(parseExplosiveForceData());
+		resultList.addAll(parseStaminaData());
+		resultList.addAll(parseInjuryRecoveryAbilityData());
+		resultList.addAll(parseInjuryRiskData());
+		resultList.addAll(parseObesityRiskAndFatReducingSensitivityData());
+		return resultList;
+	}
+	
 	public static List<ScoreResult> parseExcelData(File file, int sheetNum) throws IOException {
-		Workbook workbook = ExcelDataImporter.importDataFromExcel(file, sheetNum);
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(file);
 		Sheet sheet = workbook.getSheetAt(sheetNum);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
@@ -151,6 +161,198 @@ public class ScoreDataParser {
 		return scoreList;
 	}
 
+	private static List<ScoreResult> parseExplosiveForceData() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+爆发力.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
+		int minRowIx = sheet.getFirstRowNum();
+		int maxRowIx = sheet.getLastRowNum();
+
+		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
+			if (rowIx == 0)
+				continue;
+			ScoreResult score = new ScoreResult();
+			Row row = sheet.getRow(rowIx);
+			int minColIx = row.getFirstCellNum();
+			int maxColIx = row.getLastCellNum();
+			for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+				Cell cell = row.getCell(new Integer(colIx));
+				CellValue cellValue = evaluator.evaluate(cell);
+				if (cellValue == null) {
+					continue;
+				}
+				getBasicProps(score, colIx, cellValue);
+				if (colIx == 4) {
+					score.setExplosiveForce(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 5) {
+					score.setExplosiveForceScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+			}
+			scoreList.add(score);
+		}
+		return scoreList;
+	}
+	
+	private static List<ScoreResult> parseStaminaData() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+耐力.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
+		int minRowIx = sheet.getFirstRowNum();
+		int maxRowIx = sheet.getLastRowNum();
+
+		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
+			if (rowIx == 0)
+				continue;
+			ScoreResult score = new ScoreResult();
+			Row row = sheet.getRow(rowIx);
+			int minColIx = row.getFirstCellNum();
+			int maxColIx = row.getLastCellNum();
+			for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+				Cell cell = row.getCell(new Integer(colIx));
+				CellValue cellValue = evaluator.evaluate(cell);
+				if (cellValue == null) {
+					continue;
+				}
+				getBasicProps(score, colIx, cellValue);
+				if (colIx == 4) {
+					score.setStamina(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 5) {
+					score.setStaminaScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+			}
+			scoreList.add(score);
+		}
+		return scoreList;
+	}
+	
+	private static List<ScoreResult> parseInjuryRecoveryAbilityData() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+运动损伤的恢复能力.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
+		int minRowIx = sheet.getFirstRowNum();
+		int maxRowIx = sheet.getLastRowNum();
+
+		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
+			if (rowIx == 0)
+				continue;
+			ScoreResult score = new ScoreResult();
+			Row row = sheet.getRow(rowIx);
+			int minColIx = row.getFirstCellNum();
+			int maxColIx = row.getLastCellNum();
+			for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+				Cell cell = row.getCell(new Integer(colIx));
+				CellValue cellValue = evaluator.evaluate(cell);
+				if (cellValue == null) {
+				}
+				getBasicProps(score, colIx, cellValue);
+				if (colIx == 4) {
+					score.setInjuryRecoveryAbility(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 5) {
+					score.setInjuryRecoveryAbilityScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+			}
+			scoreList.add(score);
+		}
+		return scoreList;
+	}
+	
+	private static List<ScoreResult> parseInjuryRiskData() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+韧带、关节损伤风险+男.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
+		int minRowIx = sheet.getFirstRowNum();
+		int maxRowIx = sheet.getLastRowNum();
+
+		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
+			if (rowIx == 0)
+				continue;
+			ScoreResult score = new ScoreResult();
+			Row row = sheet.getRow(rowIx);
+			int minColIx = row.getFirstCellNum();
+			int maxColIx = row.getLastCellNum();
+			for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+				Cell cell = row.getCell(new Integer(colIx));
+				CellValue cellValue = evaluator.evaluate(cell);
+				if (cellValue == null) {
+					continue;
+				}
+				getBasicProps(score, colIx, cellValue);
+				if (colIx == 4) {
+					score.setInjuryRisk(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 5) {
+					score.setInjuryRiskScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+			}
+			scoreList.add(score);
+		}
+		return scoreList;
+	}
+	
+	private static List<ScoreResult> parseObesityRiskAndFatReducingSensitivityData() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+肥胖风险+运动减脂敏感性.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
+		int minRowIx = sheet.getFirstRowNum();
+		int maxRowIx = sheet.getLastRowNum();
+
+		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
+			if (rowIx == 0)
+				continue;
+			ScoreResult score = new ScoreResult();
+			Row row = sheet.getRow(rowIx);
+			int minColIx = row.getFirstCellNum();
+			int maxColIx = row.getLastCellNum();
+			for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+				Cell cell = row.getCell(new Integer(colIx));
+				CellValue cellValue = evaluator.evaluate(cell);
+				if (cellValue == null) {
+					continue;
+				}
+				getBasicProps(score, colIx, cellValue);
+				if (colIx == 4) {
+					score.setObesityRisk(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 5) {
+					score.setObesityRiskScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+				if (colIx == 6) {
+					score.setFatReducingSensitivity(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 7) {
+					score.setFatReducingSensitivityScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+			}
+			scoreList.add(score);
+		}
+		return scoreList;
+	}
+	
 	private static void getBasicProps(ScoreResult score, int colIx, CellValue cellValue) {
 		String score_id;
 		if (colIx == 0) {

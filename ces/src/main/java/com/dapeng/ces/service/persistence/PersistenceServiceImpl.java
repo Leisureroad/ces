@@ -50,6 +50,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     private ScoreMapper scoreMapper;
     @Autowired
     private UserScoreMapper userScoreMapper;
+    @Autowired
+    private UserScoreDataExporter exporter;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
@@ -91,11 +93,10 @@ public class PersistenceServiceImpl implements PersistenceService {
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override
     public List<Score> saveScore() {
-        String scoreExcelFile = "./data/总体体质评估表+原始数据2 (1).xls";
         List<ScoreResult> scoreList = null;
         List<Score> list = null;
         try {
-            scoreList = ScoreDataParser.parseExcelData(new File(scoreExcelFile), 0);
+            scoreList = ScoreDataParser.parseExcelData(new File("./data/总体体质评估表+原始数据2 (1).xls"), 0);
             scoreMapper.delete();
             // 数据转换
             list = this.dataConvert(scoreList);
@@ -351,7 +352,6 @@ public class PersistenceServiceImpl implements PersistenceService {
     public List<UserScoreNewResult> getUserScore(String userName) {
     	List<UserScoreNewResult> result = userMapper.selectUserInfo(userName);
     	
-    	UserScoreDataExporter exporter = new UserScoreDataExporter();
     	try {
 			exporter.export2Excel(result, userName);
 			Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -373,14 +373,11 @@ public class PersistenceServiceImpl implements PersistenceService {
 					dataMap.put(geneCode + "_" + geneName, "未测试");
 					dataMap.put(geneCode + "_" + geneName + "_feature", "未测试");
 				}
-//				System.out.println("userName: " + userName + ", geneCode: " + geneCode + ", geneName: " + geneName + getUserGeneType(userName, geneCode, geneName));
 			}
 			dataMap.put("ADH1B_rs1229984", "Bug需更改");
 			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
 			dataMap.put("ALDH2_rs671", "Bug需更改");
 			dataMap.put("ALDH2_rs671_feature", "Bug需更改");
-//			dataMap.put("PPARGC1_rs8192678", "测试数据里面这个点是T，但是评分表中没有TT这个值");
-//			dataMap.put("PPARGC1_rs8192678_feature", "测试数据里面这个点是T，但是评分表中没有TT这个值");
 			
 			WordAction action = new WordAction();
 			action.createWord(dataMap, userName.replace("*", ""));

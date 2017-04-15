@@ -14,7 +14,7 @@ public class ExcelDataImporter {
 	private final static String XLS = "xls";
 	private final static String XLSX = "xlsx";
 	
-	public static Workbook importDataFromExcel(File file, int sheetNum) throws IOException {
+	public static Workbook importDataFromExcel(File file) throws IOException {
 		InputStream is = new FileInputStream(file);
 		String extensionName = FilenameUtils.getExtension(file.getName());
 		Workbook workbook = null;
