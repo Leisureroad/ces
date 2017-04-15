@@ -98,7 +98,7 @@ public class UserScoreDataExporter {
 		userScorePerItemResult2.setName(userName);
 		userScorePerItemResult2.setExplosiveForceScore(resultMap.get("explosiveForceScore"));
 		userScorePerItemResult2.setStaminaScore(resultMap.get("staminaScore"));
-		userScorePerItemResult2.setMotionSensitivityScore(resultMap.get("motionSensitivityScore"));
+//		userScorePerItemResult2.setMotionSensitivityScore(resultMap.get("motionSensitivityScore"));
 		userScorePerItemResult2.setInjuryRecoveryAbilityScore(resultMap.get("injuryRecoveryAbilityScore"));
 		userScorePerItemResult2.setInjuryRiskScore(resultMap.get("injuryRiskScore"));
 		userScorePerItemResult2.setObesityRiskScore(resultMap.get("obesityRiskScore"));
