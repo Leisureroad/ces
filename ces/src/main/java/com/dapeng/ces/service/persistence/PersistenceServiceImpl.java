@@ -363,7 +363,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 				String geneName = userScoreNewResult.getGeneName();
 				List<UserScoreNewResult> geneTypeList = getUserGeneType(userName, geneCode, geneName);
 				String geneType = ((UserScoreNewResult)geneTypeList.get(0)).getGeneType();
-				System.out.println(geneTypeList.size()+"------"+userName+"-------"+geneCode+"-------"+geneName+"---------"+geneType);
+//				System.out.println(geneTypeList.size()+"------"+userName+"-------"+geneCode+"-------"+geneName+"---------"+geneType);
 				if (geneType != null) {
 					dataMap.put(geneCode + "_" + geneName, geneType);
 					String geneFeature = GeneFeatureDataParser.getGeneFeature(geneCode, geneName, geneType, geneFeatureList);
@@ -379,6 +379,9 @@ public class PersistenceServiceImpl implements PersistenceService {
 			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
 			dataMap.put("ALDH2_rs671", "Bug需更改");
 			dataMap.put("ALDH2_rs671_feature", "Bug需更改");
+//			dataMap.put("PPARGC1_rs8192678", "测试数据里面这个点是T，但是评分表中没有TT这个值");
+//			dataMap.put("PPARGC1_rs8192678_feature", "测试数据里面这个点是T，但是评分表中没有TT这个值");
+			
 			WordAction action = new WordAction();
 			action.createWord(dataMap, userName.replace("*", ""));
 		} catch (IOException e) {

@@ -198,12 +198,12 @@ public class ScoreDataParser {
 		String roundTrip_1 = userKey.substring(userKey.length()-2, userKey.length()-1);
 		String roundTrip_2 = userKey.substring(userKey.length()-1, userKey.length());
 		String tempUserKey = userKey.substring(0, userKey.length()-2) + roundTrip_2 + roundTrip_1;	
-		String newUserKey_roundTrip = tempUserKey.replace("C", "G").replace("T", "A");
+//		String newUserKey_roundTrip = tempUserKey.replace("C", "G").replace("T", "A");
 		if (tempUserKey.equals(scoreId)) 
 			return true;
-		String newScoreId_roundTrip = scoreId.replace("C", "G").replace("T", "A");
-		if (newUserKey_roundTrip.equals(newScoreId_roundTrip)) 
-			return true;
+//		String newScoreId_roundTrip = scoreId.replace("C", "G").replace("T", "A");
+//		if (newUserKey_roundTrip.equals(newScoreId_roundTrip)) 
+//			return true;
 		return false;
 	}
 
