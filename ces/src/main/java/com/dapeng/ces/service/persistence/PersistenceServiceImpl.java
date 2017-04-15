@@ -361,7 +361,9 @@ public class PersistenceServiceImpl implements PersistenceService {
 			for (UserScoreNewResult userScoreNewResult : result) {
 				String geneCode = userScoreNewResult.getGeneCode();
 				String geneName = userScoreNewResult.getGeneName();
-				String geneType = getUserGeneType(userName, geneCode, geneName);
+				List<UserScoreNewResult> geneTypeList = getUserGeneType(userName, geneCode, geneName);
+				String geneType = ((UserScoreNewResult)geneTypeList.get(0)).getGeneType();
+				System.out.println(geneTypeList.size()+"------"+userName+"-------"+geneCode+"-------"+geneName+"---------"+geneType);
 				if (geneType != null) {
 					dataMap.put(geneCode + "_" + geneName, geneType);
 					String geneFeature = GeneFeatureDataParser.getGeneFeature(geneCode, geneName, geneType, geneFeatureList);
@@ -386,8 +388,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     }
 
     @Override
-    public String getUserGeneType(String userName, String geneCode, String geneName) {
-        String geneType = "";
+    public List<UserScoreNewResult> getUserGeneType(String userName, String geneCode, String geneName) {
+        List<UserScoreNewResult> geneType = new ArrayList<>();
         Map<String, String> map = new HashMap<>();
         map.put("userName", userName);
         map.put("geneCode", geneCode);

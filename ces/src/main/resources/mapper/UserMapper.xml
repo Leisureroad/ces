@@ -134,7 +134,7 @@
     from user
     where uuid = #{uuid,jdbcType=VARCHAR}
   </select>
-  <select id="getUserGeneType" resultType="String" parameterType="java.util.Map" >
+  <select id="getUserGeneType" resultMap="BaseResultMap_User" parameterType="java.util.Map" >
     SELECT s.gene_type FROM user u
 	LEFT JOIN user_score us ON u.user_id = us.user_id
 	LEFT JOIN score s ON us.score_uuid = s.uuid

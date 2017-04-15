@@ -28,5 +28,5 @@ public interface UserMapper {
     
     List<UserScorePlayerResult> selectUserPlayer(String star);
     
-    String getUserGeneType(Map<String, String> map);
+    List<UserScoreNewResult> getUserGeneType(Map<String, String> map);
 }
