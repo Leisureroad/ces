@@ -18,4 +18,12 @@ spring:
     timeBetweenEvictionRunsMillis: 3000
     minEvictableIdleTimeMillis: 300000
     
-rsgene: rs13266634,rs12722,rs1800012
+rsgene: rs1815739,rs699,rs16892496,rs1799945,rs1042713,rs8192678,rs2267668,rs2016520,rs1799722,rs1205,rs1799865,rs13266634,rs2700352,rs28497577,rs1800629,rs4880
+
+total-score: 
+  explosiveForceScore: 4.0
+  staminaScore: 18.0
+  injuryRecoveryAbilityScore: 8.0
+  injuryRiskScore: 5.0
+  obesityRiskScore: 5.0 
+  fatReducingSensitivityScore: 7.0
