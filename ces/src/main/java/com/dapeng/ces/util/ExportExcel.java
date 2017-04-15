@@ -23,15 +23,15 @@ import org.apache.poi.hssf.util.HSSFColor;
 public class ExportExcel<T> {
 
 	public void exportExcel(Collection<T> dataset, OutputStream out) {
-		exportExcel("测试POI导出EXCEL文档", null, dataset, out, "yyyy-MM-dd");
+		exportExcel("sheet1", null, dataset, out, "yyyy-MM-dd");
 	}
 
 	public void exportExcel(String[] headers, Collection<T> dataset, OutputStream out) {
-		exportExcel("测试POI导出EXCEL文档", headers, dataset, out, "yyyy-MM-dd");
+		exportExcel("sheet1", headers, dataset, out, "yyyy-MM-dd");
 	}
 
 	public void exportExcel(String[] headers, Collection<T> dataset, OutputStream out, String pattern) {
-		exportExcel("测试POI导出EXCEL文档", headers, dataset, out, pattern);
+		exportExcel("sheet1", headers, dataset, out, pattern);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class ExportExcel<T> {
 		// 生成一个样式
 		HSSFCellStyle style = workbook.createCellStyle();
 		// 设置这些样式
-		style.setFillForegroundColor(HSSFColor.SKY_BLUE.index);
+		style.setFillForegroundColor(HSSFColor.BLACK.index);
 		style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
@@ -69,14 +69,14 @@ public class ExportExcel<T> {
 		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 		// 生成一个字体
 		HSSFFont font = workbook.createFont();
-		font.setColor(HSSFColor.VIOLET.index);
+		font.setColor(HSSFColor.WHITE.index);
 		font.setFontHeightInPoints((short) 12);
 		font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		// 把字体应用到当前的样式
 		style.setFont(font);
 		// 生成并设置另一个样式
 		HSSFCellStyle style2 = workbook.createCellStyle();
-		style2.setFillForegroundColor(HSSFColor.LIGHT_YELLOW.index);
+		style2.setFillForegroundColor(HSSFColor.GREEN.index);
 		style2.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		style2.setBorderBottom(HSSFCellStyle.BORDER_THIN);
 		style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);
@@ -86,6 +86,9 @@ public class ExportExcel<T> {
 		style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
 		// 生成另一个字体
 		HSSFFont font2 = workbook.createFont();
+		font2.setColor(HSSFColor.WHITE.index);
+		font2.setFontHeightInPoints((short) 12);
+		font2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
 		font2.setBoldweight(HSSFFont.BOLDWEIGHT_NORMAL);
 		// 把字体应用到当前的样式
 		style2.setFont(font2);
@@ -184,7 +187,7 @@ public class ExportExcel<T> {
 						} else {
 							HSSFRichTextString richString = new HSSFRichTextString(textValue);
 							HSSFFont font3 = workbook.createFont();
-							font3.setColor(HSSFColor.BLUE.index);
+							font3.setColor(HSSFColor.WHITE.index);
 							richString.applyFont(font3);
 							cell.setCellValue(richString);
 						}

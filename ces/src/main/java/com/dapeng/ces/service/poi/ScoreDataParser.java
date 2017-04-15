@@ -191,10 +191,10 @@ public class ScoreDataParser {
 	public static boolean getMatchedKey(String userKey, String scoreId) {
 		if (userKey.equals(scoreId))
 			return true;
-		String newUserKey = userKey.replace("C", "G").replace("T", "A");
-		String newScoreId = scoreId.replace("C", "G").replace("T", "A");
-		if (newUserKey.equals(newScoreId)) 
-			return true;
+//		String newUserKey = userKey.replace("C", "G").replace("T", "A");
+//		String newScoreId = scoreId.replace("C", "G").replace("T", "A");
+//		if (newUserKey.equals(newScoreId)) 
+//			return true;
 		String roundTrip_1 = userKey.substring(userKey.length()-2, userKey.length()-1);
 		String roundTrip_2 = userKey.substring(userKey.length()-1, userKey.length());
 		String tempUserKey = userKey.substring(0, userKey.length()-2) + roundTrip_2 + roundTrip_1;	

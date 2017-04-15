@@ -1,5 +1,6 @@
 package com.dapeng.ces.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,8 @@ public class PersistenceController {
     
     @RequestMapping(value = "getUserScore",method = RequestMethod.GET,produces = "application/json")
     public List<UserScoreNewResult> getUserScore(@RequestParam("userName") String userName){
-        return persistenceService.getUserScore(userName);
+         return persistenceService.getUserScore(userName);
+//         return "成功导出用户：" + userName + "测试报告和数据！";
     }
     
     @RequestMapping(value = "userCompare",method = RequestMethod.GET,produces = "application/json")

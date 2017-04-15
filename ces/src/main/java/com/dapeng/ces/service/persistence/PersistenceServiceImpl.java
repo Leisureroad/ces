@@ -29,10 +29,12 @@ import com.dapeng.ces.mapper.ScoreMapper;
 import com.dapeng.ces.mapper.UserMapper;
 import com.dapeng.ces.mapper.UserScoreMapper;
 import com.dapeng.ces.model.Gene;
+import com.dapeng.ces.model.GeneFeature;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.User;
 import com.dapeng.ces.model.UserScore;
 import com.dapeng.ces.service.freemarker.WordAction;
+import com.dapeng.ces.service.poi.GeneFeatureDataParser;
 import com.dapeng.ces.service.poi.ScoreDataParser;
 import com.dapeng.ces.service.poi.UserDataParser;
 import com.dapeng.ces.service.poi.UserScoreDataExporter;
@@ -353,20 +355,30 @@ public class PersistenceServiceImpl implements PersistenceService {
     	try {
 			exporter.export2Excel(result, userName);
 			Map<String, Object> dataMap = new HashMap<String, Object>();
+			String geneFeatureExcelFile = "./data/features.xls";
+			List<GeneFeature> geneFeatureList = null;
+			geneFeatureList = GeneFeatureDataParser.parseExcelData(new File(geneFeatureExcelFile), 0);
 			for (UserScoreNewResult userScoreNewResult : result) {
 				String geneCode = userScoreNewResult.getGeneCode();
 				String geneName = userScoreNewResult.getGeneName();
 				String geneType = getUserGeneType(userName, geneCode, geneName);
 				if (geneType != null) {
 					dataMap.put(geneCode + "_" + geneName, geneType);
+					String geneFeature = GeneFeatureDataParser.getGeneFeature(geneCode, geneName, geneType, geneFeatureList);
+					dataMap.put(geneCode + "_" + geneName + "_feature", geneFeature);
 				}
 				else {
 					dataMap.put(geneCode + "_" + geneName, "未测试");
+					dataMap.put(geneCode + "_" + geneName + "_feature", "未测试");
 				}
 //				System.out.println("userName: " + userName + ", geneCode: " + geneCode + ", geneName: " + geneName + getUserGeneType(userName, geneCode, geneName));
 			}
+			dataMap.put("ADH1B_rs1229984", "Bug需更改");
+			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
+			dataMap.put("ALDH2_rs671", "Bug需更改");
+			dataMap.put("ALDH2_rs671_feature", "Bug需更改");
 			WordAction action = new WordAction();
-			action.createWord(dataMap, userName);
+			action.createWord(dataMap, userName.replace("*", ""));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -200,48 +200,51 @@ public class UserScoreNewResult {
 	public void setFatReducingSensitivityScore(Double fatReducingSensitivityScore) {
 		this.fatReducingSensitivityScore = fatReducingSensitivityScore;
 	}
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("UserScoreNewResult [userId=");
-        builder.append(userId);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", geneUuid=");
-        builder.append(geneUuid);
-        builder.append(", geneName=");
-        builder.append(geneName);
-        builder.append(", geneType=");
-        builder.append(geneType);
-        builder.append(", explosiveForce=");
-        builder.append(explosiveForce);
-        builder.append(", explosiveForceScore=");
-        builder.append(explosiveForceScore);
-        builder.append(", stamina=");
-        builder.append(stamina);
-        builder.append(", staminaScore=");
-        builder.append(staminaScore);
-        builder.append(", motionSensitivity=");
-        builder.append(motionSensitivity);
-        builder.append(", motionSensitivityScore=");
-        builder.append(motionSensitivityScore);
-        builder.append(", injuryRecoveryAbility=");
-        builder.append(injuryRecoveryAbility);
-        builder.append(", injuryRecoveryAbilityScore=");
-        builder.append(injuryRecoveryAbilityScore);
-        builder.append(", injuryRisk=");
-        builder.append(injuryRisk);
-        builder.append(", injuryRiskScore=");
-        builder.append(injuryRiskScore);
-        builder.append(", obesityRisk=");
-        builder.append(obesityRisk);
-        builder.append(", obesityRiskScore=");
-        builder.append(obesityRiskScore);
-        builder.append(", fatReducingSensitivity=");
-        builder.append(fatReducingSensitivity);
-        builder.append(", fatReducingSensitivityScore=");
-        builder.append(fatReducingSensitivityScore);
-        builder.append("]");
-        return builder.toString();
-    }
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("UserScoreNewResult [userId=");
+		builder.append(userId);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", geneUuid=");
+		builder.append(geneUuid);
+		builder.append(", geneCode=");
+		builder.append(geneCode);
+		builder.append(", geneName=");
+		builder.append(geneName);
+		builder.append(", geneType=");
+		builder.append(geneType);
+		builder.append(", explosiveForce=");
+		builder.append(explosiveForce);
+		builder.append(", explosiveForceScore=");
+		builder.append(explosiveForceScore);
+		builder.append(", stamina=");
+		builder.append(stamina);
+		builder.append(", staminaScore=");
+		builder.append(staminaScore);
+		builder.append(", motionSensitivity=");
+		builder.append(motionSensitivity);
+		builder.append(", motionSensitivityScore=");
+		builder.append(motionSensitivityScore);
+		builder.append(", injuryRecoveryAbility=");
+		builder.append(injuryRecoveryAbility);
+		builder.append(", injuryRecoveryAbilityScore=");
+		builder.append(injuryRecoveryAbilityScore);
+		builder.append(", injuryRisk=");
+		builder.append(injuryRisk);
+		builder.append(", injuryRiskScore=");
+		builder.append(injuryRiskScore);
+		builder.append(", obesityRisk=");
+		builder.append(obesityRisk);
+		builder.append(", obesityRiskScore=");
+		builder.append(obesityRiskScore);
+		builder.append(", fatReducingSensitivity=");
+		builder.append(fatReducingSensitivity);
+		builder.append(", fatReducingSensitivityScore=");
+		builder.append(fatReducingSensitivityScore);
+		builder.append("]");
+		return builder.toString();
+	}
 }
