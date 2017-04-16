@@ -68,51 +68,39 @@ public class UserScoreDataExporter {
 			Double fatReducingSensitivityScore = userScoreNewResult.getFatReducingSensitivityScore();
 			if (resultMap.get("explosiveForceScore") == null && explosiveForceScore != null) {
 				resultMap.put("explosiveForceScore", explosiveForceScore);
-				continue;
 			}
-			if (resultMap.get("explosiveForceScore") != null && explosiveForceScore != null) {
+			else if (resultMap.get("explosiveForceScore") != null && explosiveForceScore != null) {
 				resultMap.put("explosiveForceScore", resultMap.get("explosiveForceScore") + explosiveForceScore);
-				continue;
 			}
 			if (resultMap.get("staminaScore") == null && staminaScore != null) {
 				resultMap.put("staminaScore", staminaScore);
-				continue;
 			}
-			if (resultMap.get("staminaScore") != null && staminaScore != null) {
+			else if (resultMap.get("staminaScore") != null && staminaScore != null) {
 				resultMap.put("staminaScore", resultMap.get("staminaScore") + staminaScore);
-				continue;
 			}
 			if (resultMap.get("injuryRecoveryAbilityScore") == null && injuryRecoveryAbilityScore != null) {
 				resultMap.put("injuryRecoveryAbilityScore", injuryRecoveryAbilityScore);
-				continue;
 			}
-			if (resultMap.get("injuryRecoveryAbilityScore") != null && injuryRecoveryAbilityScore != null) {
+			else if (resultMap.get("injuryRecoveryAbilityScore") != null && injuryRecoveryAbilityScore != null) {
 				resultMap.put("injuryRecoveryAbilityScore", resultMap.get("injuryRecoveryAbilityScore") + injuryRecoveryAbilityScore);
-				continue;
 			}
 			if (resultMap.get("injuryRiskScore") == null && injuryRiskScore != null) {
 				resultMap.put("injuryRiskScore", injuryRiskScore);
-				continue;
 			}
-			if (resultMap.get("injuryRiskScore") != null && injuryRiskScore != null) {
+			else if (resultMap.get("injuryRiskScore") != null && injuryRiskScore != null) {
 				resultMap.put("injuryRiskScore", resultMap.get("injuryRiskScore") + injuryRiskScore);
-				continue;
 			}
 			if (resultMap.get("obesityRiskScore") == null && obesityRiskScore != null) {
 				resultMap.put("obesityRiskScore", obesityRiskScore);
 				if (resultMap.get("fatReducingSensitivityScore") == null && fatReducingSensitivityScore != null) {
 					resultMap.put("fatReducingSensitivityScore", fatReducingSensitivityScore);
-					continue;
 				}
-				continue;
 			}
-			if (resultMap.get("obesityRiskScore") != null && obesityRiskScore != null) {
+			else if (resultMap.get("obesityRiskScore") != null && obesityRiskScore != null) {
 				resultMap.put("obesityRiskScore", resultMap.get("obesityRiskScore") + obesityRiskScore);
 				if (resultMap.get("fatReducingSensitivityScore") != null && fatReducingSensitivityScore != null) {
 					resultMap.put("fatReducingSensitivityScore", resultMap.get("fatReducingSensitivityScore") + fatReducingSensitivityScore);
-					continue;
 				}
-				continue;
 			}
 		}
 		UserScorePerItemResult userScorePerItemResult2 = new UserScorePerItemResult();

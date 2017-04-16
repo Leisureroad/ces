@@ -96,7 +96,8 @@ public class PersistenceServiceImpl implements PersistenceService {
         List<ScoreResult> scoreList = null;
         List<Score> list = null;
         try {
-            scoreList = ScoreDataParser.parseExcelData(new File("./data/总体体质评估表+原始数据2 (1).xls"), 0);
+//            scoreList = ScoreDataParser.parseExcelData(new File("./data/总体体质评估表+原始数据2 (1).xls"), 0);
+        	scoreList = ScoreDataParser.parseExcelData();
             scoreMapper.delete();
             // 数据转换
             list = this.dataConvert(scoreList);
@@ -378,7 +379,10 @@ public class PersistenceServiceImpl implements PersistenceService {
 			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
 			dataMap.put("ALDH2_rs671", "Bug需更改");
 			dataMap.put("ALDH2_rs671_feature", "Bug需更改");
-			
+			if (!dataMap.containsKey("COL12A1_rs970547")) {
+				dataMap.put("COL12A1_rs970547", "此项数据仅对女性有效！");
+				dataMap.put("COL12A1_rs970547_feature", "此项数据仅对女性有效！");
+			}
 			WordAction action = new WordAction();
 			action.createWord(dataMap, userName.replace("*", ""));
 		} catch (IOException e) {

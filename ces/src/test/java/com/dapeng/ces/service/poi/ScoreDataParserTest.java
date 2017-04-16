@@ -18,12 +18,13 @@ public class ScoreDataParserTest {
 		List<ScoreResult> scoreList = null;
 		try {
 			userList = UserDataParser.parseExcelData(new File(userDataExcelFile), 0);
-			scoreList = ScoreDataParser.parseExcelData(new File("./data/总体体质评估表+原始数据2 (1).xls"), 0);
+//			scoreList = ScoreDataParser.parseExcelData(new File("./data/总体体质评估表+原始数据2 (1).xls"), 0);
+			scoreList = ScoreDataParser.parseExcelData();
 //			System.out.println(userList);
 			System.out.println(scoreList);
 //			System.out.println(scoreList.size());
-			ScoreDataParser.searchUserKey("刘孟", userList, scoreList);
-//			ScoreDataParser.searchUserKey("王大鹏2", userList, scoreList);
+//			ScoreDataParser.searchUserKey("刘孟", userList, scoreList);
+			ScoreDataParser.searchUserKey("王大鹏*", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏3", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏4", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏5", userList, scoreList);

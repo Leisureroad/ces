@@ -30,136 +30,136 @@ public class ScoreDataParser {
 		return resultList;
 	}
 	
-	public static List<ScoreResult> parseExcelData(File file, int sheetNum) throws IOException {
-		Workbook workbook = ExcelDataImporter.importDataFromExcel(file);
-		Sheet sheet = workbook.getSheetAt(sheetNum);
-		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-
-		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
-		int minRowIx = sheet.getFirstRowNum();
-		int maxRowIx = sheet.getLastRowNum();
-
-		for (int rowIx = minRowIx; rowIx <= maxRowIx; rowIx++) {
-			if (rowIx == 0 || rowIx == 10 || rowIx == 38 || rowIx == 60 || rowIx == 94 || rowIx == 110)
-				continue;
-			if (rowIx == 141)
-				break;
-			ScoreResult score = new ScoreResult();
-			Row row = sheet.getRow(rowIx);
-			int minColIx = row.getFirstCellNum();
-			int maxColIx = row.getLastCellNum();
-			if (rowIx >= 1 && rowIx <= 9) {
-				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
-					Cell cell = row.getCell(new Integer(colIx));
-					CellValue cellValue = evaluator.evaluate(cell);
-					if (cellValue == null) {
-						continue;
-					}
-					getBasicProps(score, colIx, cellValue);
-					if (colIx == 4) {
-						score.setExplosiveForce(cellValue.getStringValue().trim());
-						continue;
-					}
-					if (colIx == 5) {
-						score.setExplosiveForceScore(Double.valueOf(cellValue.getNumberValue()));
-						continue;
-					}
-				}
-			}
-			if (rowIx >= 11 && rowIx <= 37) {
-				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
-					Cell cell = row.getCell(new Integer(colIx));
-					CellValue cellValue = evaluator.evaluate(cell);
-					if (cellValue == null) {
-						continue;
-					}
-					getBasicProps(score, colIx, cellValue);
-					if (colIx == 4) {
-						score.setStamina(cellValue.getStringValue().trim());
-						continue;
-					}
-					if (colIx == 5) {
-						score.setStaminaScore(Double.valueOf(cellValue.getNumberValue()));
-						continue;
-					}
+//	public static List<ScoreResult> parseExcelData(File file, int sheetNum) throws IOException {
+//		Workbook workbook = ExcelDataImporter.importDataFromExcel(file);
+//		Sheet sheet = workbook.getSheetAt(sheetNum);
+//		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+//
+//		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
+//		int minRowIx = sheet.getFirstRowNum();
+//		int maxRowIx = sheet.getLastRowNum();
+//
+//		for (int rowIx = minRowIx; rowIx <= maxRowIx; rowIx++) {
+//			if (rowIx == 0 || rowIx == 10 || rowIx == 38 || rowIx == 60 || rowIx == 94 || rowIx == 110)
+//				continue;
+//			if (rowIx == 141)
+//				break;
+//			ScoreResult score = new ScoreResult();
+//			Row row = sheet.getRow(rowIx);
+//			int minColIx = row.getFirstCellNum();
+//			int maxColIx = row.getLastCellNum();
+//			if (rowIx >= 1 && rowIx <= 9) {
+//				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+//					Cell cell = row.getCell(new Integer(colIx));
+//					CellValue cellValue = evaluator.evaluate(cell);
+//					if (cellValue == null) {
+//						continue;
+//					}
+//					getBasicProps(score, colIx, cellValue);
+//					if (colIx == 4) {
+//						score.setExplosiveForce(cellValue.getStringValue().trim());
+//						continue;
+//					}
+//					if (colIx == 5) {
+//						score.setExplosiveForceScore(Double.valueOf(cellValue.getNumberValue()));
+//						continue;
+//					}
+//				}
+//			}
+//			if (rowIx >= 11 && rowIx <= 37) {
+//				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+//					Cell cell = row.getCell(new Integer(colIx));
+//					CellValue cellValue = evaluator.evaluate(cell);
+//					if (cellValue == null) {
+//						continue;
+//					}
+//					getBasicProps(score, colIx, cellValue);
+//					if (colIx == 4) {
+//						score.setStamina(cellValue.getStringValue().trim());
+//						continue;
+//					}
+//					if (colIx == 5) {
+//						score.setStaminaScore(Double.valueOf(cellValue.getNumberValue()));
+//						continue;
+//					}
+////					if (colIx == 6) {
+////						score.setMotionSensitivity(cellValue.getStringValue().trim());
+////						continue;
+////					}
+////					if (colIx == 7) {
+////						score.setMotionSensitivityScore(Double.valueOf(cellValue.getNumberValue()));
+////						continue;
+////					}
+//				}
+//			}
+//			if (rowIx >= 39 && rowIx <= 59) {
+//				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+//					Cell cell = row.getCell(new Integer(colIx));
+//					CellValue cellValue = evaluator.evaluate(cell);
+//					if (cellValue == null) {
+//					}
+//					getBasicProps(score, colIx, cellValue);
+//					if (colIx == 4) {
+//						score.setInjuryRecoveryAbility(cellValue.getStringValue().trim());
+//						continue;
+//					}
+//					if (colIx == 5) {
+//						score.setInjuryRecoveryAbilityScore(Double.valueOf(cellValue.getNumberValue()));
+//						continue;
+//					}
+//				}
+//			}
+//			if (rowIx >= 61 && rowIx <= 93) {
+//				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+//					Cell cell = row.getCell(new Integer(colIx));
+//					CellValue cellValue = evaluator.evaluate(cell);
+//					if (cellValue == null) {
+//						continue;
+//					}
+//					getBasicProps(score, colIx, cellValue);
+//					if (colIx == 4) {
+//						score.setInjuryRisk(cellValue.getStringValue().trim());
+//						continue;
+//					}
+//					if (colIx == 5) {
+//						score.setInjuryRiskScore(Double.valueOf(cellValue.getNumberValue()));
+//						continue;
+//					}
+//				}
+//			}
+//			if (rowIx >= 95 && rowIx <= 109) {
+//				continue;
+//			}
+//			if (rowIx >= 111 && rowIx <= 140) {
+//				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+//					Cell cell = row.getCell(new Integer(colIx));
+//					CellValue cellValue = evaluator.evaluate(cell);
+//					if (cellValue == null) {
+//						continue;
+//					}
+//					getBasicProps(score, colIx, cellValue);
+//					if (colIx == 4) {
+//						score.setObesityRisk(cellValue.getStringValue().trim());
+//						continue;
+//					}
+//					if (colIx == 5) {
+//						score.setObesityRiskScore(Double.valueOf(cellValue.getNumberValue()));
+//						continue;
+//					}
 //					if (colIx == 6) {
-//						score.setMotionSensitivity(cellValue.getStringValue().trim());
+//						score.setFatReducingSensitivity(cellValue.getStringValue().trim());
 //						continue;
 //					}
 //					if (colIx == 7) {
-//						score.setMotionSensitivityScore(Double.valueOf(cellValue.getNumberValue()));
+//						score.setFatReducingSensitivityScore(Double.valueOf(cellValue.getNumberValue()));
 //						continue;
 //					}
-				}
-			}
-			if (rowIx >= 39 && rowIx <= 59) {
-				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
-					Cell cell = row.getCell(new Integer(colIx));
-					CellValue cellValue = evaluator.evaluate(cell);
-					if (cellValue == null) {
-					}
-					getBasicProps(score, colIx, cellValue);
-					if (colIx == 4) {
-						score.setInjuryRecoveryAbility(cellValue.getStringValue().trim());
-						continue;
-					}
-					if (colIx == 5) {
-						score.setInjuryRecoveryAbilityScore(Double.valueOf(cellValue.getNumberValue()));
-						continue;
-					}
-				}
-			}
-			if (rowIx >= 61 && rowIx <= 93) {
-				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
-					Cell cell = row.getCell(new Integer(colIx));
-					CellValue cellValue = evaluator.evaluate(cell);
-					if (cellValue == null) {
-						continue;
-					}
-					getBasicProps(score, colIx, cellValue);
-					if (colIx == 4) {
-						score.setInjuryRisk(cellValue.getStringValue().trim());
-						continue;
-					}
-					if (colIx == 5) {
-						score.setInjuryRiskScore(Double.valueOf(cellValue.getNumberValue()));
-						continue;
-					}
-				}
-			}
-			if (rowIx >= 95 && rowIx <= 109) {
-				continue;
-			}
-			if (rowIx >= 111 && rowIx <= 140) {
-				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
-					Cell cell = row.getCell(new Integer(colIx));
-					CellValue cellValue = evaluator.evaluate(cell);
-					if (cellValue == null) {
-						continue;
-					}
-					getBasicProps(score, colIx, cellValue);
-					if (colIx == 4) {
-						score.setObesityRisk(cellValue.getStringValue().trim());
-						continue;
-					}
-					if (colIx == 5) {
-						score.setObesityRiskScore(Double.valueOf(cellValue.getNumberValue()));
-						continue;
-					}
-					if (colIx == 6) {
-						score.setFatReducingSensitivity(cellValue.getStringValue().trim());
-						continue;
-					}
-					if (colIx == 7) {
-						score.setFatReducingSensitivityScore(Double.valueOf(cellValue.getNumberValue()));
-						continue;
-					}
-				}
-			}
-			scoreList.add(score);
-		}
-		return scoreList;
-	}
+//				}
+//			}
+//			scoreList.add(score);
+//		}
+//		return scoreList;
+//	}
 
 	private static List<ScoreResult> parseExplosiveForceData() throws IOException {
 		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+爆发力.xls"));
