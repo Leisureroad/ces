@@ -357,9 +357,9 @@ public class PersistenceServiceImpl implements PersistenceService {
     	try {
 			exporter.export2Excel(result, userName);
 			Map<String, Object> dataMap = new HashMap<String, Object>();
-			String geneFeatureExcelFile = "./data/features.xls";
+//			String geneFeatureExcelFile = "./data/features.xls";
 			List<GeneFeature> geneFeatureList = null;
-			geneFeatureList = GeneFeatureDataParser.parseExcelData(new File(geneFeatureExcelFile), 0);
+			geneFeatureList = GeneFeatureDataParser.parseExcelData();
 			for (UserScoreNewResult userScoreNewResult : result) {
 				String geneCode = userScoreNewResult.getGeneCode();
 				String geneName = userScoreNewResult.getGeneName();

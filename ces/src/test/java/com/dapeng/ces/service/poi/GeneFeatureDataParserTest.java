@@ -12,10 +12,11 @@ public class GeneFeatureDataParserTest {
 
 	@Test
 	public void testParseExcelData() {
-		String geneFeatureExcelFile = "./data/features.xls";
+//		String geneFeatureExcelFile = "./data/features.xls";
 		List<GeneFeature> geneFeatureList = null;
 		try {
-			geneFeatureList = GeneFeatureDataParser.parseExcelData(new File(geneFeatureExcelFile), 0);
+//			geneFeatureList = GeneFeatureDataParser.parseExcelData(new File(geneFeatureExcelFile), 0);
+			geneFeatureList = GeneFeatureDataParser.parseExcelData();
 			System.out.println(geneFeatureList);
 			String geneFeature =GeneFeatureDataParser.getGeneFeature("ACTN3", "rs1815739", "CC", geneFeatureList);
 			System.out.println(geneFeature);

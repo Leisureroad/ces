@@ -17,10 +17,10 @@ import com.dapeng.ces.util.ExcelDataImporter;
 
 public class GeneFeatureDataParser {
 
-	public static List<GeneFeature> parseExcelData(File file, int sheetNum) throws IOException {
-		Workbook workbook = ExcelDataImporter.importDataFromExcel(file);
+	public static List<GeneFeature> parseExcelData() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/features.xls"));
 
-		Sheet sheet = workbook.getSheetAt(sheetNum);
+		Sheet sheet = workbook.getSheetAt(0);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
 		List<GeneFeature> geneFeatureList = new ArrayList<GeneFeature>();
