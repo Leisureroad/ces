@@ -17,7 +17,8 @@ public class ScoreDataParserTest {
 		List<UserResult> userList = null;
 		List<ScoreResult> scoreList = null;
 		try {
-			userList = UserDataParser.parseExcelData(new File(userDataExcelFile), 0);
+//			userList = UserDataParser.parseExcelData(new File(userDataExcelFile), 0);
+			userList = UserDataParser.parseExcelData();
 //			scoreList = ScoreDataParser.parseExcelData(new File("./data/总体体质评估表+原始数据2 (1).xls"), 0);
 			scoreList = ScoreDataParser.parseExcelData();
 //			System.out.println(userList);

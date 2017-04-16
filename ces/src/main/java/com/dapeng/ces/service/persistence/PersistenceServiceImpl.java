@@ -57,10 +57,11 @@ public class PersistenceServiceImpl implements PersistenceService {
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override
     public List<UserResult> saveUserGene() {
-        String path = "./data/测试数据 (1).xls";
+//        String path = "./data/测试数据 (1).xls";
         List<UserResult> list = null;
         try {
-            list = UserDataParser.parseExcelData(new File(path), 0);
+//            list = UserDataParser.parseExcelData(new File(path), 0);
+        	list = UserDataParser.parseExcelData();
             // 删除user表、gene表
             userMapper.delete();
             geneMapper.delete();

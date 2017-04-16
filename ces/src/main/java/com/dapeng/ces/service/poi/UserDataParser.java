@@ -22,10 +22,10 @@ public class UserDataParser {
 
 	public static Map<Integer, String> geneDictionary = new HashMap<Integer, String>();
 
-	public static List<UserResult> parseExcelData(File file, int sheetNum) throws IOException {
-		Workbook workbook = ExcelDataImporter.importDataFromExcel(file);
+	public static List<UserResult> parseExcelData() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/测试数据 (1).xls"));
 
-		Sheet sheet = workbook.getSheetAt(sheetNum);
+		Sheet sheet = workbook.getSheetAt(0);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
 		List<UserResult> userList = new ArrayList<UserResult>();
