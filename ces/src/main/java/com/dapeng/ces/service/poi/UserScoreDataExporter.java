@@ -8,11 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.dapeng.ces.dto.UserScoreNewResult;
 import com.dapeng.ces.dto.UserScorePerItemResult;
+import com.dapeng.ces.model.NationalRanking;
+import com.dapeng.ces.service.persistence.PersistenceService;
 import com.dapeng.ces.util.ExportExcel;
 
 @Component
@@ -34,14 +37,20 @@ public class UserScoreDataExporter {
 	
 	@Value("${total-score.fatReducingSensitivityScore}")
 	private Double fatReducingSensitivityScore_percentage;
-
-	public void export2Excel(List<UserScoreNewResult> userScoreResult, String userName) throws IOException {
+//
+//	@Autowired
+//	private PersistenceService persistenceService;
+	
+	public void export2Excel(List<UserScoreNewResult> userScoreResult, String userName, PersistenceService persistenceService) throws IOException {
+		
 		String[] headers = { "编号", "姓名", "uuid", "基因", "位点", "基因型", "爆发力", "爆发力得分", "耐力	", "耐力得分", "耐力运动敏感度", "耐力运动敏感度得分",
 				"运动损伤的恢复能力", "恢复能力得分", "韧带、关节损伤风险", "韧带、关节损伤风险得分", "肥胖风险", "肥胖风险得分", "运动减脂敏感性", "运动减肥敏感性得分"};
 		ExportExcel<UserScoreNewResult> ex = new ExportExcel<UserScoreNewResult>();
 		OutputStream out = new FileOutputStream(userName.replace("*","")+"_评分_原始数据.xls");
 		ex.exportExcel(headers, userScoreResult, out);
 		out.close();
+		
+		getRankingData(userName, persistenceService);
 		
 		String[] headers2 = { "编号", "姓名", "爆发力得分", "爆发力得分(百分制)", "耐力得分", "耐力得分(百分制)", "恢复能力得分", "恢复能力得分(百分制)", 
 				"韧带、关节损伤风险得分", "韧带、关节损伤风险得分(百分制)", "肥胖风险得分", "肥胖风险得分(百分制)", "运动减肥敏感性得分", "运动减肥敏感性得分(百分制)"};
@@ -51,6 +60,48 @@ public class UserScoreDataExporter {
 		ex2.exportExcel(headers2, resultList, out2);
 		out2.close();
 		System.out.println("excel导出成功！");
+	}
+
+	private void getRankingData(String userName, PersistenceService persistenceService) throws IOException {
+		List<NationalRanking> rankingDataList = RankingDataParser.parseExcelData();
+		for (NationalRanking nationalRanking : rankingDataList) {
+			List<UserScoreNewResult> geneTypeList_1 = persistenceService.getUserGeneType(userName, nationalRanking.getGene_code1(), nationalRanking.getGene_name1());
+			String geneType_1 = ((UserScoreNewResult)geneTypeList_1.get(0)).getGeneType();
+			boolean isMatched_1 = false;
+			if (nationalRanking.getGene_type1().indexOf('+') != -1)
+			{
+				String[] geneTypes_1 = nationalRanking.getGene_type1().split("\\+");
+				for (String geneType_benchmark : geneTypes_1) {
+					if (geneType_1.equals(geneType_benchmark)) {
+						isMatched_1 = true;
+						break;
+					}
+				}
+			}
+			else {
+				if (geneType_1.equals(nationalRanking.getGene_type1())) isMatched_1 = true;
+			}
+			if (!isMatched_1) continue;
+			List<UserScoreNewResult> geneTypeList_2 = persistenceService.getUserGeneType(userName, nationalRanking.getGene_code2(), nationalRanking.getGene_name2());
+			String geneType_2 = ((UserScoreNewResult)geneTypeList_2.get(0)).getGeneType();
+			boolean isMatched_2 = false;
+			if (nationalRanking.getGene_type2().indexOf('+') != -1) {
+				String[] geneTypes_2 = nationalRanking.getGene_type2().split("\\+");
+				for (String geneType_benchmark : geneTypes_2) {
+					if (geneType_2.equals(geneType_benchmark)) {
+						isMatched_2 = true;
+						break;
+					}
+				}	
+			}
+			else {
+				if (geneType_2.equals(nationalRanking.getGene_type2())) isMatched_2 = true;
+			}
+			if (isMatched_1 && isMatched_2) 
+				System.out.println("geneCode1: " + nationalRanking.getGene_code1() + ", geneName1: " + nationalRanking.getGene_name1() +", geneType1: "+ geneType_1 
+						+ ", geneCode2: " + nationalRanking.getGene_code2() + ", geneName2: " + nationalRanking.getGene_name2() +", geneType2: "+ geneType_2 + " "
+						+ nationalRanking.getRanking());
+		}
 	}
 
 	private List<UserScorePerItemResult> calculateCumulativeScore(List<UserScoreNewResult> userScoreResult, String userName) {

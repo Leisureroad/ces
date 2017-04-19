@@ -51,6 +51,7 @@ public class RankingDataParser {
 					}
 					if (colIx == 1) {
 						ranking.setGene_name1(cellValue.getStringValue().trim());
+						ranking.setKey1(ranking.getGene_code1() + ranking.getGene_name1());
 						continue;
 					}
 					if (colIx == 2) {
@@ -67,6 +68,7 @@ public class RankingDataParser {
 					}
 					if (colIx == 5) {
 						ranking.setGene_type2(cellValue.getStringValue().trim());
+						ranking.setKey2(ranking.getGene_code2() + ranking.getGene_name2());
 						continue;
 					}
 					if (colIx == 6) {

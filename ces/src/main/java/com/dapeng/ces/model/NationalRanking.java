@@ -3,9 +3,11 @@ package com.dapeng.ces.model;
 public class NationalRanking {
 	private String uuid;
 	private String item_type;
+	private String key1;
 	private String gene_code1;
 	private String gene_name1;
 	private String gene_type1;
+	private String key2;
 	private String gene_code2;
 	private String gene_name2;
 	private String gene_type2;
@@ -21,6 +23,12 @@ public class NationalRanking {
 	}
 	public void setItem_type(String item_type) {
 		this.item_type = item_type;
+	}
+	public String getKey1() {
+		return key1;
+	}
+	public void setKey1(String key1) {
+		this.key1 = key1;
 	}
 	public String getGene_code1() {
 		return gene_code1;
@@ -39,6 +47,12 @@ public class NationalRanking {
 	}
 	public void setGene_type1(String gene_type1) {
 		this.gene_type1 = gene_type1;
+	}
+	public String getKey2() {
+		return key2;
+	}
+	public void setKey2(String key2) {
+		this.key2 = key2;
 	}
 	public String getGene_code2() {
 		return gene_code2;
@@ -67,16 +81,20 @@ public class NationalRanking {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Ranking [uuid=");
+		builder.append("NationalRanking [uuid=");
 		builder.append(uuid);
 		builder.append(", item_type=");
 		builder.append(item_type);
+		builder.append(", key1=");
+		builder.append(key1);
 		builder.append(", gene_code1=");
 		builder.append(gene_code1);
 		builder.append(", gene_name1=");
 		builder.append(gene_name1);
 		builder.append(", gene_type1=");
 		builder.append(gene_type1);
+		builder.append(", key2=");
+		builder.append(key2);
 		builder.append(", gene_code2=");
 		builder.append(gene_code2);
 		builder.append(", gene_name2=");

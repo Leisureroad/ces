@@ -355,7 +355,7 @@ public class PersistenceServiceImpl implements PersistenceService {
     	List<UserScoreNewResult> result = userMapper.selectUserInfo(userName);
     	
     	try {
-			exporter.export2Excel(result, userName);
+			exporter.export2Excel(result, userName, this);
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 //			String geneFeatureExcelFile = "./data/features.xls";
 			List<GeneFeature> geneFeatureList = null;
