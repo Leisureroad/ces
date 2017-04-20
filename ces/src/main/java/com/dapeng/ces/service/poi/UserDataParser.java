@@ -21,6 +21,7 @@ import com.dapeng.ces.util.ExcelDataImporter;
 public class UserDataParser {
 
 	public static Map<Integer, String> geneDictionary = new HashMap<Integer, String>();
+	public static Map<Integer, String> geneCodeDictionary = new HashMap<Integer, String>();
 
 	public static List<UserResult> parseExcelData() throws IOException {
 		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/测试数据 (1).xls"));
@@ -32,8 +33,30 @@ public class UserDataParser {
 		int minRowIx = sheet.getFirstRowNum();
 		int maxRowIx = sheet.getLastRowNum();
 		for (int rowIx = minRowIx; rowIx <= maxRowIx; rowIx++) {
-			if (rowIx == 0)
-				continue;
+			if (rowIx == 0) {
+				Row row = sheet.getRow(rowIx);
+				int minColIx = row.getFirstCellNum();
+				int maxColIx = row.getLastCellNum();
+				for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+					Cell cell = row.getCell(new Integer(colIx));
+					CellValue cellValue = evaluator.evaluate(cell);
+					if (cellValue == null) {
+						continue;
+					}
+					if (colIx == 0) {
+						continue;
+					}
+					if (colIx == 1) {
+						continue;
+					}
+					if (colIx == 2) {
+						continue;
+					}
+					if (colIx >= 3) {
+						geneCodeDictionary.put(Integer.valueOf(colIx), cellValue.getStringValue());
+					}
+				}
+			}
 			if (rowIx == 1) {
 				Row row = sheet.getRow(rowIx);
 				int minColIx = row.getFirstCellNum();
@@ -95,6 +118,7 @@ public class UserDataParser {
 							 value += value ; 
 						}
 						gene.setValue(value);
+						gene.setCode(geneCodeDictionary.get(Integer.valueOf(colIx)));
 						geneList.add(gene);
 					}
 				}
