@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dapeng.ces.mapper.NationalRankingMapper" >
+  <resultMap id="BaseResultMap" type="com.dapeng.ces.model.NationalRanking" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="item_type" property="itemType" jdbcType="VARCHAR" />
+    <result column="key1" property="key1" jdbcType="VARCHAR" />
+    <result column="gene_code1" property="geneCode1" jdbcType="VARCHAR" />
+    <result column="gene_name1" property="geneName1" jdbcType="VARCHAR" />
+    <result column="gene_type1" property="geneType1" jdbcType="VARCHAR" />
+    <result column="key2" property="key2" jdbcType="VARCHAR" />
+    <result column="gene_code2" property="geneCode2" jdbcType="VARCHAR" />
+    <result column="gene_name2" property="geneName2" jdbcType="VARCHAR" />
+    <result column="gene_type2" property="geneType2" jdbcType="VARCHAR" />
+    <result column="ranking" property="ranking" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uuid, item_type, key1, gene_code1, gene_name1, gene_type1, key2, gene_code2, gene_name2, 
+    gene_type2, ranking
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from national_ranking
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from national_ranking
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from national_ranking
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dapeng.ces.model.NationalRanking" >
+    insert into national_ranking (uuid, item_type, key1, 
+      gene_code1, gene_name1, gene_type1, 
+      key2, gene_code2, gene_name2, 
+      gene_type2, ranking)
+    values (#{uuid,jdbcType=VARCHAR}, #{itemType,jdbcType=VARCHAR}, #{key1,jdbcType=VARCHAR}, 
+      #{geneCode1,jdbcType=VARCHAR}, #{geneName1,jdbcType=VARCHAR}, #{geneType1,jdbcType=VARCHAR}, 
+      #{key2,jdbcType=VARCHAR}, #{geneCode2,jdbcType=VARCHAR}, #{geneName2,jdbcType=VARCHAR}, 
+      #{geneType2,jdbcType=VARCHAR}, #{ranking,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dapeng.ces.model.NationalRanking" >
+    insert into national_ranking
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="itemType != null" >
+        item_type,
+      </if>
+      <if test="key1 != null" >
+        key1,
+      </if>
+      <if test="geneCode1 != null" >
+        gene_code1,
+      </if>
+      <if test="geneName1 != null" >
+        gene_name1,
+      </if>
+      <if test="geneType1 != null" >
+        gene_type1,
+      </if>
+      <if test="key2 != null" >
+        key2,
+      </if>
+      <if test="geneCode2 != null" >
+        gene_code2,
+      </if>
+      <if test="geneName2 != null" >
+        gene_name2,
+      </if>
+      <if test="geneType2 != null" >
+        gene_type2,
+      </if>
+      <if test="ranking != null" >
+        ranking,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="itemType != null" >
+        #{itemType,jdbcType=VARCHAR},
+      </if>
+      <if test="key1 != null" >
+        #{key1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode1 != null" >
+        #{geneCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName1 != null" >
+        #{geneName1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType1 != null" >
+        #{geneType1,jdbcType=VARCHAR},
+      </if>
+      <if test="key2 != null" >
+        #{key2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode2 != null" >
+        #{geneCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName2 != null" >
+        #{geneName2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType2 != null" >
+        #{geneType2,jdbcType=VARCHAR},
+      </if>
+      <if test="ranking != null" >
+        #{ranking,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dapeng.ces.model.NationalRanking" >
+    update national_ranking
+    <set >
+      <if test="itemType != null" >
+        item_type = #{itemType,jdbcType=VARCHAR},
+      </if>
+      <if test="key1 != null" >
+        key1 = #{key1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode1 != null" >
+        gene_code1 = #{geneCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName1 != null" >
+        gene_name1 = #{geneName1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType1 != null" >
+        gene_type1 = #{geneType1,jdbcType=VARCHAR},
+      </if>
+      <if test="key2 != null" >
+        key2 = #{key2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode2 != null" >
+        gene_code2 = #{geneCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName2 != null" >
+        gene_name2 = #{geneName2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType2 != null" >
+        gene_type2 = #{geneType2,jdbcType=VARCHAR},
+      </if>
+      <if test="ranking != null" >
+        ranking = #{ranking,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dapeng.ces.model.NationalRanking" >
+    update national_ranking
+    set item_type = #{itemType,jdbcType=VARCHAR},
+      key1 = #{key1,jdbcType=VARCHAR},
+      gene_code1 = #{geneCode1,jdbcType=VARCHAR},
+      gene_name1 = #{geneName1,jdbcType=VARCHAR},
+      gene_type1 = #{geneType1,jdbcType=VARCHAR},
+      key2 = #{key2,jdbcType=VARCHAR},
+      gene_code2 = #{geneCode2,jdbcType=VARCHAR},
+      gene_name2 = #{geneName2,jdbcType=VARCHAR},
+      gene_type2 = #{geneType2,jdbcType=VARCHAR},
+      ranking = #{ranking,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

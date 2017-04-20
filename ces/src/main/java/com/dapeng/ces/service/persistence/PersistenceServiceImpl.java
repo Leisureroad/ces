@@ -1,6 +1,5 @@
 package com.dapeng.ces.service.persistence;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dapeng.ces.dto.GeneResult;
+import com.dapeng.ces.dto.NationalRankingExcel;
 import com.dapeng.ces.dto.ScoreResult;
 import com.dapeng.ces.dto.UserCompareGene;
 import com.dapeng.ces.dto.UserCompareParam;
@@ -25,16 +25,19 @@ import com.dapeng.ces.dto.UserScoreCompareResult;
 import com.dapeng.ces.dto.UserScoreNewResult;
 import com.dapeng.ces.dto.UserScorePlayerResult;
 import com.dapeng.ces.mapper.GeneMapper;
+import com.dapeng.ces.mapper.NationalRankingMapper;
 import com.dapeng.ces.mapper.ScoreMapper;
 import com.dapeng.ces.mapper.UserMapper;
 import com.dapeng.ces.mapper.UserScoreMapper;
 import com.dapeng.ces.model.Gene;
 import com.dapeng.ces.model.GeneFeature;
+import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.User;
 import com.dapeng.ces.model.UserScore;
 import com.dapeng.ces.service.freemarker.WordAction;
 import com.dapeng.ces.service.poi.GeneFeatureDataParser;
+import com.dapeng.ces.service.poi.RankingDataParser;
 import com.dapeng.ces.service.poi.ScoreDataParser;
 import com.dapeng.ces.service.poi.UserDataParser;
 import com.dapeng.ces.service.poi.UserScoreDataExporter;
@@ -52,7 +55,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     private UserScoreMapper userScoreMapper;
     @Autowired
     private UserScoreDataExporter exporter;
-
+    @Autowired
+    private NationalRankingMapper nationalRankingMapper;
     @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override
@@ -306,7 +310,7 @@ public class PersistenceServiceImpl implements PersistenceService {
                             UserScoreCompareResult uscr = new UserScoreCompareResult();
                             uscr.setGeneCode(userScoreNewResult.getGeneCode());
                             uscr.setGeneName(userScoreNewResult.getGeneName());
-                            uscr.setGeneType(userScoreNewResult.getGeneType());
+                            uscr.setGeneType(userScoreNewResult.getGeneValue());
                             userScoreCompareList.add(uscr);
                         }
                     }
@@ -364,7 +368,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 				String geneCode = userScoreNewResult.getGeneCode();
 				String geneName = userScoreNewResult.getGeneName();
 				List<UserScoreNewResult> geneTypeList = getUserGeneType(userName, geneCode, geneName);
-				String geneType = ((UserScoreNewResult)geneTypeList.get(0)).getGeneType();
+				String geneType = ((UserScoreNewResult)geneTypeList.get(0)).getGeneValue();
 //				System.out.println(geneTypeList.size()+"------"+userName+"-------"+geneCode+"-------"+geneName+"---------"+geneType);
 				if (geneType != null) {
 					dataMap.put(geneCode + "_" + geneName, geneType);
@@ -376,10 +380,10 @@ public class PersistenceServiceImpl implements PersistenceService {
 					dataMap.put(geneCode + "_" + geneName + "_feature", "未测试");
 				}
 			}
-			dataMap.put("ADH1B_rs1229984", "Bug需更改");
-			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
-			dataMap.put("ALDH2_rs671", "Bug需更改");
-			dataMap.put("ALDH2_rs671_feature", "Bug需更改");
+//			dataMap.put("ADH1B_rs1229984", "Bug需更改");
+//			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
+//			dataMap.put("ALDH2_rs671", "Bug需更改");
+//			dataMap.put("ALDH2_rs671_feature", "Bug需更改");
 			if (!dataMap.containsKey("COL12A1_rs970547")) {
 				dataMap.put("COL12A1_rs970547", "此项数据仅对女性有效！");
 				dataMap.put("COL12A1_rs970547_feature", "此项数据仅对女性有效！");
@@ -405,5 +409,35 @@ public class PersistenceServiceImpl implements PersistenceService {
             e.printStackTrace();
         }
         return geneType;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
+            isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
+    @Override
+    public List<NationalRanking> saveNationalRanking() {
+        nationalRankingMapper.delete();
+        List<NationalRanking> list = new ArrayList<>();
+        try {
+            List<NationalRankingExcel> rankingDataList = RankingDataParser.parseExcelData();
+            for (NationalRankingExcel nationalRankingExcel : rankingDataList) {
+                NationalRanking nr = new NationalRanking();
+                nr.setUuid(PrimaryKeyGenerator.getUuid32());
+                nr.setItemType(nationalRankingExcel.getItem_type());
+                nr.setKey1(nationalRankingExcel.getKey1());
+                nr.setGeneCode1(nationalRankingExcel.getGene_code1());
+                nr.setGeneType1(nationalRankingExcel.getGene_type1());
+                nr.setGeneName1(nationalRankingExcel.getGene_name1());
+                nr.setKey2(nationalRankingExcel.getKey2());
+                nr.setGeneCode2(nationalRankingExcel.getGene_code2());
+                nr.setGeneType2(nationalRankingExcel.getGene_type2());
+                nr.setGeneName2(nationalRankingExcel.getGene_name2());
+                nr.setRanking(nationalRankingExcel.getRanking());
+                list.add(nr);
+                nationalRankingMapper.insertSelective(nr);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

@@ -15,6 +15,7 @@
     <result column="gene_uuid" property="geneUuid" jdbcType="VARCHAR" />
     <result column="gene_code" property="geneCode" jdbcType="VARCHAR" />
     <result column="gene_name" property="geneName" jdbcType="VARCHAR" />
+    <result column="gene_value" property="geneValue" jdbcType="VARCHAR" />
     <result column="gene_type" property="geneType" jdbcType="VARCHAR" />
     <result column="explosive_force" property="explosiveForce" jdbcType="VARCHAR" />
     <result column="explosive_force_score" property="explosiveForceScore" jdbcType="DOUBLE" />
@@ -45,6 +46,7 @@
 	    <result column="gene_uuid" property="geneUuid" jdbcType="VARCHAR" />
 	    <result column="gene_code" property="geneCode" jdbcType="VARCHAR" />
 	    <result column="gene_name" property="geneName" jdbcType="VARCHAR" />
+	    <result column="gene_value" property="geneValue" jdbcType="VARCHAR" />
 	    <result column="gene_type" property="geneType" jdbcType="VARCHAR" />
 	    <result column="explosive_force" property="explosiveForce" jdbcType="VARCHAR" />
 	    <result column="explosive_force_score" property="explosiveForceScore" jdbcType="DOUBLE" />
@@ -72,6 +74,7 @@
 		us.gene_uuid,
 		s.gene_code,
 		s.gene_name,
+		g.`value` as gene_value,
 		s.gene_type,
 		s.explosive_force,
 		s.explosive_force_score,
@@ -90,6 +93,7 @@
 	FROM
 		user u
 	LEFT JOIN user_score us ON u.user_id = us.user_id
+	LEFT JOIN gene g ON us.gene_uuid = g.uuid
 	LEFT JOIN score s ON s.uuid = us.score_uuid
 	WHERE u.name = #{name,jdbcType=VARCHAR}
   </select>
@@ -106,6 +110,7 @@
 		us.gene_uuid,
 		s.gene_code,
 		s.gene_name,
+		g.`value` as gene_value,
 		s.gene_type,
 		s.explosive_force,
 		s.explosive_force_score,
@@ -124,6 +129,7 @@
 	FROM
 		user u
 	LEFT JOIN user_score us ON u.user_id = us.user_id
+	LEFT JOIN gene g ON us.gene_uuid = g.uuid
 	LEFT JOIN score s ON s.uuid = us.score_uuid
 	WHERE u.star = #{star,jdbcType=VARCHAR}
   </select>
@@ -135,8 +141,9 @@
     where uuid = #{uuid,jdbcType=VARCHAR}
   </select>
   <select id="getUserGeneType" resultMap="BaseResultMap_User" parameterType="java.util.Map" >
-    SELECT s.gene_type FROM user u
+    SELECT g.`value` as gene_value FROM user u
 	LEFT JOIN user_score us ON u.user_id = us.user_id
+	LEFT JOIN gene g ON us.gene_uuid = g.uuid
 	LEFT JOIN score s ON us.score_uuid = s.uuid
 	WHERE u.name = #{userName,jdbcType=VARCHAR} 
 		AND s.gene_name = #{geneName,jdbcType=VARCHAR} 
