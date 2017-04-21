@@ -22,7 +22,7 @@ import com.dapeng.ces.dto.UserCompareParam;
 import com.dapeng.ces.dto.UserCompareResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreCompareResult;
-import com.dapeng.ces.dto.UserScoreNewResult;
+import com.dapeng.ces.dto.UserOriginalResult;
 import com.dapeng.ces.dto.UserScorePlayerResult;
 import com.dapeng.ces.mapper.GeneMapper;
 import com.dapeng.ces.mapper.NationalRankingMapper;
@@ -86,6 +86,7 @@ public class PersistenceServiceImpl implements PersistenceService {
                     gene.setUserId(user.getUserId());
                     gene.setName(geneResult.getName());
                     gene.setValue(geneResult.getValue());
+                    gene.setCode(geneResult.getCode());
                     geneMapper.insertSelective(gene);
                 }
             }
@@ -236,12 +237,12 @@ public class PersistenceServiceImpl implements PersistenceService {
     public List<UserCompareResult> userCompare(String userName, List<String> list) {
         List<UserCompareResult> returnList = new ArrayList<>();
         // 获取用户的位点基因信息
-        List<UserScoreNewResult> userInfoList = userMapper.selectUserInfo(userName);
+        List<UserOriginalResult> userInfoList = userMapper.selectUserInfo(userName);
         // 获取所有运动员的信息
         List<UserScorePlayerResult> userPlayerList = userMapper.selectUserPlayer("1");
         // 对比用户和运动员信息，获取匹配的位点信息
         Map<String, UserCompareParam> map = new HashMap<>();
-        for (UserScoreNewResult userScoreNewResult : userInfoList) {
+        for (UserOriginalResult userScoreNewResult : userInfoList) {
             String geneName = userScoreNewResult.getGeneName();// 用户的geneName
             String geneType = userScoreNewResult.getGeneType();
             for (UserScorePlayerResult userScorePlayerResult : userPlayerList) {
@@ -301,8 +302,8 @@ public class PersistenceServiceImpl implements PersistenceService {
                 ucr.setRsMax(maxValue);
                 List<UserCompareGene> userCompareGeneList = userCompareParam.getUserCompareGeneList();//获取匹配的位点
                 List<UserScoreCompareResult> userScoreCompareList = new ArrayList<>();//返回的list集合
-                List<UserScoreNewResult> usrNew = userScorePlayerResult.getUserScoreNewResultList();
-                for (UserScoreNewResult userScoreNewResult : usrNew) {
+                List<UserOriginalResult> usrNew = userScorePlayerResult.getUserScoreNewResultList();
+                for (UserOriginalResult userScoreNewResult : usrNew) {
                     for (UserCompareGene userCompareGene : userCompareGeneList) {
                         String geneName = userCompareGene.getGeneName();
                         String geneType = userCompareGene.getGeneType();
@@ -310,7 +311,7 @@ public class PersistenceServiceImpl implements PersistenceService {
                             UserScoreCompareResult uscr = new UserScoreCompareResult();
                             uscr.setGeneCode(userScoreNewResult.getGeneCode());
                             uscr.setGeneName(userScoreNewResult.getGeneName());
-                            uscr.setGeneType(userScoreNewResult.getGeneValue());
+                            uscr.setGeneType(userScoreNewResult.getGeneType());
                             userScoreCompareList.add(uscr);
                         }
                     }
@@ -336,8 +337,8 @@ public class PersistenceServiceImpl implements PersistenceService {
      */
     private String getGeneType(String geneName, UserScorePlayerResult userScorePlayerResult) {
         String geneType = "";
-        List<UserScoreNewResult> scoreList = userScorePlayerResult.getUserScoreNewResultList();
-        for (UserScoreNewResult userScoreNewResult2 : scoreList) {
+        List<UserOriginalResult> scoreList = userScorePlayerResult.getUserScoreNewResultList();
+        for (UserOriginalResult userScoreNewResult2 : scoreList) {
             String geneNamePlayer = userScoreNewResult2.getGeneName();
             if (geneName.equals(geneNamePlayer)) {
                 geneType = userScoreNewResult2.getGeneType();
@@ -355,8 +356,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     }
 
     @Override
-    public List<UserScoreNewResult> getUserScore(String userName) {
-    	List<UserScoreNewResult> result = userMapper.selectUserInfo(userName);
+    public List<UserOriginalResult> getUserScore(String userName) {
+    	List<UserOriginalResult> result = userMapper.selectUserInfo(userName);
     	
     	try {
 			exporter.export2Excel(result, userName, this);
@@ -364,11 +365,11 @@ public class PersistenceServiceImpl implements PersistenceService {
 //			String geneFeatureExcelFile = "./data/features.xls";
 			List<GeneFeature> geneFeatureList = null;
 			geneFeatureList = GeneFeatureDataParser.parseExcelData();
-			for (UserScoreNewResult userScoreNewResult : result) {
+			for (UserOriginalResult userScoreNewResult : result) {
 				String geneCode = userScoreNewResult.getGeneCode();
 				String geneName = userScoreNewResult.getGeneName();
-				List<UserScoreNewResult> geneTypeList = getUserGeneType(userName, geneCode, geneName);
-				String geneType = ((UserScoreNewResult)geneTypeList.get(0)).getGeneValue();
+				List<UserOriginalResult> geneTypeList = getUserGeneType(userName, geneCode, geneName);
+				String geneType = ((UserOriginalResult)geneTypeList.get(0)).getGeneType();
 //				System.out.println(geneTypeList.size()+"------"+userName+"-------"+geneCode+"-------"+geneName+"---------"+geneType);
 				if (geneType != null) {
 					dataMap.put(geneCode + "_" + geneName, geneType);
@@ -397,8 +398,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     }
 
     @Override
-    public List<UserScoreNewResult> getUserGeneType(String userName, String geneCode, String geneName) {
-        List<UserScoreNewResult> geneType = new ArrayList<>();
+    public List<UserOriginalResult> getUserGeneType(String userName, String geneCode, String geneName) {
+        List<UserOriginalResult> geneType = new ArrayList<>();
         Map<String, String> map = new HashMap<>();
         map.put("userName", userName);
         map.put("geneCode", geneCode);

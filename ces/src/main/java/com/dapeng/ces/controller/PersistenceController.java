@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dapeng.ces.dto.UserCompareResult;
 import com.dapeng.ces.dto.UserResult;
-import com.dapeng.ces.dto.UserScoreNewResult;
+import com.dapeng.ces.dto.UserOriginalResult;
 import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.UserScore;
@@ -51,7 +51,7 @@ public class PersistenceController {
     }
     
     @RequestMapping(value = "getUserScore",method = RequestMethod.GET,produces = "application/json")
-    public List<UserScoreNewResult> getUserScore(@RequestParam("userName") String userName){
+    public List<UserOriginalResult> getUserScore(@RequestParam("userName") String userName){
          return persistenceService.getUserScore(userName);
 //         return "成功导出用户：" + userName + "测试报告和数据！";
     }

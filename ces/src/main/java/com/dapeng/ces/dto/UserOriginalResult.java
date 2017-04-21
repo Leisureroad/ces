@@ -1,17 +1,13 @@
 package com.dapeng.ces.dto;
 
-public class UserScoreNewResult {
+public class UserOriginalResult {
 	private String userId;
 	
 	private String name;
 	
-	private String geneUuid;
-	
 	private String geneCode;
 	
     private String geneName;
-    
-    private String geneValue;
     
     private String geneType;
 
@@ -59,14 +55,6 @@ public class UserScoreNewResult {
 		this.name = name;
 	}
 
-    public String getGeneUuid() {
-        return geneUuid;
-    }
-    
-    public void setGeneUuid(String geneUuid) {
-        this.geneUuid = geneUuid;
-    }
-
     public String getGeneCode() {
         return geneCode;
     }
@@ -75,21 +63,13 @@ public class UserScoreNewResult {
         this.geneCode = geneCode;
     }
 
-	public String getGeneName() {
+    public String getGeneName() {
 		return geneName;
 	}
 
 	public void setGeneName(String geneName) {
 		this.geneName = geneName;
 	}
-
-	public String getGeneValue() {
-        return geneValue;
-    }
-
-    public void setGeneValue(String geneValue) {
-        this.geneValue = geneValue;
-    }
 
     public String getGeneType() {
 		return geneType;
@@ -210,53 +190,4 @@ public class UserScoreNewResult {
 	public void setFatReducingSensitivityScore(Double fatReducingSensitivityScore) {
 		this.fatReducingSensitivityScore = fatReducingSensitivityScore;
 	}
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("UserScoreNewResult [userId=");
-        builder.append(userId);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", geneUuid=");
-        builder.append(geneUuid);
-        builder.append(", geneCode=");
-        builder.append(geneCode);
-        builder.append(", geneName=");
-        builder.append(geneName);
-        builder.append(", geneValue=");
-        builder.append(geneValue);
-        builder.append(", geneType=");
-        builder.append(geneType);
-        builder.append(", explosiveForce=");
-        builder.append(explosiveForce);
-        builder.append(", explosiveForceScore=");
-        builder.append(explosiveForceScore);
-        builder.append(", stamina=");
-        builder.append(stamina);
-        builder.append(", staminaScore=");
-        builder.append(staminaScore);
-        builder.append(", motionSensitivity=");
-        builder.append(motionSensitivity);
-        builder.append(", motionSensitivityScore=");
-        builder.append(motionSensitivityScore);
-        builder.append(", injuryRecoveryAbility=");
-        builder.append(injuryRecoveryAbility);
-        builder.append(", injuryRecoveryAbilityScore=");
-        builder.append(injuryRecoveryAbilityScore);
-        builder.append(", injuryRisk=");
-        builder.append(injuryRisk);
-        builder.append(", injuryRiskScore=");
-        builder.append(injuryRiskScore);
-        builder.append(", obesityRisk=");
-        builder.append(obesityRisk);
-        builder.append(", obesityRiskScore=");
-        builder.append(obesityRiskScore);
-        builder.append(", fatReducingSensitivity=");
-        builder.append(fatReducingSensitivity);
-        builder.append(", fatReducingSensitivityScore=");
-        builder.append(fatReducingSensitivityScore);
-        builder.append("]");
-        return builder.toString();
-    }
 }

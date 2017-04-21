@@ -6,9 +6,10 @@
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    uuid, user_id, name, value
+    uuid, user_id, name, value, code
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -22,18 +23,18 @@
     from gene
     where user_id = #{userId,jdbcType=VARCHAR}
   </select>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from gene
+  </delete>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from gene
     where uuid = #{uuid,jdbcType=VARCHAR}
   </delete>
-  <delete id="delete" parameterType="java.lang.String" >
-    delete from gene
-  </delete>
   <insert id="insert" parameterType="com.dapeng.ces.model.Gene" >
     insert into gene (uuid, user_id, name, 
-      value)
+      value, code)
     values (#{uuid,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{value,jdbcType=VARCHAR})
+      #{value,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.dapeng.ces.model.Gene" >
     insert into gene
@@ -50,6 +51,9 @@
       <if test="value != null" >
         value,
       </if>
+      <if test="code != null" >
+        code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="uuid != null" >
@@ -63,6 +67,9 @@
       </if>
       <if test="value != null" >
         #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -78,6 +85,9 @@
       <if test="value != null" >
         value = #{value,jdbcType=VARCHAR},
       </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
     </set>
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
@@ -85,7 +95,8 @@
     update gene
     set user_id = #{userId,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
-      value = #{value,jdbcType=VARCHAR}
+      value = #{value,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR}
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
 </mapper>

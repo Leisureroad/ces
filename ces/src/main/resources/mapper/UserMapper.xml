@@ -9,13 +9,11 @@
     <result column="position_384" property="position384" jdbcType="VARCHAR" />
     <result column="star" property="star" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="BaseResultMap_User" type="com.dapeng.ces.dto.UserScoreNewResult" >
+  <resultMap id="BaseResultMap_User" type="com.dapeng.ces.dto.UserOriginalResult" >
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="gene_uuid" property="geneUuid" jdbcType="VARCHAR" />
     <result column="gene_code" property="geneCode" jdbcType="VARCHAR" />
     <result column="gene_name" property="geneName" jdbcType="VARCHAR" />
-    <result column="gene_value" property="geneValue" jdbcType="VARCHAR" />
     <result column="gene_type" property="geneType" jdbcType="VARCHAR" />
     <result column="explosive_force" property="explosiveForce" jdbcType="VARCHAR" />
     <result column="explosive_force_score" property="explosiveForceScore" jdbcType="DOUBLE" />
@@ -40,7 +38,7 @@
     <result column="position_384" property="position384" jdbcType="VARCHAR" />
     <result column="star" property="star" jdbcType="VARCHAR" />
   	<collection property="userScoreNewResultList"
-		ofType="com.dapeng.ces.dto.UserScoreNewResult">
+		ofType="com.dapeng.ces.dto.UserOriginalResult">
 	    <result column="user_id_1" property="userId" jdbcType="VARCHAR" />
 	    <result column="name_1" property="name" jdbcType="VARCHAR" />
 	    <result column="gene_uuid" property="geneUuid" jdbcType="VARCHAR" />
@@ -71,11 +69,9 @@
   	SELECT
 		u.user_id,
 		u.name,
-		us.gene_uuid,
-		s.gene_code,
-		s.gene_name,
-		g.`value` as gene_value,
-		s.gene_type,
+		g.`code` as gene_code,
+		g.`name` as gene_name,
+		g.`value` as gene_type,
 		s.explosive_force,
 		s.explosive_force_score,
 		s.stamina,
@@ -141,7 +137,7 @@
     where uuid = #{uuid,jdbcType=VARCHAR}
   </select>
   <select id="getUserGeneType" resultMap="BaseResultMap_User" parameterType="java.util.Map" >
-    SELECT g.`value` as gene_value FROM user u
+    SELECT g.`value` as gene_type FROM user u
 	LEFT JOIN user_score us ON u.user_id = us.user_id
 	LEFT JOIN gene g ON us.gene_uuid = g.uuid
 	LEFT JOIN score s ON us.score_uuid = s.uuid
