@@ -13,10 +13,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.dapeng.ces.dto.GeneResult;
+import com.dapeng.ces.dto.ScoreFemaleExcel;
 import com.dapeng.ces.dto.ScoreResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreResult;
-import com.dapeng.ces.model.ScoreFemale;
 import com.dapeng.ces.util.ExcelDataImporter;
 
 public class ScoreDataParser {
@@ -310,19 +310,19 @@ public class ScoreDataParser {
 		return scoreList;
 	}
 	
-	public static List<ScoreFemale> parseInjuryRiskData_Female() throws IOException {
+	public static List<ScoreFemaleExcel> parseInjuryRiskData_Female() throws IOException {
 		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+韧带、关节损伤风险+女.xls"));
 		Sheet sheet = workbook.getSheetAt(0);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
-		List<ScoreFemale> scoreList = new ArrayList<ScoreFemale>();
+		List<ScoreFemaleExcel> scoreList = new ArrayList<ScoreFemaleExcel>();
 		int minRowIx = sheet.getFirstRowNum();
 		int maxRowIx = sheet.getLastRowNum();
 
 		for (int rowIx = minRowIx; rowIx <= maxRowIx; rowIx++) {
 			if (rowIx == 0)
 				continue;
-			ScoreFemale score = new ScoreFemale();
+			ScoreFemaleExcel score = new ScoreFemaleExcel();
 			Row row = sheet.getRow(rowIx);
 			int minColIx = row.getFirstCellNum();
 			int maxColIx = row.getLastCellNum();

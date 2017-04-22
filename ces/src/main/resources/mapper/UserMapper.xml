@@ -9,7 +9,7 @@
     <result column="position_384" property="position384" jdbcType="VARCHAR" />
     <result column="star" property="star" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="BaseResultMap_User" type="com.dapeng.ces.dto.UserOriginalResult" >
+  <resultMap id="BaseResultMap_User" type="com.dapeng.ces.dto.UserScoreDtoResult" >
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="gene_code" property="geneCode" jdbcType="VARCHAR" />
@@ -30,6 +30,14 @@
     <result column="fat_reducing_sensitivity" property="fatReducingSensitivity" jdbcType="VARCHAR" />
     <result column="fat_reducing_sensitivity_score" property="fatReducingSensitivityScore" jdbcType="DOUBLE" />
   </resultMap>
+  <resultMap id="BaseResultMap_UserOriginal" type="com.dapeng.ces.dto.UserOriginalResult" >
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="gene_code" property="geneCode" jdbcType="VARCHAR" />
+    <result column="gene_name" property="geneName" jdbcType="VARCHAR" />
+    <result column="gene_type" property="geneType" jdbcType="VARCHAR" />
+  </resultMap>
+  
   <resultMap id="BaseResultMap_Player" type="com.dapeng.ces.dto.UserScorePlayerResult" >
     <id column="uuid" property="uuid" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
@@ -65,7 +73,7 @@
   <sql id="Base_Column_List" >
     uuid, user_id, name, sex, position_384, star
   </sql>
-  <select id="selectUserInfo" resultMap="BaseResultMap_User" parameterType="java.lang.String" >
+  <select id="selectUserScoreInfo" resultMap="BaseResultMap_User" parameterType="java.lang.String" >
   	SELECT
 		u.user_id,
 		u.name,
@@ -93,6 +101,19 @@
 	LEFT JOIN score s ON s.uuid = us.score_uuid
 	WHERE u.name = #{name,jdbcType=VARCHAR}
   </select>
+  <select id="selectUserOriginal" resultMap="BaseResultMap_UserOriginal" parameterType="java.lang.String" >
+  	SELECT
+		u.user_id,
+		u.name,
+		g.`code` as gene_code,
+		g.`name` as gene_name,
+		g.`value` as gene_type
+	FROM
+		user u
+	LEFT JOIN gene g ON u.user_id = g.user_id
+	WHERE u.name = #{name,jdbcType=VARCHAR}
+  </select>
+  
   <select id="selectUserPlayer" resultMap="BaseResultMap_Player" parameterType="java.lang.String" >
   	SELECT
 		u.uuid,
@@ -136,8 +157,14 @@
     from user
     where uuid = #{uuid,jdbcType=VARCHAR}
   </select>
-  <select id="getUserGeneType" resultMap="BaseResultMap_User" parameterType="java.util.Map" >
-    SELECT g.`value` as gene_type FROM user u
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+  <select id="getUserScoreType" resultMap="BaseResultMap_User" parameterType="java.util.Map" >
+    SELECT s.gene_type as gene_type FROM user u
 	LEFT JOIN user_score us ON u.user_id = us.user_id
 	LEFT JOIN gene g ON us.gene_uuid = g.uuid
 	LEFT JOIN score s ON us.score_uuid = s.uuid
@@ -145,10 +172,23 @@
 		AND s.gene_name = #{geneName,jdbcType=VARCHAR} 
 		AND s.gene_code = #{geneCode,jdbcType=VARCHAR}
   </select>
+  <select id="getUserOriginalType" resultMap="BaseResultMap_User" parameterType="java.util.Map" >
+    SELECT g.`value` as gene_type FROM user u
+	LEFT JOIN gene g ON u.user_id = g.user_id
+	WHERE u.name = #{userName,jdbcType=VARCHAR}
+		AND g.`name` = #{geneName,jdbcType=VARCHAR}
+		AND g.`code` = #{geneCode,jdbcType=VARCHAR}
+  </select>
   <select id="selectAllUser" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from user
+  </select>
+  <select id="selectUserBySex" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where sex = #{sex,jdbcType=VARCHAR} and star = #{star,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from user
