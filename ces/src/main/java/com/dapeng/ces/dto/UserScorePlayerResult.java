@@ -15,7 +15,7 @@ public class UserScorePlayerResult {
 
     private String star;
     
-    private List<UserOriginalResult> userScoreNewResultList;
+    private List<UserScoreDtoResult> userScoreNewResultList;
 
     public String getUuid() {
         return uuid;
@@ -65,11 +65,11 @@ public class UserScorePlayerResult {
         this.star = star;
     }
 
-    public List<UserOriginalResult> getUserScoreNewResultList() {
+    public List<UserScoreDtoResult> getUserScoreNewResultList() {
         return userScoreNewResultList;
     }
 
-    public void setUserScoreNewResultList(List<UserOriginalResult> userScoreNewResultList) {
+    public void setUserScoreNewResultList(List<UserScoreDtoResult> userScoreNewResultList) {
         this.userScoreNewResultList = userScoreNewResultList;
     }
 

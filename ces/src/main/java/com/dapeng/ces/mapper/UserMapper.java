@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dapeng.ces.dto.UserOriginalResult;
+import com.dapeng.ces.dto.UserScoreDtoResult;
 import com.dapeng.ces.dto.UserScorePlayerResult;
 import com.dapeng.ces.model.User;
 
@@ -24,9 +25,17 @@ public interface UserMapper {
     
     List<User> selectAllUser();
     
-    List<UserOriginalResult> selectUserInfo(String name);
+    List<UserScoreDtoResult> selectUserScoreInfo(String name);
+    
+    List<UserOriginalResult> selectUserOriginal(String name);
     
     List<UserScorePlayerResult> selectUserPlayer(String star);
     
-    List<UserOriginalResult> getUserGeneType(Map<String, String> map);
+    List<UserScoreDtoResult> getUserOriginalType(Map<String, String> map);
+    
+    List<UserScoreDtoResult> getUserScoreType(Map<String, String> map);
+    
+    User selectByName(String name);
+    //根据性别查询运动员信息
+    List<User> selectUserBySex(Map<String, String> map);
 }

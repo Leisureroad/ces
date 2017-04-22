@@ -2,6 +2,7 @@ package com.dapeng.ces.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dapeng.ces.dto.UserCompareResult;
 import com.dapeng.ces.dto.UserResult;
-import com.dapeng.ces.dto.UserOriginalResult;
+import com.dapeng.ces.dto.UserScoreDtoResult;
 import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.UserScore;
@@ -51,7 +52,7 @@ public class PersistenceController {
     }
     
     @RequestMapping(value = "getUserScore",method = RequestMethod.GET,produces = "application/json")
-    public List<UserOriginalResult> getUserScore(@RequestParam("userName") String userName){
+    public List<UserScoreDtoResult> getUserScore(@RequestParam("userName") String userName){
          return persistenceService.getUserScore(userName);
 //         return "成功导出用户：" + userName + "测试报告和数据！";
     }
@@ -68,6 +69,10 @@ public class PersistenceController {
         return persistenceService.saveNationalRanking();
     }
     
+    @RequestMapping(value = "subitemCompare",method = RequestMethod.GET,produces = "application/json")
+    public Map<String, List<String>> subitemCompare(String userName){
+        return persistenceService.subitemCompare(userName);
+    }
     @RequestMapping(value = "test",method=RequestMethod.GET)
     public String test(){
         UserScoreDataExporter usde = new UserScoreDataExporter();
