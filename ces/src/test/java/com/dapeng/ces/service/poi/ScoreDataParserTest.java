@@ -36,6 +36,7 @@ public class ScoreDataParserTest {
 //			ScoreDataParser.searchUserKey("王大鹏10", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏11", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏12", userList, scoreList);
+			System.out.println(ScoreDataParser.parseInjuryRiskData_Female());
 		} catch (IOException e) {
 		}
 	}
