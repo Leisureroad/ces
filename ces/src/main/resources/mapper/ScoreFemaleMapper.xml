@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dapeng.ces.mapper.ScoreFemaleMapper" >
+  <resultMap id="BaseResultMap" type="com.dapeng.ces.model.ScoreFemale" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="gene_code1" property="geneCode1" jdbcType="VARCHAR" />
+    <result column="gene_name1" property="geneName1" jdbcType="VARCHAR" />
+    <result column="gene_type1" property="geneType1" jdbcType="VARCHAR" />
+    <result column="gene_code2" property="geneCode2" jdbcType="VARCHAR" />
+    <result column="gene_name2" property="geneName2" jdbcType="VARCHAR" />
+    <result column="gene_type2" property="geneType2" jdbcType="VARCHAR" />
+    <result column="injury_risk" property="injuryRisk" jdbcType="VARCHAR" />
+    <result column="injury_risk_score" property="injuryRiskScore" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uuid, gene_code1, gene_name1, gene_type1, gene_code2, gene_name2, gene_type2, injury_risk, 
+    injury_risk_score
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from score_female
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAllScoreFemale" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from score_female
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from score_female
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from score_female
+  </delete>
+  <insert id="insert" parameterType="com.dapeng.ces.model.ScoreFemale" >
+    insert into score_female (uuid, gene_code1, gene_name1, 
+      gene_type1, gene_code2, gene_name2, 
+      gene_type2, injury_risk, injury_risk_score
+      )
+    values (#{uuid,jdbcType=VARCHAR}, #{geneCode1,jdbcType=VARCHAR}, #{geneName1,jdbcType=VARCHAR}, 
+      #{geneType1,jdbcType=VARCHAR}, #{geneCode2,jdbcType=VARCHAR}, #{geneName2,jdbcType=VARCHAR}, 
+      #{geneType2,jdbcType=VARCHAR}, #{injuryRisk,jdbcType=VARCHAR}, #{injuryRiskScore,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dapeng.ces.model.ScoreFemale" >
+    insert into score_female
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="geneCode1 != null" >
+        gene_code1,
+      </if>
+      <if test="geneName1 != null" >
+        gene_name1,
+      </if>
+      <if test="geneType1 != null" >
+        gene_type1,
+      </if>
+      <if test="geneCode2 != null" >
+        gene_code2,
+      </if>
+      <if test="geneName2 != null" >
+        gene_name2,
+      </if>
+      <if test="geneType2 != null" >
+        gene_type2,
+      </if>
+      <if test="injuryRisk != null" >
+        injury_risk,
+      </if>
+      <if test="injuryRiskScore != null" >
+        injury_risk_score,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode1 != null" >
+        #{geneCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName1 != null" >
+        #{geneName1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType1 != null" >
+        #{geneType1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode2 != null" >
+        #{geneCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName2 != null" >
+        #{geneName2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType2 != null" >
+        #{geneType2,jdbcType=VARCHAR},
+      </if>
+      <if test="injuryRisk != null" >
+        #{injuryRisk,jdbcType=VARCHAR},
+      </if>
+      <if test="injuryRiskScore != null" >
+        #{injuryRiskScore,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dapeng.ces.model.ScoreFemale" >
+    update score_female
+    <set >
+      <if test="geneCode1 != null" >
+        gene_code1 = #{geneCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName1 != null" >
+        gene_name1 = #{geneName1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType1 != null" >
+        gene_type1 = #{geneType1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode2 != null" >
+        gene_code2 = #{geneCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName2 != null" >
+        gene_name2 = #{geneName2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType2 != null" >
+        gene_type2 = #{geneType2,jdbcType=VARCHAR},
+      </if>
+      <if test="injuryRisk != null" >
+        injury_risk = #{injuryRisk,jdbcType=VARCHAR},
+      </if>
+      <if test="injuryRiskScore != null" >
+        injury_risk_score = #{injuryRiskScore,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dapeng.ces.model.ScoreFemale" >
+    update score_female
+    set gene_code1 = #{geneCode1,jdbcType=VARCHAR},
+      gene_name1 = #{geneName1,jdbcType=VARCHAR},
+      gene_type1 = #{geneType1,jdbcType=VARCHAR},
+      gene_code2 = #{geneCode2,jdbcType=VARCHAR},
+      gene_name2 = #{geneName2,jdbcType=VARCHAR},
+      gene_type2 = #{geneType2,jdbcType=VARCHAR},
+      injury_risk = #{injuryRisk,jdbcType=VARCHAR},
+      injury_risk_score = #{injuryRiskScore,jdbcType=DOUBLE}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

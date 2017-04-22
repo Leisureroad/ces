@@ -18,27 +18,32 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.dapeng.ces.dto.GeneResult;
 import com.dapeng.ces.dto.NationalRankingExcel;
+import com.dapeng.ces.dto.ScoreFemaleExcel;
 import com.dapeng.ces.dto.ScoreResult;
 import com.dapeng.ces.dto.UserCompareGene;
 import com.dapeng.ces.dto.UserCompareParam;
 import com.dapeng.ces.dto.UserCompareResult;
 import com.dapeng.ces.dto.UserOriginalResult;
-import com.dapeng.ces.dto.UserScoreDtoResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreCompareResult;
+import com.dapeng.ces.dto.UserScoreDtoResult;
 import com.dapeng.ces.dto.UserScorePerItemResult;
 import com.dapeng.ces.dto.UserScorePlayerResult;
 import com.dapeng.ces.mapper.GeneMapper;
 import com.dapeng.ces.mapper.NationalRankingMapper;
+import com.dapeng.ces.mapper.ScoreFemaleMapper;
 import com.dapeng.ces.mapper.ScoreMapper;
 import com.dapeng.ces.mapper.UserMapper;
+import com.dapeng.ces.mapper.UserScoreFemaleMapper;
 import com.dapeng.ces.mapper.UserScoreMapper;
 import com.dapeng.ces.model.Gene;
 import com.dapeng.ces.model.GeneFeature;
 import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
+import com.dapeng.ces.model.ScoreFemale;
 import com.dapeng.ces.model.User;
 import com.dapeng.ces.model.UserScore;
+import com.dapeng.ces.model.UserScoreFemale;
 import com.dapeng.ces.service.freemarker.WordAction;
 import com.dapeng.ces.service.poi.GeneFeatureDataParser;
 import com.dapeng.ces.service.poi.RankingDataParser;
@@ -46,7 +51,6 @@ import com.dapeng.ces.service.poi.ScoreDataParser;
 import com.dapeng.ces.service.poi.UserDataParser;
 import com.dapeng.ces.service.poi.UserScoreDataExporter;
 import com.dapeng.ces.util.PrimaryKeyGenerator;
-import com.sun.xml.internal.rngom.parse.Parseable;
 
 @Service
 public class PersistenceServiceImpl implements PersistenceService {
@@ -62,6 +66,10 @@ public class PersistenceServiceImpl implements PersistenceService {
     private UserScoreDataExporter exporter;
     @Autowired
     private NationalRankingMapper nationalRankingMapper;
+    @Autowired
+    private ScoreFemaleMapper scoreFemaleMapper;
+    @Autowired
+    private UserScoreFemaleMapper userScoreFemaleMapper;
     @Value("${total-score.explosiveForceScore}")
     private Double explosiveForceScore_percentage;
     
@@ -223,33 +231,54 @@ public class PersistenceServiceImpl implements PersistenceService {
     @Override
     public List<UserScore> saveUserScore() {
         userScoreMapper.delete();
+        userScoreFemaleMapper.delete();
         List<UserScore> list = new ArrayList<>();
         List<User> allUser = userMapper.selectAllUser();
         for (User user : allUser) {
             String userId = user.getUserId();
+            String sex = user.getSex();
             List<Gene> geneList = geneMapper.selectByUserId(userId);
             for (Gene gene : geneList) {
                 String geneUuid = gene.getUuid();
                 String name = gene.getName();
                 String value = gene.getValue();
+                String code = gene.getCode();
                 List<Score> scoreList = scoreMapper.selectAllScore();
                 if(scoreList == null){
                     continue;
                 }
-                for (Score score : scoreList) {
-                    String scoreId = score.getScoreId();
-                    boolean result = ScoreDataParser.getMatchedKey(name + value, scoreId);
-                    if(!result){
+                if("COL12A1".equals(code) && "女".equals(sex)){
+                    List<ScoreFemale> scoreFemaleList = scoreFemaleMapper.selectAllScoreFemale();
+                    if(scoreFemaleList == null){
                         continue;
                     }
-                    String scoreUuid = score.getUuid();
-                    UserScore userScore = new UserScore();
-                    userScore.setUuid(PrimaryKeyGenerator.getUuid32());
-                    userScore.setUserId(userId);
-                    userScore.setGeneUuid(geneUuid);
-                    userScore.setScoreUuid(scoreUuid);
-                    list.add(userScore);
-                    userScoreMapper.insertSelective(userScore);
+                    for (ScoreFemale scoreFemale : scoreFemaleList) {
+                        String scoreFemaleUuid = scoreFemale.getUuid();
+                        UserScoreFemale usf = new UserScoreFemale();
+                        usf.setUuid(PrimaryKeyGenerator.getUuid32());
+                        usf.setUserId(userId);
+                        usf.setGeneUuid(geneUuid);
+                        usf.setScoreFemaleUuid(scoreFemaleUuid);
+                        userScoreFemaleMapper.insertSelective(usf);
+                    }
+                }else if("COL12A1".equals(code) && "男".equals(sex)){
+                    continue;
+                }else{
+                    for (Score score : scoreList) {
+                        String scoreId = score.getScoreId();
+                        boolean result = ScoreDataParser.getMatchedKey(name + value, scoreId);
+                        if(!result){
+                            continue;
+                        }
+                        String scoreUuid = score.getUuid();
+                        UserScore userScore = new UserScore();
+                        userScore.setUuid(PrimaryKeyGenerator.getUuid32());
+                        userScore.setUserId(userId);
+                        userScore.setGeneUuid(geneUuid);
+                        userScore.setScoreUuid(scoreUuid);
+                        list.add(userScore);
+                        userScoreMapper.insertSelective(userScore);
+                    }
                 }
             }
         }
@@ -475,8 +504,8 @@ public class PersistenceServiceImpl implements PersistenceService {
         Double staminaScore = userScorePerItemResult.getStaminaScore_percentage();//耐力
         Double injuryRecoveryAbilityScore = userScorePerItemResult.getInjuryRecoveryAbilityScore_percentage();//恢复能力
         Double injuryRiskScore = userScorePerItemResult.getInjuryRiskScore_percentage();//韧带关节损伤风险
-        Double fatReducingSensitivityScore = userScorePerItemResult.getFatReducingSensitivityScore_percentage();//肥胖风险
-        userScorePerItemResult.getObesityRiskScore_percentage();
+        Double obesityRiskScore = userScorePerItemResult.getObesityRiskScore_percentage();//肥胖风险
+        Double fatReducingSensitivityScore = userScorePerItemResult.getFatReducingSensitivityScore_percentage();//敏感
         
         //定义集合存放运动员分数
         List<UserScorePerItemResult> playerList = new ArrayList<>();
@@ -521,7 +550,7 @@ public class PersistenceServiceImpl implements PersistenceService {
                 list3.add(uspir.getName());
                 resultMap.put("运动损伤风险", list3);
             }
-            if(fatReducingSensitivityScore.compareTo(uspir.getFatReducingSensitivityScore_percentage())==0){
+            if(obesityRiskScore.compareTo(uspir.getObesityRiskScore_percentage())==0){
                 list4.add(uspir.getName());
                 resultMap.put("肥胖风险", list4);
             }
@@ -700,6 +729,33 @@ public class PersistenceServiceImpl implements PersistenceService {
         }
         return geneType;
 
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
+            isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
+    @Override
+    public List<ScoreFemale> saveScoreFemale() {
+        scoreFemaleMapper.delete();
+        List<ScoreFemale> sfList = new ArrayList<>();
+        try {
+            List<ScoreFemaleExcel> scoreFemaleList = ScoreDataParser.parseInjuryRiskData_Female();
+            for (ScoreFemaleExcel scoreFemaleExcel : scoreFemaleList) {
+                ScoreFemale sf = new ScoreFemale();
+                sf.setUuid(PrimaryKeyGenerator.getUuid32());
+                sf.setGeneCode1(scoreFemaleExcel.getGeneCode1());
+                sf.setGeneCode2(scoreFemaleExcel.getGeneCode2());
+                sf.setGeneName1(scoreFemaleExcel.getGeneName1());
+                sf.setGeneName2(scoreFemaleExcel.getGeneName2());
+                sf.setGeneType1(scoreFemaleExcel.getGeneType1());
+                sf.setGeneType2(scoreFemaleExcel.getGeneType2());
+                sf.setInjuryRisk(scoreFemaleExcel.getInjuryRisk());
+                sf.setInjuryRiskScore(scoreFemaleExcel.getInjuryRiskScore());
+                sfList.add(sf);
+                scoreFemaleMapper.insertSelective(sf);
+            }
+        } catch (IOException e) {
+        }
+        return sfList;
     }
 
 }

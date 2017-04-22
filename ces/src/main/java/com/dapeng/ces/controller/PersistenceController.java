@@ -16,6 +16,7 @@ import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreDtoResult;
 import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
+import com.dapeng.ces.model.ScoreFemale;
 import com.dapeng.ces.model.UserScore;
 import com.dapeng.ces.service.persistence.PersistenceService;
 import com.dapeng.ces.service.poi.UserScoreDataExporter;
@@ -32,6 +33,7 @@ public class PersistenceController {
     public boolean init(){
         persistenceService.saveUserGene();
         persistenceService.saveScore();
+        persistenceService.saveScoreFemale();
         persistenceService.saveUserScore();
         return true;
     }
@@ -49,6 +51,11 @@ public class PersistenceController {
     @RequestMapping(value = "saveUserScore",method = RequestMethod.GET,produces = "application/json")
     public List<UserScore> saveUserScore(){
         return persistenceService.saveUserScore();
+    }
+    
+    @RequestMapping(value = "saveScoreFemale",method = RequestMethod.GET,produces = "application/json")
+    public List<ScoreFemale> saveScoreFemale(){
+        return persistenceService.saveScoreFemale();
     }
     
     @RequestMapping(value = "getUserScore",method = RequestMethod.GET,produces = "application/json")
@@ -72,16 +79,5 @@ public class PersistenceController {
     @RequestMapping(value = "subitemCompare",method = RequestMethod.GET,produces = "application/json")
     public Map<String, List<String>> subitemCompare(String userName){
         return persistenceService.subitemCompare(userName);
-    }
-    @RequestMapping(value = "test",method=RequestMethod.GET)
-    public String test(){
-        UserScoreDataExporter usde = new UserScoreDataExporter();
-        try {
-            usde.getRankingData("王大鹏*", persistenceService);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
     }
 }
