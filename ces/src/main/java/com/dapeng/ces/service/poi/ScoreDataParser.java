@@ -16,6 +16,7 @@ import com.dapeng.ces.dto.GeneResult;
 import com.dapeng.ces.dto.ScoreResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreResult;
+import com.dapeng.ces.model.ScoreFemale;
 import com.dapeng.ces.util.ExcelDataImporter;
 
 public class ScoreDataParser {
@@ -27,6 +28,7 @@ public class ScoreDataParser {
 		resultList.addAll(parseInjuryRecoveryAbilityData());
 		resultList.addAll(parseInjuryRiskData());
 		resultList.addAll(parseObesityRiskAndFatReducingSensitivityData());
+		parseInjuryRiskData_Female();
 		return resultList;
 	}
 	
@@ -308,6 +310,69 @@ public class ScoreDataParser {
 		return scoreList;
 	}
 	
+	public static List<ScoreFemale> parseInjuryRiskData_Female() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+韧带、关节损伤风险+女.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+		List<ScoreFemale> scoreList = new ArrayList<ScoreFemale>();
+		int minRowIx = sheet.getFirstRowNum();
+		int maxRowIx = sheet.getLastRowNum();
+
+		for (int rowIx = minRowIx; rowIx <= maxRowIx; rowIx++) {
+			if (rowIx == 0)
+				continue;
+			ScoreFemale score = new ScoreFemale();
+			Row row = sheet.getRow(rowIx);
+			int minColIx = row.getFirstCellNum();
+			int maxColIx = row.getLastCellNum();
+			for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+				Cell cell = row.getCell(new Integer(colIx));
+				CellValue cellValue = evaluator.evaluate(cell);
+				if (cellValue == null) {
+					continue;
+				}
+				if (colIx == 0) {
+					continue;
+				}
+				if (colIx == 1) {
+					score.setGeneCode1(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 2) {
+					score.setGeneName1(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 3) {
+					score.setGeneType1(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 4) {
+					score.setGeneCode2(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 5) {
+					score.setGeneName2(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 6) {
+					score.setGeneType2(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 7) {
+					score.setInjuryRisk(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 8) {
+					score.setInjuryRiskScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+			}
+			scoreList.add(score);
+		}
+		return scoreList;
+	}
+	
 	private static List<ScoreResult> parseObesityRiskAndFatReducingSensitivityData() throws IOException {
 		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+肥胖风险+运动减脂敏感性.xls"));
 		Sheet sheet = workbook.getSheetAt(0);
@@ -420,5 +485,9 @@ public class ScoreDataParser {
 				}
 			}
 		}
+	}
+	
+	public static void main(String[] args) throws IOException {
+		System.out.println(ScoreDataParser.parseInjuryRiskData_Female());
 	}
 }
