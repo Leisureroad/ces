@@ -25,7 +25,7 @@ public class ScoreDataParserTest {
 			System.out.println(scoreList);
 //			System.out.println(scoreList.size());
 //			ScoreDataParser.searchUserKey("刘孟", userList, scoreList);
-			ScoreDataParser.searchUserKey("王大鹏*", userList, scoreList);
+			ScoreDataParser.searchUserKey("曾会丰", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏3", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏4", userList, scoreList);
 //			ScoreDataParser.searchUserKey("王大鹏5", userList, scoreList);

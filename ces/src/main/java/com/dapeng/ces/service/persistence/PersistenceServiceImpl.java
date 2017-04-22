@@ -1,6 +1,5 @@
 package com.dapeng.ces.service.persistence;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,25 +15,29 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dapeng.ces.dto.GeneResult;
+import com.dapeng.ces.dto.NationalRankingExcel;
 import com.dapeng.ces.dto.ScoreResult;
 import com.dapeng.ces.dto.UserCompareGene;
 import com.dapeng.ces.dto.UserCompareParam;
 import com.dapeng.ces.dto.UserCompareResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreCompareResult;
-import com.dapeng.ces.dto.UserScoreNewResult;
+import com.dapeng.ces.dto.UserOriginalResult;
 import com.dapeng.ces.dto.UserScorePlayerResult;
 import com.dapeng.ces.mapper.GeneMapper;
+import com.dapeng.ces.mapper.NationalRankingMapper;
 import com.dapeng.ces.mapper.ScoreMapper;
 import com.dapeng.ces.mapper.UserMapper;
 import com.dapeng.ces.mapper.UserScoreMapper;
 import com.dapeng.ces.model.Gene;
 import com.dapeng.ces.model.GeneFeature;
+import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.User;
 import com.dapeng.ces.model.UserScore;
 import com.dapeng.ces.service.freemarker.WordAction;
 import com.dapeng.ces.service.poi.GeneFeatureDataParser;
+import com.dapeng.ces.service.poi.RankingDataParser;
 import com.dapeng.ces.service.poi.ScoreDataParser;
 import com.dapeng.ces.service.poi.UserDataParser;
 import com.dapeng.ces.service.poi.UserScoreDataExporter;
@@ -52,7 +55,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     private UserScoreMapper userScoreMapper;
     @Autowired
     private UserScoreDataExporter exporter;
-
+    @Autowired
+    private NationalRankingMapper nationalRankingMapper;
     @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override
@@ -82,6 +86,7 @@ public class PersistenceServiceImpl implements PersistenceService {
                     gene.setUserId(user.getUserId());
                     gene.setName(geneResult.getName());
                     gene.setValue(geneResult.getValue());
+                    gene.setCode(geneResult.getCode());
                     geneMapper.insertSelective(gene);
                 }
             }
@@ -232,12 +237,12 @@ public class PersistenceServiceImpl implements PersistenceService {
     public List<UserCompareResult> userCompare(String userName, List<String> list) {
         List<UserCompareResult> returnList = new ArrayList<>();
         // 获取用户的位点基因信息
-        List<UserScoreNewResult> userInfoList = userMapper.selectUserInfo(userName);
+        List<UserOriginalResult> userInfoList = userMapper.selectUserInfo(userName);
         // 获取所有运动员的信息
         List<UserScorePlayerResult> userPlayerList = userMapper.selectUserPlayer("1");
         // 对比用户和运动员信息，获取匹配的位点信息
         Map<String, UserCompareParam> map = new HashMap<>();
-        for (UserScoreNewResult userScoreNewResult : userInfoList) {
+        for (UserOriginalResult userScoreNewResult : userInfoList) {
             String geneName = userScoreNewResult.getGeneName();// 用户的geneName
             String geneType = userScoreNewResult.getGeneType();
             for (UserScorePlayerResult userScorePlayerResult : userPlayerList) {
@@ -297,8 +302,8 @@ public class PersistenceServiceImpl implements PersistenceService {
                 ucr.setRsMax(maxValue);
                 List<UserCompareGene> userCompareGeneList = userCompareParam.getUserCompareGeneList();//获取匹配的位点
                 List<UserScoreCompareResult> userScoreCompareList = new ArrayList<>();//返回的list集合
-                List<UserScoreNewResult> usrNew = userScorePlayerResult.getUserScoreNewResultList();
-                for (UserScoreNewResult userScoreNewResult : usrNew) {
+                List<UserOriginalResult> usrNew = userScorePlayerResult.getUserScoreNewResultList();
+                for (UserOriginalResult userScoreNewResult : usrNew) {
                     for (UserCompareGene userCompareGene : userCompareGeneList) {
                         String geneName = userCompareGene.getGeneName();
                         String geneType = userCompareGene.getGeneType();
@@ -332,8 +337,8 @@ public class PersistenceServiceImpl implements PersistenceService {
      */
     private String getGeneType(String geneName, UserScorePlayerResult userScorePlayerResult) {
         String geneType = "";
-        List<UserScoreNewResult> scoreList = userScorePlayerResult.getUserScoreNewResultList();
-        for (UserScoreNewResult userScoreNewResult2 : scoreList) {
+        List<UserOriginalResult> scoreList = userScorePlayerResult.getUserScoreNewResultList();
+        for (UserOriginalResult userScoreNewResult2 : scoreList) {
             String geneNamePlayer = userScoreNewResult2.getGeneName();
             if (geneName.equals(geneNamePlayer)) {
                 geneType = userScoreNewResult2.getGeneType();
@@ -351,8 +356,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     }
 
     @Override
-    public List<UserScoreNewResult> getUserScore(String userName) {
-    	List<UserScoreNewResult> result = userMapper.selectUserInfo(userName);
+    public List<UserOriginalResult> getUserScore(String userName) {
+    	List<UserOriginalResult> result = userMapper.selectUserInfo(userName);
     	
     	try {
 			exporter.export2Excel(result, userName, this);
@@ -360,11 +365,11 @@ public class PersistenceServiceImpl implements PersistenceService {
 //			String geneFeatureExcelFile = "./data/features.xls";
 			List<GeneFeature> geneFeatureList = null;
 			geneFeatureList = GeneFeatureDataParser.parseExcelData();
-			for (UserScoreNewResult userScoreNewResult : result) {
+			for (UserOriginalResult userScoreNewResult : result) {
 				String geneCode = userScoreNewResult.getGeneCode();
 				String geneName = userScoreNewResult.getGeneName();
-				List<UserScoreNewResult> geneTypeList = getUserGeneType(userName, geneCode, geneName);
-				String geneType = ((UserScoreNewResult)geneTypeList.get(0)).getGeneType();
+				List<UserOriginalResult> geneTypeList = getUserGeneType(userName, geneCode, geneName);
+				String geneType = ((UserOriginalResult)geneTypeList.get(0)).getGeneType();
 //				System.out.println(geneTypeList.size()+"------"+userName+"-------"+geneCode+"-------"+geneName+"---------"+geneType);
 				if (geneType != null) {
 					dataMap.put(geneCode + "_" + geneName, geneType);
@@ -376,10 +381,10 @@ public class PersistenceServiceImpl implements PersistenceService {
 					dataMap.put(geneCode + "_" + geneName + "_feature", "未测试");
 				}
 			}
-			dataMap.put("ADH1B_rs1229984", "Bug需更改");
-			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
-			dataMap.put("ALDH2_rs671", "Bug需更改");
-			dataMap.put("ALDH2_rs671_feature", "Bug需更改");
+//			dataMap.put("ADH1B_rs1229984", "Bug需更改");
+//			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
+//			dataMap.put("ALDH2_rs671", "Bug需更改");
+//			dataMap.put("ALDH2_rs671_feature", "Bug需更改");
 			if (!dataMap.containsKey("COL12A1_rs970547")) {
 				dataMap.put("COL12A1_rs970547", "此项数据仅对女性有效！");
 				dataMap.put("COL12A1_rs970547_feature", "此项数据仅对女性有效！");
@@ -393,8 +398,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     }
 
     @Override
-    public List<UserScoreNewResult> getUserGeneType(String userName, String geneCode, String geneName) {
-        List<UserScoreNewResult> geneType = new ArrayList<>();
+    public List<UserOriginalResult> getUserGeneType(String userName, String geneCode, String geneName) {
+        List<UserOriginalResult> geneType = new ArrayList<>();
         Map<String, String> map = new HashMap<>();
         map.put("userName", userName);
         map.put("geneCode", geneCode);
@@ -405,5 +410,35 @@ public class PersistenceServiceImpl implements PersistenceService {
             e.printStackTrace();
         }
         return geneType;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
+            isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
+    @Override
+    public List<NationalRanking> saveNationalRanking() {
+        nationalRankingMapper.delete();
+        List<NationalRanking> list = new ArrayList<>();
+        try {
+            List<NationalRankingExcel> rankingDataList = RankingDataParser.parseExcelData();
+            for (NationalRankingExcel nationalRankingExcel : rankingDataList) {
+                NationalRanking nr = new NationalRanking();
+                nr.setUuid(PrimaryKeyGenerator.getUuid32());
+                nr.setItemType(nationalRankingExcel.getItem_type());
+                nr.setKey1(nationalRankingExcel.getKey1());
+                nr.setGeneCode1(nationalRankingExcel.getGene_code1());
+                nr.setGeneType1(nationalRankingExcel.getGene_type1());
+                nr.setGeneName1(nationalRankingExcel.getGene_name1());
+                nr.setKey2(nationalRankingExcel.getKey2());
+                nr.setGeneCode2(nationalRankingExcel.getGene_code2());
+                nr.setGeneType2(nationalRankingExcel.getGene_type2());
+                nr.setGeneName2(nationalRankingExcel.getGene_name2());
+                nr.setRanking(nationalRankingExcel.getRanking());
+                list.add(nr);
+                nationalRankingMapper.insertSelective(nr);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

@@ -13,24 +13,24 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.dapeng.ces.constant.ItemTypeConstant;
-import com.dapeng.ces.model.NationalRanking;
+import com.dapeng.ces.dto.NationalRankingExcel;
 import com.dapeng.ces.util.ExcelDataImporter;
 
 public class RankingDataParser {
 	
-	public static List<NationalRanking> parseExcelData() throws IOException {
+	public static List<NationalRankingExcel> parseExcelData() throws IOException {
 		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+全国排名.xls"));
 		Sheet sheet = workbook.getSheetAt(0);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
-		List<NationalRanking> rankingList = new ArrayList<NationalRanking>();
+		List<NationalRankingExcel> rankingList = new ArrayList<NationalRankingExcel>();
 		int minRowIx = sheet.getFirstRowNum();
 		int maxRowIx = sheet.getLastRowNum();
 
 		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
 			if (rowIx == 0 || rowIx == 7 || rowIx == 17 || rowIx == 24 || rowIx == 28)
 				continue;
-			NationalRanking ranking = new NationalRanking();
+			NationalRankingExcel ranking = new NationalRankingExcel();
 			Row row = sheet.getRow(rowIx);
 			int minColIx = row.getFirstCellNum();
 			int maxColIx = row.getLastCellNum();

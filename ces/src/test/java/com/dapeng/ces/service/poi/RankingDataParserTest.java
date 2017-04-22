@@ -6,13 +6,13 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.dapeng.ces.model.NationalRanking;
+import com.dapeng.ces.dto.NationalRankingExcel;
 
 public class RankingDataParserTest {
 
 	@Test
 	public void testParseExcelData() {
-		List<NationalRanking> rankingList = null;
+		List<NationalRankingExcel> rankingList = null;
 		try {
 			rankingList = RankingDataParser.parseExcelData();
 			System.out.println(rankingList);

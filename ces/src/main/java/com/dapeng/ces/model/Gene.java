@@ -9,6 +9,8 @@ public class Gene {
 
     private String value;
 
+    private String code;
+
     public String getUuid() {
         return uuid;
     }
@@ -39,5 +41,13 @@ public class Gene {
 
     public void setValue(String value) {
         this.value = value == null ? null : value.trim();
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code == null ? null : code.trim();
     }
 }
