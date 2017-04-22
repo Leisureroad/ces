@@ -82,6 +82,9 @@ public class PersistenceServiceImpl implements PersistenceService {
     @Value("${total-score.injuryRiskScore}")
     private Double injuryRiskScore_percentage;
     
+    @Value("${total-score.injuryRiskScore_female}")
+	private Double injuryRiskScore_female_percentage;
+    
     @Value("${total-score.obesityRiskScore}")
     private Double obesityRiskScore_percentage;
     
@@ -412,7 +415,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     	List<UserScoreDtoResult> userScoreList = userMapper.selectUserScoreInfo(userName);
     	List<UserOriginalResult> userOriginalList = userMapper.selectUserOriginal(userName);
     	try {
-			exporter.export2Excel(userScoreList, userName, this);
+    		 User user = userMapper.selectByName(userName);
+			exporter.export2Excel(userScoreList, userName, this, user.getSex());
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 //			String geneFeatureExcelFile = "./data/features.xls";
 			List<GeneFeature> geneFeatureList = null;
@@ -423,16 +427,36 @@ public class PersistenceServiceImpl implements PersistenceService {
 				List<UserScoreDtoResult> geneTypeList = getUserOriginalType(userName, geneCode, geneName);
 				String geneType = ((UserScoreDtoResult)geneTypeList.get(0)).getGeneType();
 //				System.out.println(geneTypeList.size()+"------"+userName+"-------"+geneCode+"-------"+geneName+"---------"+geneType);
-				if (geneType != null) {
-					dataMap.put(geneCode + "_" + geneName, geneType);
-					String geneFeature = GeneFeatureDataParser.getGeneFeature(geneCode, geneName, geneType, geneFeatureList);
-					dataMap.put(geneCode + "_" + geneName + "_feature", geneFeature);
+				if ("女".equals(user.getSex()) && "COL12A1".equals(geneCode) && "rs970547".equals(geneName)) {
+					String geneType1 = ((UserScoreDtoResult)getUserOriginalType(userName, "COL5A1", "rs12722").get(0)).getGeneType();
+					List<ScoreFemale> scoreFemaleList = scoreFemaleMapper.selectAllScoreFemale();
+					for (ScoreFemale scoreFemale : scoreFemaleList) {
+						if (scoreFemale.getGeneType1().equals(geneType1) && scoreFemale.getGeneType2().equals(geneType)) {
+							dataMap.put("COL12A1_rs970547", geneType);
+							String geneFeature = GeneFeatureDataParser.getGeneFeature("COL5A1_COL12A1", "rs12722_rs970547", geneType1+"_"+geneType, geneFeatureList);
+							dataMap.put("COL12A1_rs970547_feature", geneFeature);
+						}
+					}
 				}
 				else {
-					dataMap.put(geneCode + "_" + geneName, "未测试");
-					dataMap.put(geneCode + "_" + geneName + "_feature", "未测试");
+					if ("COL12A1".equals(geneCode) && "rs970547".equals(geneName)) {
+						dataMap.put("COL12A1_rs970547", "此项数据仅对女性有效！");
+						dataMap.put("COL12A1_rs970547_feature", "此项数据仅对女性有效！");
+						continue;
+					}
+					if (geneType != null) {
+						dataMap.put(geneCode + "_" + geneName, geneType);
+						String geneFeature = GeneFeatureDataParser.getGeneFeature(geneCode, geneName, geneType, geneFeatureList);
+						dataMap.put(geneCode + "_" + geneName + "_feature", geneFeature);
+					}
+					else {
+						dataMap.put(geneCode + "_" + geneName, "未测试");
+						dataMap.put(geneCode + "_" + geneName + "_feature", "未测试");
+					}
 				}
+				
 			}
+			
 //			dataMap.put("ADH1B_rs1229984", "Bug需更改");
 //			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
 //			dataMap.put("ALDH2_rs671", "Bug需更改");
@@ -493,7 +517,7 @@ public class PersistenceServiceImpl implements PersistenceService {
         UserScorePerItemResult userScorePerItemResult = new UserScorePerItemResult();
         List<UserScoreDtoResult> userOriginalList = userMapper.selectUserScoreInfo(userName);
         try {
-            userScorePerItemResult = this.calculateCumulativeScore(userOriginalList, userName);
+            userScorePerItemResult = this.calculateCumulativeScore(userOriginalList, userName, sex);
         } catch (IOException e) {
         }
         if(userScorePerItemResult == null){
@@ -515,7 +539,7 @@ public class PersistenceServiceImpl implements PersistenceService {
         List<User> users = userMapper.selectUserBySex(param);
         for (User user2 : users) {
             try {
-                UserScorePerItemResult playerScorePerItemResult = this.calculateCumulativeScore(userOriginalList, user2.getName());
+                UserScorePerItemResult playerScorePerItemResult = this.calculateCumulativeScore(userOriginalList, user2.getName(), user2.getSex());
                 playerList.add(playerScorePerItemResult);
             } catch (IOException e) {
             }
@@ -557,7 +581,8 @@ public class PersistenceServiceImpl implements PersistenceService {
         }
         return resultMap;
     }
-    private UserScorePerItemResult calculateCumulativeScore(List<UserScoreDtoResult> userScoreResult, String userName) throws IOException {
+    
+    private UserScorePerItemResult calculateCumulativeScore(List<UserScoreDtoResult> userScoreResult, String userName, String userSex) throws IOException {
 //        List<UserScorePerItemResult> resultList = new ArrayList<UserScorePerItemResult>();
         Map<String, Double> resultMap = new HashMap<String, Double>();
         String userIdOutput = "";
@@ -620,7 +645,12 @@ public class PersistenceServiceImpl implements PersistenceService {
         userScorePerItemResult2.setExplosiveForceScore_percentage(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage * 100);
         userScorePerItemResult2.setStaminaScore_percentage(resultMap.get("staminaScore") / staminaScore_percentage * 100);
         userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage * 100);
-        userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage * 100);
+        if (!"女".equals(userSex)) {
+        	userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage * 100);
+        }
+        else {
+        	userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_female_percentage * 100);
+        }
         userScorePerItemResult2.setObesityRiskScore_percentage(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage * 100);
         userScorePerItemResult2.setFatReducingSensitivityScore_percentage(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage * 100);
         Map<String, String> map = this.getRankingDataMap(userName);
@@ -633,6 +663,7 @@ public class PersistenceServiceImpl implements PersistenceService {
 //        resultList.add(userScorePerItemResult2);
         return userScorePerItemResult2;
     }
+    
     public Map<String, String> getRankingDataMap(String userName) throws IOException {
         Map<String, String> resultMap = new HashMap<>();
         List<NationalRankingExcel> rankingDataList = RankingDataParser.parseExcelData();

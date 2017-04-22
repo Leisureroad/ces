@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.util.SystemOutLogger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,9 @@ public class UserScoreDataExporter {
 	@Value("${total-score.injuryRiskScore}")
 	private Double injuryRiskScore_percentage;
 	
+	@Value("${total-score.injuryRiskScore_female}")
+	private Double injuryRiskScore_percentage_female;
+	
 	@Value("${total-score.obesityRiskScore}")
 	private Double obesityRiskScore_percentage;
 	
@@ -40,7 +44,7 @@ public class UserScoreDataExporter {
 //	@Autowired
 //	private PersistenceService persistenceService;
 	
-	public void export2Excel(List<UserScoreDtoResult> userScoreResult, String userName, PersistenceService persistenceService) throws IOException {
+	public void export2Excel(List<UserScoreDtoResult> userScoreResult, String userName, PersistenceService persistenceService, String userSex) throws IOException {
 		
 		String[] headers = { "编号", "姓名", "基因", "位点","基因型", "爆发力", "爆发力得分", "耐力	", "耐力得分", "耐力运动敏感度", "耐力运动敏感度得分",
 				"运动损伤的恢复能力", "恢复能力得分", "韧带、关节损伤风险", "韧带、关节损伤风险得分", "肥胖风险", "肥胖风险得分", "运动减脂敏感性", "运动减肥敏感性得分"};
@@ -54,7 +58,7 @@ public class UserScoreDataExporter {
 		String[] headers2 = { "编号", "姓名", "爆发力得分(百分制)","爆发力排名",  "耐力得分(百分制)", "耐力排名", "恢复能力得分(百分制)","恢复能力排名", 
 				 "韧带、关节损伤风险得分(百分制)","韧带、关节损伤风险排名",  "肥胖风险得分(百分制)","肥胖风险排名", "运动减肥敏感性得分(百分制)","运动减肥敏感性排名"};
 		ExportExcel<UserScorePerItemResult> ex2 = new ExportExcel<UserScorePerItemResult>();
-		List<UserScorePerItemResult> resultList = calculateCumulativeScore(userScoreResult, userName,persistenceService);
+		List<UserScorePerItemResult> resultList = calculateCumulativeScore(userScoreResult, userName,persistenceService, userSex);
 		OutputStream out2 = new FileOutputStream(userName.replace("*","")+"_评分.xls");
 		ex2.exportExcel(headers2, resultList, out2);
 		out2.close();
@@ -169,7 +173,7 @@ public class UserScoreDataExporter {
 		}
 	}
 
-	public List<UserScorePerItemResult> calculateCumulativeScore(List<UserScoreDtoResult> userScoreResult, String userName, PersistenceService persistenceService) throws IOException {
+	public List<UserScorePerItemResult> calculateCumulativeScore(List<UserScoreDtoResult> userScoreResult, String userName, PersistenceService persistenceService, String userSex) throws IOException {
 		List<UserScorePerItemResult> resultList = new ArrayList<UserScorePerItemResult>();
 		Map<String, Double> resultMap = new HashMap<String, Double>();
 		String userIdOutput = "";
@@ -233,9 +237,19 @@ public class UserScoreDataExporter {
 		userScorePerItemResult2.setExplosiveForceScore_percentage(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage * 100);
 		userScorePerItemResult2.setStaminaScore_percentage(resultMap.get("staminaScore") / staminaScore_percentage * 100);
 		userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage * 100);
-		userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage * 100);
+		if (!"女".equals(userSex)) {
+			userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage * 100);
+		}
+		else {
+			userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage_female * 100);
+		}
 		userScorePerItemResult2.setObesityRiskScore_percentage(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage * 100);
-		userScorePerItemResult2.setFatReducingSensitivityScore_percentage(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage * 100);
+		if (resultMap.get("fatReducingSensitivityScore") == null) {
+			userScorePerItemResult2.setFatReducingSensitivityScore_percentage(0.0);
+		}
+		else {
+			userScorePerItemResult2.setFatReducingSensitivityScore_percentage(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage * 100);
+		}
 		Map<String, String> map = getRankingDataMap(userName, persistenceService);
 		userScorePerItemResult2.setExplosiveForceScore_ranking(map.get("explosiveForceScore_ranking"));
 		userScorePerItemResult2.setStaminaScore_ranking(map.get("staminaScore_ranking"));
@@ -243,6 +257,7 @@ public class UserScoreDataExporter {
 		userScorePerItemResult2.setInjuryRiskScore_ranking(map.get("injuryRiskScore_ranking"));
 		userScorePerItemResult2.setObesityRiskScore_ranking(map.get("fatReducingSensitivityScore_ranking"));
 		userScorePerItemResult2.setFatReducingSensitivityScore_ranking(map.get("fatReducingSensitivityScore_ranking"));
+		System.out.println(userScorePerItemResult2);
 		resultList.add(userScorePerItemResult2);
 		return resultList;
 	}
