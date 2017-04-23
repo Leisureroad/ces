@@ -417,6 +417,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     	try {
     		 User user = userMapper.selectByName(userName);
 			exporter.export2Excel(userScoreList, userName, this, user.getSex());
+			List<UserScorePerItemResult> userScorePerItemResult = exporter.calculateCumulativeScore(userScoreList, userName, this, user.getSex());
+			
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 //			String geneFeatureExcelFile = "./data/features.xls";
 			List<GeneFeature> geneFeatureList = null;
@@ -466,6 +468,23 @@ public class PersistenceServiceImpl implements PersistenceService {
 				dataMap.put("COL12A1_rs970547_feature", "此项数据仅对女性有效！");
 			}
 			WordAction action = new WordAction();
+			dataMap.put("explosiveForceScore", userScorePerItemResult.get(0).getExplosiveForceScore_percentage());
+			dataMap.put("explosiveForceScore_ranking", userScorePerItemResult.get(0).getExplosiveForceScore_ranking());
+			
+			dataMap.put("staminaScore", userScorePerItemResult.get(0).getStaminaScore_percentage());
+			dataMap.put("staminaScore_ranking", userScorePerItemResult.get(0).getStaminaScore_ranking());
+			
+			dataMap.put("injuryRecoveryAbilityScore", userScorePerItemResult.get(0).getInjuryRecoveryAbilityScore_percentage());
+			dataMap.put("injuryRecoveryAbilityScore_ranking", userScorePerItemResult.get(0).getInjuryRecoveryAbilityScore_ranking());
+			
+			dataMap.put("injuryRiskScore", userScorePerItemResult.get(0).getInjuryRiskScore_percentage());
+			dataMap.put("injuryRiskScore_ranking", userScorePerItemResult.get(0).getInjuryRiskScore_ranking());
+			
+			dataMap.put("obesityRiskScore", userScorePerItemResult.get(0).getObesityRiskScore_percentage());
+			dataMap.put("obesityRiskScore_fatReducingSensitivityScore_ranking", userScorePerItemResult.get(0).getObesityRiskScore_ranking());
+			
+			dataMap.put("fatReducingSensitivityScore", userScorePerItemResult.get(0).getFatReducingSensitivityScore_percentage());
+			
 			action.createWord(dataMap, userName.replace("*", ""));
 		} catch (IOException e) {
 			e.printStackTrace();
