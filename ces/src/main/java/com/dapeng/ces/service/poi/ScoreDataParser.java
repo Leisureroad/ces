@@ -17,6 +17,7 @@ import com.dapeng.ces.dto.ScoreFemaleExcel;
 import com.dapeng.ces.dto.ScoreResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreResult;
+import com.dapeng.ces.model.ScoreGroup;
 import com.dapeng.ces.util.ExcelDataImporter;
 
 public class ScoreDataParser {
@@ -418,6 +419,70 @@ public class ScoreDataParser {
 		return scoreList;
 	}
 	
+	
+	private static List<ScoreGroup> parseObesityRiskAndFatReducingSensitivityData_group() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+肥胖风险+运动减脂敏感性_组合.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+		List<ScoreGroup> scoreList = new ArrayList<ScoreGroup>();
+		int minRowIx = sheet.getFirstRowNum();
+		int maxRowIx = sheet.getLastRowNum();
+
+		for (int rowIx = minRowIx; rowIx <= maxRowIx; rowIx++) {
+			if (rowIx == 0)
+				continue;
+			ScoreGroup score = new ScoreGroup();
+			Row row = sheet.getRow(rowIx);
+			int minColIx = row.getFirstCellNum();
+			int maxColIx = row.getLastCellNum();
+			for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+				Cell cell = row.getCell(new Integer(colIx));
+				CellValue cellValue = evaluator.evaluate(cell);
+				if (cellValue == null) {
+					continue;
+				}
+				if (colIx == 0) {
+					continue;
+				}
+				if (colIx == 1) {
+					score.setGeneCode1(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 2) {
+					score.setGeneName1(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 3) {
+					score.setGeneType1(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 4) {
+					score.setGeneCode2(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 5) {
+					score.setGeneName2(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 6) {
+					score.setGeneType2(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 7) {
+					score.setFatReducingSensitivity(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 8) {
+					score.setFatReducingSensitivityScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+			}
+			scoreList.add(score);
+		}
+		return scoreList;
+	}
+	
 	private static void getBasicProps(ScoreResult score, int colIx, CellValue cellValue) {
 		String score_id;
 		if (colIx == 0) {
@@ -488,6 +553,6 @@ public class ScoreDataParser {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		System.out.println(ScoreDataParser.parseObesityRiskAndFatReducingSensitivityData());
+		System.out.println(ScoreDataParser.parseObesityRiskAndFatReducingSensitivityData_group());
 	}
 }
