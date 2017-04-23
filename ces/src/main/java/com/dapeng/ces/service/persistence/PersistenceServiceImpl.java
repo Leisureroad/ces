@@ -422,18 +422,18 @@ public class PersistenceServiceImpl implements PersistenceService {
     	try {
     		User user = userMapper.selectByName(userName);
     		String sex = user.getSex();
-//    		if("女".equals(sex)){
-//    		    UserScoreFemaleResult userScoreFemaleResult = userMapper.selectUserScoreFemale(userName);
-//    		    UserScoreDtoResult usdr = new UserScoreDtoResult();
-//    		    usdr.setUserId(userScoreFemaleResult.getUserId());
-//    		    usdr.setName(userScoreFemaleResult.getName());
-//    		    usdr.setGeneCode(userScoreFemaleResult.getGeneCode1()+"_"+userScoreFemaleResult.getGeneCode2());
-//    		    usdr.setGeneName(userScoreFemaleResult.getGeneName1()+"_"+userScoreFemaleResult.getGeneName2());
-//    		    usdr.setGeneType(userScoreFemaleResult.getGeneType1()+"_"+userScoreFemaleResult.getGeneType2());
-//    		    usdr.setInjuryRisk(userScoreFemaleResult.getInjuryRisk());
-//    		    usdr.setInjuryRiskScore(userScoreFemaleResult.getInjuryRiskScore());
-//    		    userScoreList.add(usdr);
-//    		}
+    		if("女".equals(sex)){
+    		    UserScoreFemaleResult userScoreFemaleResult = userMapper.selectUserScoreFemale(userName);
+    		    UserScoreDtoResult usdr = new UserScoreDtoResult();
+    		    usdr.setUserId(userScoreFemaleResult.getUserId());
+    		    usdr.setName(userScoreFemaleResult.getName());
+    		    usdr.setGeneCode(userScoreFemaleResult.getGeneCode1()+"_"+userScoreFemaleResult.getGeneCode2());
+    		    usdr.setGeneName(userScoreFemaleResult.getGeneName1()+"_"+userScoreFemaleResult.getGeneName2());
+    		    usdr.setGeneType(userScoreFemaleResult.getGeneType1()+"_"+userScoreFemaleResult.getGeneType2());
+    		    usdr.setInjuryRisk(userScoreFemaleResult.getInjuryRisk());
+    		    usdr.setInjuryRiskScore(userScoreFemaleResult.getInjuryRiskScore());
+    		    userScoreList.add(usdr);
+    		}
 			exporter.export2Excel(userScoreList, userName, this, sex);
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 //			String geneFeatureExcelFile = "./data/features.xls";
@@ -533,9 +533,21 @@ public class PersistenceServiceImpl implements PersistenceService {
         String sex = user.getSex();
         //根据用户查询出此用户的分值等信息
         UserScorePerItemResult userScorePerItemResult = new UserScorePerItemResult();
-        List<UserScoreDtoResult> userOriginalList = userMapper.selectUserScoreInfo(userName);
+        List<UserScoreDtoResult> userScoreList = userMapper.selectUserScoreInfo(userName);
+        if("女".equals(sex)){
+            UserScoreFemaleResult userScoreFemaleResult = userMapper.selectUserScoreFemale(userName);
+            UserScoreDtoResult usdr = new UserScoreDtoResult();
+            usdr.setUserId(userScoreFemaleResult.getUserId());
+            usdr.setName(userScoreFemaleResult.getName());
+            usdr.setGeneCode(userScoreFemaleResult.getGeneCode1()+"_"+userScoreFemaleResult.getGeneCode2());
+            usdr.setGeneName(userScoreFemaleResult.getGeneName1()+"_"+userScoreFemaleResult.getGeneName2());
+            usdr.setGeneType(userScoreFemaleResult.getGeneType1()+"_"+userScoreFemaleResult.getGeneType2());
+            usdr.setInjuryRisk(userScoreFemaleResult.getInjuryRisk());
+            usdr.setInjuryRiskScore(userScoreFemaleResult.getInjuryRiskScore());
+            userScoreList.add(usdr);
+        }
         try {
-            userScorePerItemResult = this.calculateCumulativeScore(userOriginalList, userName, sex);
+            userScorePerItemResult = this.calculateCumulativeScore(userScoreList, userName, sex);
         } catch (IOException e) {
         }
         if(userScorePerItemResult == null){
@@ -557,7 +569,7 @@ public class PersistenceServiceImpl implements PersistenceService {
         List<User> users = userMapper.selectUserBySex(param);
         for (User user2 : users) {
             try {
-                UserScorePerItemResult playerScorePerItemResult = this.calculateCumulativeScore(userOriginalList, user2.getName(), user2.getSex());
+                UserScorePerItemResult playerScorePerItemResult = this.calculateCumulativeScore(userScoreList, user2.getName(), user2.getSex());
                 playerList.add(playerScorePerItemResult);
             } catch (IOException e) {
             }
