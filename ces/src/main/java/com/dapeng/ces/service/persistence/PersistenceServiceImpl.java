@@ -27,6 +27,7 @@ import com.dapeng.ces.dto.UserOriginalResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreCompareResult;
 import com.dapeng.ces.dto.UserScoreDtoResult;
+import com.dapeng.ces.dto.UserScoreFemaleResult;
 import com.dapeng.ces.dto.UserScorePerItemResult;
 import com.dapeng.ces.dto.UserScorePlayerResult;
 import com.dapeng.ces.mapper.GeneMapper;
@@ -246,27 +247,31 @@ public class PersistenceServiceImpl implements PersistenceService {
                 String name = gene.getName();
                 String value = gene.getValue();
                 String code = gene.getCode();
-                List<Score> scoreList = scoreMapper.selectAllScore();
-                if(scoreList == null){
-                    continue;
-                }
                 if("COL12A1".equals(code) && "女".equals(sex)){
                     List<ScoreFemale> scoreFemaleList = scoreFemaleMapper.selectAllScoreFemale();
                     if(scoreFemaleList == null){
                         continue;
                     }
+                    List<UserScoreDtoResult> geneType_5AList = this.getUserOriginalType(user.getName(), "COL5A1", "rs12722");
+                    String geneType_5A = ((UserScoreDtoResult)geneType_5AList.get(0)).getGeneType();
                     for (ScoreFemale scoreFemale : scoreFemaleList) {
                         String scoreFemaleUuid = scoreFemale.getUuid();
-                        UserScoreFemale usf = new UserScoreFemale();
-                        usf.setUuid(PrimaryKeyGenerator.getUuid32());
-                        usf.setUserId(userId);
-                        usf.setGeneUuid(geneUuid);
-                        usf.setScoreFemaleUuid(scoreFemaleUuid);
-                        userScoreFemaleMapper.insertSelective(usf);
+                        if(geneType_5A.equals(scoreFemale.getGeneType1()) && value.equals(scoreFemale.getGeneType2())){
+                            UserScoreFemale usf = new UserScoreFemale();
+                            usf.setUuid(PrimaryKeyGenerator.getUuid32());
+                            usf.setUserId(userId);
+                            usf.setGeneUuid(geneUuid);
+                            usf.setScoreFemaleUuid(scoreFemaleUuid);
+                            userScoreFemaleMapper.insertSelective(usf);
+                        }
                     }
                 }else if("COL12A1".equals(code) && "男".equals(sex)){
                     continue;
                 }else{
+                    List<Score> scoreList = scoreMapper.selectAllScore();
+                    if(scoreList == null){
+                        continue;
+                    }
                     for (Score score : scoreList) {
                         String scoreId = score.getScoreId();
                         boolean result = ScoreDataParser.getMatchedKey(name + value, scoreId);
@@ -415,8 +420,21 @@ public class PersistenceServiceImpl implements PersistenceService {
     	List<UserScoreDtoResult> userScoreList = userMapper.selectUserScoreInfo(userName);
     	List<UserOriginalResult> userOriginalList = userMapper.selectUserOriginal(userName);
     	try {
-    		 User user = userMapper.selectByName(userName);
-			exporter.export2Excel(userScoreList, userName, this, user.getSex());
+    		User user = userMapper.selectByName(userName);
+    		String sex = user.getSex();
+    		if("女".equals(sex)){
+    		    UserScoreFemaleResult userScoreFemaleResult = userMapper.selectUserScoreFemale(userName);
+    		    UserScoreDtoResult usdr = new UserScoreDtoResult();
+    		    usdr.setUserId(userScoreFemaleResult.getUserId());
+    		    usdr.setName(userScoreFemaleResult.getName());
+    		    usdr.setGeneCode(userScoreFemaleResult.getGeneCode1()+"_"+userScoreFemaleResult.getGeneCode2());
+    		    usdr.setGeneName(userScoreFemaleResult.getGeneName1()+"_"+userScoreFemaleResult.getGeneName2());
+    		    usdr.setGeneType(userScoreFemaleResult.getGeneType1()+"_"+userScoreFemaleResult.getGeneType2());
+    		    usdr.setInjuryRisk(userScoreFemaleResult.getInjuryRisk());
+    		    usdr.setInjuryRiskScore(userScoreFemaleResult.getInjuryRiskScore());
+    		    userScoreList.add(usdr);
+    		}
+			exporter.export2Excel(userScoreList, userName, this, sex);
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 //			String geneFeatureExcelFile = "./data/features.xls";
 			List<GeneFeature> geneFeatureList = null;
@@ -515,9 +533,21 @@ public class PersistenceServiceImpl implements PersistenceService {
         String sex = user.getSex();
         //根据用户查询出此用户的分值等信息
         UserScorePerItemResult userScorePerItemResult = new UserScorePerItemResult();
-        List<UserScoreDtoResult> userOriginalList = userMapper.selectUserScoreInfo(userName);
+        List<UserScoreDtoResult> userScoreList = userMapper.selectUserScoreInfo(userName);
+        if("女".equals(sex)){
+            UserScoreFemaleResult userScoreFemaleResult = userMapper.selectUserScoreFemale(userName);
+            UserScoreDtoResult usdr = new UserScoreDtoResult();
+            usdr.setUserId(userScoreFemaleResult.getUserId());
+            usdr.setName(userScoreFemaleResult.getName());
+            usdr.setGeneCode(userScoreFemaleResult.getGeneCode1()+"_"+userScoreFemaleResult.getGeneCode2());
+            usdr.setGeneName(userScoreFemaleResult.getGeneName1()+"_"+userScoreFemaleResult.getGeneName2());
+            usdr.setGeneType(userScoreFemaleResult.getGeneType1()+"_"+userScoreFemaleResult.getGeneType2());
+            usdr.setInjuryRisk(userScoreFemaleResult.getInjuryRisk());
+            usdr.setInjuryRiskScore(userScoreFemaleResult.getInjuryRiskScore());
+            userScoreList.add(usdr);
+        }
         try {
-            userScorePerItemResult = this.calculateCumulativeScore(userOriginalList, userName, sex);
+            userScorePerItemResult = this.calculateCumulativeScore(userScoreList, userName, sex);
         } catch (IOException e) {
         }
         if(userScorePerItemResult == null){
@@ -539,7 +569,7 @@ public class PersistenceServiceImpl implements PersistenceService {
         List<User> users = userMapper.selectUserBySex(param);
         for (User user2 : users) {
             try {
-                UserScorePerItemResult playerScorePerItemResult = this.calculateCumulativeScore(userOriginalList, user2.getName(), user2.getSex());
+                UserScorePerItemResult playerScorePerItemResult = this.calculateCumulativeScore(userScoreList, user2.getName(), user2.getSex());
                 playerList.add(playerScorePerItemResult);
             } catch (IOException e) {
             }
