@@ -69,7 +69,7 @@ public class UserScoreDataExporter {
         Map<String, String> resultMap = new HashMap<>();
         List<NationalRankingExcel> rankingDataList = RankingDataParser.parseExcelData();
         for (NationalRankingExcel nationalRanking : rankingDataList) {
-            List<UserScoreDtoResult> geneTypeList_1 = persistenceService.getUserScoreType(userName,
+            List<UserScoreDtoResult> geneTypeList_1 = persistenceService.getUserOriginalType(userName,
                     nationalRanking.getGene_code1(), nationalRanking.getGene_name1());
             if(geneTypeList_1 == null || geneTypeList_1.size() == 0){
                 continue;
@@ -90,7 +90,7 @@ public class UserScoreDataExporter {
             }
             if (!isMatched_1)
                 continue;
-            List<UserScoreDtoResult> geneTypeList_2 = persistenceService.getUserScoreType(userName,
+            List<UserScoreDtoResult> geneTypeList_2 = persistenceService.getUserOriginalType(userName,
                     nationalRanking.getGene_code2(), nationalRanking.getGene_name2());
             if(geneTypeList_2 == null || geneTypeList_2.size() == 0){
                 continue;
