@@ -3,12 +3,12 @@ package com.dapeng.ces.service.poi;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -179,6 +179,7 @@ public class UserScoreDataExporter {
 		for (UserScoreDtoResult userScoreNewResult : userScoreResult) {
 			String userId = userScoreNewResult.getUserId();
 			userIdOutput = userId;
+//			对各个属性进行累加
 			Double explosiveForceScore = userScoreNewResult.getExplosiveForceScore();
 			Double staminaScore = userScoreNewResult.getStaminaScore();
 			Double injuryRecoveryAbilityScore = userScoreNewResult.getInjuryRecoveryAbilityScore();
@@ -212,20 +213,23 @@ public class UserScoreDataExporter {
 			}
 			if (resultMap.get("obesityRiskScore") == null && obesityRiskScore != null) {
 				resultMap.put("obesityRiskScore", obesityRiskScore);
-				if (resultMap.get("fatReducingSensitivityScore") == null && fatReducingSensitivityScore != null) {
-					resultMap.put("fatReducingSensitivityScore", fatReducingSensitivityScore);
-				}
+				
 			}
 			else if (resultMap.get("obesityRiskScore") != null && obesityRiskScore != null) {
 				resultMap.put("obesityRiskScore", resultMap.get("obesityRiskScore") + obesityRiskScore);
-				if (resultMap.get("fatReducingSensitivityScore") != null && fatReducingSensitivityScore != null) {
-					resultMap.put("fatReducingSensitivityScore", resultMap.get("fatReducingSensitivityScore") + fatReducingSensitivityScore);
-				}
+				
+			}
+			if (resultMap.get("fatReducingSensitivityScore") == null && fatReducingSensitivityScore != null) {
+				resultMap.put("fatReducingSensitivityScore", fatReducingSensitivityScore);
+			}
+			else if (resultMap.get("fatReducingSensitivityScore") != null && fatReducingSensitivityScore != null) {
+				resultMap.put("fatReducingSensitivityScore", resultMap.get("fatReducingSensitivityScore") + fatReducingSensitivityScore);
 			}
 		}
 		UserScorePerItemResult userScorePerItemResult2 = new UserScorePerItemResult();
 		userScorePerItemResult2.setUserId(userIdOutput);
 		userScorePerItemResult2.setName(userName);
+//		累加分，非百分制		
 //		userScorePerItemResult2.setExplosiveForceScore(resultMap.get("explosiveForceScore"));
 //		userScorePerItemResult2.setStaminaScore(resultMap.get("staminaScore"));
 //		userScorePerItemResult2.setInjuryRecoveryAbilityScore(resultMap.get("injuryRecoveryAbilityScore"));
@@ -233,22 +237,20 @@ public class UserScoreDataExporter {
 //		userScorePerItemResult2.setObesityRiskScore(resultMap.get("obesityRiskScore"));
 //		userScorePerItemResult2.setFatReducingSensitivityScore(resultMap.get("fatReducingSensitivityScore"));
 		
-		userScorePerItemResult2.setExplosiveForceScore_percentage(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage * 100);
-		userScorePerItemResult2.setStaminaScore_percentage(resultMap.get("staminaScore") / staminaScore_percentage * 100);
-		userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage * 100);
+//		累加分，百分制
+		DecimalFormat df = new DecimalFormat("#.00");
+		userScorePerItemResult2.setExplosiveForceScore_percentage(Double.valueOf(df.format(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage * 100)));
+		userScorePerItemResult2.setStaminaScore_percentage(Double.valueOf(df.format(resultMap.get("staminaScore") / staminaScore_percentage * 100)));
+		userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(Double.valueOf(df.format(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage * 100)));
 		if (!"女".equals(userSex)) {
-			userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage * 100);
+			userScorePerItemResult2.setInjuryRiskScore_percentage(Double.valueOf(df.format(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage * 100)));
 		}
 		else {
-			userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage_female * 100);
+			userScorePerItemResult2.setInjuryRiskScore_percentage(Double.valueOf(df.format(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage_female * 100)));
 		}
-		userScorePerItemResult2.setObesityRiskScore_percentage(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage * 100);
-		if (resultMap.get("fatReducingSensitivityScore") == null) {
-			userScorePerItemResult2.setFatReducingSensitivityScore_percentage(0.0);
-		}
-		else {
-			userScorePerItemResult2.setFatReducingSensitivityScore_percentage(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage * 100);
-		}
+		userScorePerItemResult2.setObesityRiskScore_percentage(Double.valueOf(df.format(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage * 100)));
+		userScorePerItemResult2.setFatReducingSensitivityScore_percentage(Double.valueOf(df.format(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage * 100)));
+
 		Map<String, String> map = getRankingDataMap(userName, persistenceService);
 		userScorePerItemResult2.setExplosiveForceScore_ranking(map.get("explosiveForceScore_ranking"));
 		userScorePerItemResult2.setStaminaScore_ranking(map.get("staminaScore_ranking"));
@@ -256,7 +258,6 @@ public class UserScoreDataExporter {
 		userScorePerItemResult2.setInjuryRiskScore_ranking(map.get("injuryRiskScore_ranking"));
 		userScorePerItemResult2.setObesityRiskScore_ranking(map.get("fatReducingSensitivityScore_ranking"));
 		userScorePerItemResult2.setFatReducingSensitivityScore_ranking(map.get("fatReducingSensitivityScore_ranking"));
-		System.out.println(userScorePerItemResult2);
 		resultList.add(userScorePerItemResult2);
 		return resultList;
 	}

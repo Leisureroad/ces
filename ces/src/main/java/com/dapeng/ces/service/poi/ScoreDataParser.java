@@ -488,6 +488,6 @@ public class ScoreDataParser {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		System.out.println(ScoreDataParser.parseInjuryRiskData_Female());
+		System.out.println(ScoreDataParser.parseObesityRiskAndFatReducingSensitivityData());
 	}
 }
