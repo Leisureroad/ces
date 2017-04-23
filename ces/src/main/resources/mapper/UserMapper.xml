@@ -9,6 +9,18 @@
     <result column="position_384" property="position384" jdbcType="VARCHAR" />
     <result column="star" property="star" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="BaseResultMap_UserScoreFemale" type="com.dapeng.ces.dto.UserScoreFemaleResult" >
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="gene_code1" property="geneCode1" jdbcType="VARCHAR" />
+    <result column="gene_name1" property="geneName1" jdbcType="VARCHAR" />
+    <result column="gene_type1" property="geneType1" jdbcType="VARCHAR" />
+    <result column="gene_code2" property="geneCode2" jdbcType="VARCHAR" />
+    <result column="gene_name2" property="geneName2" jdbcType="VARCHAR" />
+    <result column="gene_type2" property="geneType2" jdbcType="VARCHAR" />
+    <result column="injury_risk" property="injuryRisk" jdbcType="VARCHAR" />
+    <result column="injury_risk_score" property="injuryRiskScore" jdbcType="DOUBLE" />
+  </resultMap>
   <resultMap id="BaseResultMap_User" type="com.dapeng.ces.dto.UserScoreDtoResult" >
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
@@ -73,14 +85,33 @@
   <sql id="Base_Column_List" >
     uuid, user_id, name, sex, position_384, star
   </sql>
+  <select id="selectUserScoreFemale" resultMap="BaseResultMap_UserScoreFemale" parameterType="java.lang.String" >
+ 	SELECT
+		u.user_id,
+		u.name,
+		s.gene_code1,
+		s.gene_name1,
+		s.gene_type1,
+		s.gene_code2,
+		s.gene_name2,
+		s.gene_type2,
+		s.injury_risk,
+		s.injury_risk_score
+	FROM
+		user u
+	LEFT JOIN user_score_female us ON u.user_id = us.user_id
+	LEFT JOIN gene g ON us.gene_uuid = g.uuid
+	LEFT JOIN score_female s ON s.uuid = us.score_female_uuid
+	WHERE u.name = #{name,jdbcType=VARCHAR}
+  </select>
   <select id="selectUserScoreInfo" resultMap="BaseResultMap_User" parameterType="java.lang.String" >
   	SELECT
 		u.user_id,
 		u.name,
 		u.sex,
-		g.`code` as gene_code,
-		g.`name` as gene_name,
-		g.`value` as gene_type,
+		s.gene_code,
+		s.gene_name,
+		s.gene_type,
 		s.explosive_force,
 		s.explosive_force_score,
 		s.stamina,

@@ -45,7 +45,6 @@ public class UserScoreDataExporter {
 //	private PersistenceService persistenceService;
 	
 	public void export2Excel(List<UserScoreDtoResult> userScoreResult, String userName, PersistenceService persistenceService, String userSex) throws IOException {
-		
 		String[] headers = { "编号", "姓名", "基因", "位点","基因型", "爆发力", "爆发力得分", "耐力	", "耐力得分", "耐力运动敏感度", "耐力运动敏感度得分",
 				"运动损伤的恢复能力", "恢复能力得分", "韧带、关节损伤风险", "韧带、关节损伤风险得分", "肥胖风险", "肥胖风险得分", "运动减脂敏感性", "运动减肥敏感性得分"};
 		ExportExcel<UserScoreDtoResult> ex = new ExportExcel<UserScoreDtoResult>();
