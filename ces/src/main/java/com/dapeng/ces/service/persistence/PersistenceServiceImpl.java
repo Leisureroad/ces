@@ -33,18 +33,22 @@ import com.dapeng.ces.dto.UserScorePlayerResult;
 import com.dapeng.ces.mapper.GeneMapper;
 import com.dapeng.ces.mapper.NationalRankingMapper;
 import com.dapeng.ces.mapper.ScoreFemaleMapper;
+import com.dapeng.ces.mapper.ScoreGroupMapper;
 import com.dapeng.ces.mapper.ScoreMapper;
 import com.dapeng.ces.mapper.UserMapper;
 import com.dapeng.ces.mapper.UserScoreFemaleMapper;
+import com.dapeng.ces.mapper.UserScoreGroupMapper;
 import com.dapeng.ces.mapper.UserScoreMapper;
 import com.dapeng.ces.model.Gene;
 import com.dapeng.ces.model.GeneFeature;
 import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.ScoreFemale;
+import com.dapeng.ces.model.ScoreGroup;
 import com.dapeng.ces.model.User;
 import com.dapeng.ces.model.UserScore;
 import com.dapeng.ces.model.UserScoreFemale;
+import com.dapeng.ces.model.UserScoreGroup;
 import com.dapeng.ces.service.freemarker.WordAction;
 import com.dapeng.ces.service.poi.GeneFeatureDataParser;
 import com.dapeng.ces.service.poi.RankingDataParser;
@@ -71,6 +75,11 @@ public class PersistenceServiceImpl implements PersistenceService {
     private ScoreFemaleMapper scoreFemaleMapper;
     @Autowired
     private UserScoreFemaleMapper userScoreFemaleMapper;
+    @Autowired
+    private ScoreGroupMapper scoreGroupMapper;
+    @Autowired
+    private UserScoreGroupMapper userScoreGroupMapper;
+    
     @Value("${total-score.explosiveForceScore}")
     private Double explosiveForceScore_percentage;
     
@@ -236,6 +245,7 @@ public class PersistenceServiceImpl implements PersistenceService {
     public List<UserScore> saveUserScore() {
         userScoreMapper.delete();
         userScoreFemaleMapper.delete();
+        userScoreGroupMapper.delete();
         List<UserScore> list = new ArrayList<>();
         List<User> allUser = userMapper.selectAllUser();
         for (User user : allUser) {
@@ -247,6 +257,25 @@ public class PersistenceServiceImpl implements PersistenceService {
                 String name = gene.getName();
                 String value = gene.getValue();
                 String code = gene.getCode();
+                if("APOE".equals(code) && "rs429358".equals(name)) {
+                	List<ScoreGroup> scoreGroupList = scoreGroupMapper.selectAllScoreGroup();
+                	if(scoreGroupList == null){
+                        continue;
+                    }
+                	 List<UserScoreDtoResult> geneType_APOEList = this.getUserOriginalType(user.getName(), "APOE", "rs7412");
+                     String geneType_APOE = ((UserScoreDtoResult)geneType_APOEList.get(0)).getGeneType();
+                     for (ScoreGroup scoreGroup : scoreGroupList) {
+                         String scoreGroupUuid = scoreGroup.getUuid();
+                         if(value.equals(scoreGroup.getGeneType1()) && geneType_APOE.equals(scoreGroup.getGeneType2())){
+                             UserScoreGroup usg = new UserScoreGroup();
+                             usg.setUuid(PrimaryKeyGenerator.getUuid32());
+                             usg.setUserId(userId);
+                             usg.setGeneUuid(geneUuid);
+                             usg.setScoreGroupUuid(scoreGroupUuid);
+                             userScoreGroupMapper.insertSelective(usg);
+                         }
+                     }
+                }
                 if("COL12A1".equals(code) && "女".equals(sex)){
                     List<ScoreFemale> scoreFemaleList = scoreFemaleMapper.selectAllScoreFemale();
                     if(scoreFemaleList == null){
@@ -837,5 +866,31 @@ public class PersistenceServiceImpl implements PersistenceService {
         }
         return sfList;
     }
-
+    
+    @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
+            isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
+    @Override
+    public List<ScoreGroup> saveScoreGroup() {
+        scoreGroupMapper.delete();
+        List<ScoreGroup> sfList = new ArrayList<ScoreGroup>();
+        try {
+            List<ScoreGroup> scoreGroupList = ScoreDataParser.parseObesityRiskAndFatReducingSensitivityData_group();
+            for (ScoreGroup scoreGroup : scoreGroupList) {
+            	ScoreGroup sg = new ScoreGroup();
+                sg.setUuid(PrimaryKeyGenerator.getUuid32());
+                sg.setGeneCode1(scoreGroup.getGeneCode1());
+                sg.setGeneCode2(scoreGroup.getGeneCode2());
+                sg.setGeneName1(scoreGroup.getGeneName1());
+                sg.setGeneName2(scoreGroup.getGeneName2());
+                sg.setGeneType1(scoreGroup.getGeneType1());
+                sg.setGeneType2(scoreGroup.getGeneType2());
+                sg.setFatReducingSensitivity(scoreGroup.getFatReducingSensitivity());
+                sg.setFatReducingSensitivityScore(scoreGroup.getFatReducingSensitivityScore());
+                sfList.add(sg);
+                scoreGroupMapper.insertSelective(sg);
+            }
+        } catch (IOException e) {
+        }
+        return sfList;
+    }
 }

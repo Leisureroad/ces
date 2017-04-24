@@ -1,6 +1,5 @@
 package com.dapeng.ces.controller;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +16,9 @@ import com.dapeng.ces.dto.UserScoreDtoResult;
 import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.ScoreFemale;
+import com.dapeng.ces.model.ScoreGroup;
 import com.dapeng.ces.model.UserScore;
 import com.dapeng.ces.service.persistence.PersistenceService;
-import com.dapeng.ces.service.poi.UserScoreDataExporter;
 import com.dapeng.ces.util.StringUtil;
 
 @RestController
@@ -34,6 +33,7 @@ public class PersistenceController {
         persistenceService.saveUserGene();
         persistenceService.saveScore();
         persistenceService.saveScoreFemale();
+        persistenceService.saveScoreGroup();
         persistenceService.saveUserScore();
         return true;
     }
@@ -56,6 +56,11 @@ public class PersistenceController {
     @RequestMapping(value = "saveScoreFemale",method = RequestMethod.GET,produces = "application/json")
     public List<ScoreFemale> saveScoreFemale(){
         return persistenceService.saveScoreFemale();
+    }
+    
+    @RequestMapping(value = "saveScoreGroup",method = RequestMethod.GET,produces = "application/json")
+    public List<ScoreGroup> saveScoreGroup(){
+        return persistenceService.saveScoreGroup();
     }
     
     @RequestMapping(value = "getUserScore",method = RequestMethod.GET,produces = "application/json")

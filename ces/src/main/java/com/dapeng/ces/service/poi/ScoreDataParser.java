@@ -29,6 +29,7 @@ public class ScoreDataParser {
 		resultList.addAll(parseInjuryRecoveryAbilityData());
 		resultList.addAll(parseInjuryRiskData());
 		resultList.addAll(parseObesityRiskAndFatReducingSensitivityData());
+		parseObesityRiskAndFatReducingSensitivityData_group();
 		parseInjuryRiskData_Female();
 		return resultList;
 	}
@@ -419,8 +420,7 @@ public class ScoreDataParser {
 		return scoreList;
 	}
 	
-	
-	private static List<ScoreGroup> parseObesityRiskAndFatReducingSensitivityData_group() throws IOException {
+	public static List<ScoreGroup> parseObesityRiskAndFatReducingSensitivityData_group() throws IOException {
 		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+肥胖风险+运动减脂敏感性_组合.xls"));
 		Sheet sheet = workbook.getSheetAt(0);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
