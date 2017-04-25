@@ -450,94 +450,127 @@ public class PersistenceServiceImpl implements PersistenceService {
     	List<UserOriginalResult> userOriginalList = userMapper.selectUserOriginal(userName);
     	try {
     		User user = userMapper.selectByName(userName);
-    		String sex = user.getSex();
-    		if("女".equals(sex)){
-    		    UserScoreFemaleResult userScoreFemaleResult = userMapper.selectUserScoreFemale(userName);
-    		    UserScoreDtoResult usdr = new UserScoreDtoResult();
-    		    usdr.setUserId(userScoreFemaleResult.getUserId());
-    		    usdr.setName(userScoreFemaleResult.getName());
-    		    usdr.setGeneCode(userScoreFemaleResult.getGeneCode1()+"_"+userScoreFemaleResult.getGeneCode2());
-    		    usdr.setGeneName(userScoreFemaleResult.getGeneName1()+"_"+userScoreFemaleResult.getGeneName2());
-    		    usdr.setGeneType(userScoreFemaleResult.getGeneType1()+"_"+userScoreFemaleResult.getGeneType2());
-    		    usdr.setInjuryRisk(userScoreFemaleResult.getInjuryRisk());
-    		    usdr.setInjuryRiskScore(userScoreFemaleResult.getInjuryRiskScore());
-    		    userScoreList.add(usdr);
-    		}
-			exporter.export2Excel(userScoreList, userName, this, sex);
+    		addFemaleDataToExcel(userName, userScoreList, user);
+			addScoreGroupDataToExcel(userName, userScoreList, user);			
+    		exporter.export2Excel(userScoreList, userName, this, user.getSex());
 			List<UserScorePerItemResult> userScorePerItemResult = exporter.calculateCumulativeScore(userScoreList, userName, this, user.getSex());
 			
-			Map<String, Object> dataMap = new HashMap<String, Object>();
-//			String geneFeatureExcelFile = "./data/features.xls";
-			List<GeneFeature> geneFeatureList = null;
-			geneFeatureList = GeneFeatureDataParser.parseExcelData();
-			for (UserOriginalResult userOriginal : userOriginalList) {
-				String geneCode = userOriginal.getGeneCode();
-				String geneName = userOriginal.getGeneName();
-				List<UserScoreDtoResult> geneTypeList = getUserOriginalType(userName, geneCode, geneName);
-				String geneType = ((UserScoreDtoResult)geneTypeList.get(0)).getGeneType();
-//				System.out.println(geneTypeList.size()+"------"+userName+"-------"+geneCode+"-------"+geneName+"---------"+geneType);
-				if ("女".equals(user.getSex()) && "COL12A1".equals(geneCode) && "rs970547".equals(geneName)) {
-					String geneType1 = ((UserScoreDtoResult)getUserOriginalType(userName, "COL5A1", "rs12722").get(0)).getGeneType();
-					List<ScoreFemale> scoreFemaleList = scoreFemaleMapper.selectAllScoreFemale();
-					for (ScoreFemale scoreFemale : scoreFemaleList) {
-						if (scoreFemale.getGeneType1().equals(geneType1) && scoreFemale.getGeneType2().equals(geneType)) {
-							dataMap.put("COL12A1_rs970547", geneType);
-							String geneFeature = GeneFeatureDataParser.getGeneFeature("COL5A1_COL12A1", "rs12722_rs970547", geneType1+"_"+geneType, geneFeatureList);
-							dataMap.put("COL12A1_rs970547_feature", geneFeature);
-						}
-					}
-				}
-				else {
-					if ("COL12A1".equals(geneCode) && "rs970547".equals(geneName)) {
-						dataMap.put("COL12A1_rs970547", "此项数据仅对女性有效！");
-						dataMap.put("COL12A1_rs970547_feature", "此项数据仅对女性有效！");
-						continue;
-					}
-					if (geneType != null) {
-						dataMap.put(geneCode + "_" + geneName, geneType);
-						String geneFeature = GeneFeatureDataParser.getGeneFeature(geneCode, geneName, geneType, geneFeatureList);
-						dataMap.put(geneCode + "_" + geneName + "_feature", geneFeature);
-					}
-					else {
-						dataMap.put(geneCode + "_" + geneName, "未测试");
-						dataMap.put(geneCode + "_" + geneName + "_feature", "未测试");
-					}
-				}
-				
-			}
-			
-//			dataMap.put("ADH1B_rs1229984", "Bug需更改");
-//			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
-//			dataMap.put("ALDH2_rs671", "Bug需更改");
-//			dataMap.put("ALDH2_rs671_feature", "Bug需更改");
-			if (!dataMap.containsKey("COL12A1_rs970547")) {
-				dataMap.put("COL12A1_rs970547", "此项数据仅对女性有效！");
-				dataMap.put("COL12A1_rs970547_feature", "此项数据仅对女性有效！");
-			}
+			Map<String, Object> dataMap = addDataToWord(userName, userOriginalList, user);
 			WordAction action = new WordAction();
-			dataMap.put("explosiveForceScore", userScorePerItemResult.get(0).getExplosiveForceScore_percentage());
-			dataMap.put("explosiveForceScore_ranking", userScorePerItemResult.get(0).getExplosiveForceScore_ranking());
-			
-			dataMap.put("staminaScore", userScorePerItemResult.get(0).getStaminaScore_percentage());
-			dataMap.put("staminaScore_ranking", userScorePerItemResult.get(0).getStaminaScore_ranking());
-			
-			dataMap.put("injuryRecoveryAbilityScore", userScorePerItemResult.get(0).getInjuryRecoveryAbilityScore_percentage());
-			dataMap.put("injuryRecoveryAbilityScore_ranking", userScorePerItemResult.get(0).getInjuryRecoveryAbilityScore_ranking());
-			
-			dataMap.put("injuryRiskScore", userScorePerItemResult.get(0).getInjuryRiskScore_percentage());
-			dataMap.put("injuryRiskScore_ranking", userScorePerItemResult.get(0).getInjuryRiskScore_ranking());
-			
-			dataMap.put("obesityRiskScore", userScorePerItemResult.get(0).getObesityRiskScore_percentage());
-			dataMap.put("obesityRiskScore_fatReducingSensitivityScore_ranking", userScorePerItemResult.get(0).getObesityRiskScore_ranking());
-			
-			dataMap.put("fatReducingSensitivityScore", userScorePerItemResult.get(0).getFatReducingSensitivityScore_percentage());
-			
+			addScoreTableToWord(userScorePerItemResult, dataMap);
 			action.createWord(dataMap, userName.replace("*", ""));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         return userScoreList;
     }
+
+	private void addScoreTableToWord(List<UserScorePerItemResult> userScorePerItemResult, Map<String, Object> dataMap) {
+		dataMap.put("explosiveForceScore", userScorePerItemResult.get(0).getExplosiveForceScore_percentage());
+		dataMap.put("explosiveForceScore_ranking", userScorePerItemResult.get(0).getExplosiveForceScore_ranking());
+		
+		dataMap.put("staminaScore", userScorePerItemResult.get(0).getStaminaScore_percentage());
+		dataMap.put("staminaScore_ranking", userScorePerItemResult.get(0).getStaminaScore_ranking());
+		
+		dataMap.put("injuryRecoveryAbilityScore", userScorePerItemResult.get(0).getInjuryRecoveryAbilityScore_percentage());
+		dataMap.put("injuryRecoveryAbilityScore_ranking", userScorePerItemResult.get(0).getInjuryRecoveryAbilityScore_ranking());
+		
+		dataMap.put("injuryRiskScore", userScorePerItemResult.get(0).getInjuryRiskScore_percentage());
+		dataMap.put("injuryRiskScore_ranking", userScorePerItemResult.get(0).getInjuryRiskScore_ranking());
+		
+		dataMap.put("obesityRiskScore", userScorePerItemResult.get(0).getObesityRiskScore_percentage());
+		dataMap.put("obesityRiskScore_fatReducingSensitivityScore_ranking", userScorePerItemResult.get(0).getObesityRiskScore_ranking());
+		
+		dataMap.put("fatReducingSensitivityScore", userScorePerItemResult.get(0).getFatReducingSensitivityScore_percentage());
+	}
+
+	private Map<String, Object> addDataToWord(String userName, List<UserOriginalResult> userOriginalList, User user)
+			throws IOException {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+//			String geneFeatureExcelFile = "./data/features.xls";
+		List<GeneFeature> geneFeatureList = null;
+		geneFeatureList = GeneFeatureDataParser.parseExcelData();
+		for (UserOriginalResult userOriginal : userOriginalList) {
+			String geneCode = userOriginal.getGeneCode();
+			String geneName = userOriginal.getGeneName();
+			List<UserScoreDtoResult> geneTypeList = getUserOriginalType(userName, geneCode, geneName);
+			String geneType = ((UserScoreDtoResult)geneTypeList.get(0)).getGeneType();
+//				System.out.println(geneTypeList.size()+"------"+userName+"-------"+geneCode+"-------"+geneName+"---------"+geneType);
+			if ("女".equals(user.getSex()) && "COL12A1".equals(geneCode) && "rs970547".equals(geneName)) {
+				String geneType1 = ((UserScoreDtoResult)getUserOriginalType(userName, "COL5A1", "rs12722").get(0)).getGeneType();
+				List<ScoreFemale> scoreFemaleList = scoreFemaleMapper.selectAllScoreFemale();
+				for (ScoreFemale scoreFemale : scoreFemaleList) {
+					if (scoreFemale.getGeneType1().equals(geneType1) && scoreFemale.getGeneType2().equals(geneType)) {
+						dataMap.put("COL12A1_rs970547", geneType);
+						String geneFeature = GeneFeatureDataParser.getGeneFeature("COL5A1_COL12A1", "rs12722_rs970547", geneType1+"_"+geneType, geneFeatureList);
+						dataMap.put("COL12A1_rs970547_feature", geneFeature);
+					}
+				}
+			}
+			else {
+				if ("COL12A1".equals(geneCode) && "rs970547".equals(geneName)) {
+					dataMap.put("COL12A1_rs970547", "此项数据仅对女性有效！");
+					dataMap.put("COL12A1_rs970547_feature", "此项数据仅对女性有效！");
+					continue;
+				}
+				if (geneType != null) {
+					dataMap.put(geneCode + "_" + geneName, geneType);
+					String geneFeature = GeneFeatureDataParser.getGeneFeature(geneCode, geneName, geneType, geneFeatureList);
+					dataMap.put(geneCode + "_" + geneName + "_feature", geneFeature);
+				}
+				else {
+					dataMap.put(geneCode + "_" + geneName, "未测试");
+					dataMap.put(geneCode + "_" + geneName + "_feature", "未测试");
+				}
+			}
+			
+		}
+//			dataMap.put("ADH1B_rs1229984", "Bug需更改");
+//			dataMap.put("ADH1B_rs1229984_feature", "Bug需更改");
+//			dataMap.put("ALDH2_rs671", "Bug需更改");
+//			dataMap.put("ALDH2_rs671_feature", "Bug需更改");
+		if (!dataMap.containsKey("COL12A1_rs970547")) {
+			dataMap.put("COL12A1_rs970547", "此项数据仅对女性有效！");
+			dataMap.put("COL12A1_rs970547_feature", "此项数据仅对女性有效！");
+		}
+		return dataMap;
+	}
+
+	private void addScoreGroupDataToExcel(String userName, List<UserScoreDtoResult> userScoreList, User user) {
+		String geneType1 = ((UserScoreDtoResult)getUserOriginalType(userName, "APOE", "rs429358").get(0)).getGeneType();
+		String geneType2 = ((UserScoreDtoResult)getUserOriginalType(userName, "APOE", "rs7412").get(0)).getGeneType();
+		List<ScoreGroup> scoreGroupList = scoreGroupMapper.selectAllScoreGroup();
+		
+		for (ScoreGroup scoreGroup : scoreGroupList) {
+			if (geneType1.equals(scoreGroup.getGeneType1()) && geneType2.equals(scoreGroup.getGeneType2())) {
+				UserScoreDtoResult usdr = new UserScoreDtoResult();
+				usdr.setUserId(user.getUserId());
+				usdr.setName(user.getName());
+				usdr.setGeneCode("APOE_APOE");
+				usdr.setGeneName("rs429358_rs7412");
+				usdr.setGeneType(geneType1+"_"+geneType2);
+				usdr.setFatReducingSensitivity(scoreGroup.getFatReducingSensitivity());
+				usdr.setFatReducingSensitivityScore(scoreGroup.getFatReducingSensitivityScore());
+				userScoreList.add(usdr);
+			}
+		}
+	}
+
+	private void addFemaleDataToExcel(String userName, List<UserScoreDtoResult> userScoreList, User user) {
+		String sex = user.getSex();
+		if("女".equals(sex)){
+		    UserScoreFemaleResult userScoreFemaleResult = userMapper.selectUserScoreFemale(userName);
+		    UserScoreDtoResult usdr = new UserScoreDtoResult();
+		    usdr.setUserId(userScoreFemaleResult.getUserId());
+		    usdr.setName(userScoreFemaleResult.getName());
+		    usdr.setGeneCode(userScoreFemaleResult.getGeneCode1()+"_"+userScoreFemaleResult.getGeneCode2());
+		    usdr.setGeneName(userScoreFemaleResult.getGeneName1()+"_"+userScoreFemaleResult.getGeneName2());
+		    usdr.setGeneType(userScoreFemaleResult.getGeneType1()+"_"+userScoreFemaleResult.getGeneType2());
+		    usdr.setInjuryRisk(userScoreFemaleResult.getInjuryRisk());
+		    usdr.setInjuryRiskScore(userScoreFemaleResult.getInjuryRiskScore());
+		    userScoreList.add(usdr);
+		}
+	}
 
     @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。

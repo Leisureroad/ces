@@ -1,5 +1,7 @@
 package com.dapeng.ces.mapper;
 
+import java.util.List;
+
 import com.dapeng.ces.model.UserScoreGroup;
 
 public interface UserScoreGroupMapper {
@@ -16,4 +18,6 @@ public interface UserScoreGroupMapper {
     int delete();
     
     int updateByPrimaryKey(UserScoreGroup record);
+    
+    List<UserScoreGroup> selectAllUserScoreGroup();
 }
