@@ -3,6 +3,7 @@ package com.dapeng.ces.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.dapeng.ces.dto.UserOriginalPlayerResult;
 import com.dapeng.ces.dto.UserOriginalResult;
 import com.dapeng.ces.dto.UserScoreDtoResult;
 import com.dapeng.ces.dto.UserScoreFemaleResult;
@@ -41,4 +42,6 @@ public interface UserMapper {
     List<User> selectUserBySex(Map<String, String> map);
     
     UserScoreFemaleResult selectUserScoreFemale(String name);
+    
+    List<UserOriginalPlayerResult> selectUserOriginalPlayer(Map<String, String> map);
 }

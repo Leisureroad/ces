@@ -22,4 +22,5 @@ public interface PersistenceService {
     List<NationalRanking> saveNationalRanking();
     Map<String, List<String>> subitemCompare(String userName);
     List<ScoreFemale> saveScoreFemale();
+    Map<String, List<String>> subitemCompareGene(String userName);
 }
