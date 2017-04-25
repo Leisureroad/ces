@@ -25,7 +25,7 @@ import com.dapeng.ces.util.StringUtil;
 public class PersistenceController {
     @Autowired
     private PersistenceService persistenceService;
-    @Value("${rsgene}")
+//    @Value("${rsgene}")
     private String rsgene;
 	
     @RequestMapping(value = "init",method = RequestMethod.GET,produces = "application/json")
@@ -84,5 +84,10 @@ public class PersistenceController {
     @RequestMapping(value = "subitemCompare",method = RequestMethod.GET,produces = "application/json")
     public Map<String, List<String>> subitemCompare(String userName){
         return persistenceService.subitemCompare(userName);
+    }
+    
+    @RequestMapping(value = "subitemCompareGene",method = RequestMethod.GET,produces = "application/json")
+    public Map<String, List<String>> subitemCompareGene(String userName){
+        return persistenceService.subitemCompareGene(userName);
     }
 }
