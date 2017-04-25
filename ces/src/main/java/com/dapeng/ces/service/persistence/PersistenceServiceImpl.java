@@ -950,6 +950,7 @@ public class PersistenceServiceImpl implements PersistenceService {
     }
 
     private List<String> getMatchGeneUserList(String userName, List<String> list) {
+    	System.out.println("totalSize="+list.size());
         //根据姓名查询用户信息
         User user = userMapper.selectByName(userName);
         if(user == null){
@@ -982,12 +983,12 @@ public class PersistenceServiceImpl implements PersistenceService {
                 }
             }
         }
-        System.out.println(map_match.size());
+//        System.out.println(map_match.size());
         // 遍历map，获取最大的value值
         Iterator<Entry<String, Integer>> it = map_match.entrySet().iterator();
         int maxValue = 0;
         String maxKey = null;
-        for(int i=0;i<map.size();i++){
+        for(int i=0;i<map_match.size();i++){
             Entry<String, Integer> entry = (Map.Entry<String, Integer>)it.next();
             Integer value = entry.getValue();
             if(value > maxValue){
@@ -995,7 +996,7 @@ public class PersistenceServiceImpl implements PersistenceService {
                 maxKey = entry.getKey().toString();
             }
         }
-        System.out.println("maxValue"+maxValue);
+        System.out.println("maxValue="+maxValue);
         //获取重复的最大值
         List<String> userIdList = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : map_match.entrySet()) {
@@ -1007,6 +1008,7 @@ public class PersistenceServiceImpl implements PersistenceService {
         return userIdList;
     }
     private List<String> getMatchGeneUserList_injuryRisk(String userName, List<String> list) {
+    	System.out.println("totalSize="+list.size());
         //根据姓名查询用户信息
         User user = userMapper.selectByName(userName);
         if(user == null){
@@ -1064,12 +1066,12 @@ public class PersistenceServiceImpl implements PersistenceService {
                 }
             }
         }
-        System.out.println(map_match.size());
+//        System.out.println(map_match.size());
         // 遍历map，获取最大的value值
         Iterator<Entry<String, Integer>> it = map_match.entrySet().iterator();
         int maxValue = 0;
         String maxKey = null;
-        for(int i=0;i<map.size();i++){
+        for(int i=0;i<map_match.size();i++){
             Entry<String, Integer> entry = (Map.Entry<String, Integer>)it.next();
             Integer value = entry.getValue();
             if(value > maxValue){
@@ -1077,7 +1079,7 @@ public class PersistenceServiceImpl implements PersistenceService {
                 maxKey = entry.getKey().toString();
             }
         }
-        System.out.println("maxValue"+maxValue);
+        System.out.println("maxValue="+maxValue);
         //获取重复的最大值
         List<String> userIdList = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : map_match.entrySet()) {
