@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dapeng.ces.dto.GenePlayerResult;
 import com.dapeng.ces.dto.GeneResult;
 import com.dapeng.ces.dto.NationalRankingExcel;
 import com.dapeng.ces.dto.ScoreFemaleExcel;
@@ -23,6 +24,7 @@ import com.dapeng.ces.dto.ScoreResult;
 import com.dapeng.ces.dto.UserCompareGene;
 import com.dapeng.ces.dto.UserCompareParam;
 import com.dapeng.ces.dto.UserCompareResult;
+import com.dapeng.ces.dto.UserOriginalPlayerResult;
 import com.dapeng.ces.dto.UserOriginalResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreCompareResult;
@@ -56,6 +58,7 @@ import com.dapeng.ces.service.poi.ScoreDataParser;
 import com.dapeng.ces.service.poi.UserDataParser;
 import com.dapeng.ces.service.poi.UserScoreDataExporter;
 import com.dapeng.ces.util.PrimaryKeyGenerator;
+import com.dapeng.ces.util.StringUtil;
 
 @Service
 public class PersistenceServiceImpl implements PersistenceService {
@@ -100,7 +103,7 @@ public class PersistenceServiceImpl implements PersistenceService {
     
     @Value("${total-score.fatReducingSensitivityScore}")
     private Double fatReducingSensitivityScore_percentage;
-
+    
     @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override
@@ -436,6 +439,18 @@ public class PersistenceServiceImpl implements PersistenceService {
         return geneType;
     }
     
+    private String getGenePlayerType(String geneName,UserOriginalPlayerResult userOriginalPlayer){
+        String geneType = "";
+        List<GenePlayerResult> genePlayerList = userOriginalPlayer.getGenePlayerList();
+        for (GenePlayerResult genePlayer : genePlayerList) {
+            String geneNamePlayer = genePlayer.getGeneName();
+            if (geneName.equals(geneNamePlayer)) {
+                geneType = genePlayer.getGeneType();
+            }
+        }
+        return geneType;
+
+    }
     private boolean isIncludeGeneName(List<String> list,String geneName){
         boolean result = false;
         if(list.contains(geneName)){
@@ -899,7 +914,180 @@ public class PersistenceServiceImpl implements PersistenceService {
         }
         return sfList;
     }
-    
+    @Value("${rsgene.explosiveForceOrStamina}")
+    private String explosiveForceOrStamina;
+    @Value("${rsgene.injuryRecoveryAbility}")
+    private String injuryRecoveryAbility;
+    @Value("${rsgene.injuryRisk}")
+    private String injuryRisk;
+    @Value("${rsgene.obesityRisk}")
+    private String obesityRisk;
+    @Override
+    public Map<String, List<String>> subitemCompareGene(String userName) {
+        Map<String, List<String>> resultMap = new HashMap<>();
+        //获取对比爆发力和耐力组合的位点
+        List<String> explosiveForceOrStaminaList = StringUtil.string2List(explosiveForceOrStamina, ",");
+        //获取对比恢复能力的位点
+        List<String> injuryRecoveryAbilityList = StringUtil.string2List(injuryRecoveryAbility, ",");
+        //获取对比韧带、关节损伤的位点
+        List<String> injuryRiskList = StringUtil.string2List(injuryRisk, ",");
+        //获取对比肥胖风险的位点
+        List<String> obesityRiskList = StringUtil.string2List(obesityRisk, ",");
+
+        List<String> explosiveForceOrStaminaUserIdList = getMatchGeneUserList(userName, explosiveForceOrStaminaList);
+        resultMap.put("爆发力+耐力", explosiveForceOrStaminaUserIdList);
+        
+        List<String> injuryRecoveryAbilityListUserIdList = getMatchGeneUserList(userName, injuryRecoveryAbilityList);
+        resultMap.put("运动损伤的恢复能力", injuryRecoveryAbilityListUserIdList);
+        
+        List<String> injuryRiskUserIdList = getMatchGeneUserList_injuryRisk(userName, injuryRiskList);
+        resultMap.put("韧带、关节损伤风险", injuryRiskUserIdList);
+
+        List<String> obesityRiskUserIdList = getMatchGeneUserList(userName, obesityRiskList);
+        resultMap.put("肥胖风险", obesityRiskUserIdList);
+        
+        return resultMap;
+    }
+
+    private List<String> getMatchGeneUserList(String userName, List<String> list) {
+        //根据姓名查询用户信息
+        User user = userMapper.selectByName(userName);
+        if(user == null){
+            return null;
+        }
+        //获取用户性别
+        String sex = user.getSex();
+        // 获取用户的位点基因信息
+        List<UserOriginalResult> userOriginalList = userMapper.selectUserOriginal(userName);
+        // 获取所有运动员的信息
+        Map<String, String> map = new HashMap<>();
+        map.put("star", "1");
+        map.put("sex", sex);
+        List<UserOriginalPlayerResult> userOriginalPlayerList = userMapper.selectUserOriginalPlayer(map);
+        Map<String, Integer> map_match = new HashMap<>();
+        for (UserOriginalResult userOriginalResult : userOriginalList) {
+            String geneName = userOriginalResult.getGeneName();
+            String geneType = userOriginalResult.getGeneType();
+            for (UserOriginalPlayerResult userOriginalPlayer : userOriginalPlayerList) {
+                String userIdPlayer = userOriginalPlayer.getUserId();
+                String name = userOriginalPlayer.getName();
+                Integer count = map_match.get(userIdPlayer+name);
+                if(count == null){
+                    count = 0;
+                }
+                String geneTypePlayer = this.getGenePlayerType(geneName, userOriginalPlayer);
+                if (isIncludeGeneName(list, geneName) && geneType.equals(geneTypePlayer)) {
+                    count = count.intValue() + 1;
+                    map_match.put(userIdPlayer+name, count);
+                }
+            }
+        }
+        System.out.println(map_match.size());
+        // 遍历map，获取最大的value值
+        Iterator<Entry<String, Integer>> it = map_match.entrySet().iterator();
+        int maxValue = 0;
+        String maxKey = null;
+        for(int i=0;i<map.size();i++){
+            Entry<String, Integer> entry = (Map.Entry<String, Integer>)it.next();
+            Integer value = entry.getValue();
+            if(value > maxValue){
+                maxValue = value;
+                maxKey = entry.getKey().toString();
+            }
+        }
+        System.out.println("maxValue"+maxValue);
+        //获取重复的最大值
+        List<String> userIdList = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : map_match.entrySet()) {
+            Integer value = entry.getValue();
+            if(maxValue == value){
+                userIdList.add(entry.getKey());
+            }
+        }
+        return userIdList;
+    }
+    private List<String> getMatchGeneUserList_injuryRisk(String userName, List<String> list) {
+        //根据姓名查询用户信息
+        User user = userMapper.selectByName(userName);
+        if(user == null){
+            return null;
+        }
+        //获取用户性别
+        String sex = user.getSex();
+        // 获取用户的位点基因信息
+        List<UserOriginalResult> userOriginalList = userMapper.selectUserOriginal(userName);
+        // 获取所有运动员的信息
+        Map<String, String> map = new HashMap<>();
+        map.put("star", "1");
+        map.put("sex", sex);
+        List<UserOriginalPlayerResult> userOriginalPlayerList = userMapper.selectUserOriginalPlayer(map);
+        Map<String, Integer> map_match = new HashMap<>();
+        for (UserOriginalResult userOriginalResult : userOriginalList) {
+            String geneCode = userOriginalResult.getGeneCode();
+            String geneName = userOriginalResult.getGeneName();
+            String geneType = userOriginalResult.getGeneType();
+            if("女".equals(sex) && "COL12A1".equals(geneCode)){
+                //获取人员的COL5A1的基因型
+                List<UserScoreDtoResult> geneType_5AList = this.getUserOriginalType(userName, "COL5A1", "rs12722");
+                String geneType_5A = ((UserScoreDtoResult)geneType_5AList.get(0)).getGeneType();
+                for (UserOriginalPlayerResult userOriginalPlayer : userOriginalPlayerList) {
+                    String userIdPlayer = userOriginalPlayer.getUserId();
+                    String name = userOriginalPlayer.getName();
+                    Integer count = map_match.get(userIdPlayer+name);
+                    if(count == null){
+                        count = 0;
+                    }
+                    //获取运动员的COL5A1的基因型
+                    List<UserScoreDtoResult> geneType_5APlayerList = this.getUserOriginalType(name, "COL5A1", "rs12722");
+                    String geneType_5APlayer = ((UserScoreDtoResult)geneType_5APlayerList.get(0)).getGeneType();
+                    String geneTypePlayer = this.getGenePlayerType(geneName, userOriginalPlayer);
+                    if (isIncludeGeneName(list, geneName) && geneType.equals(geneTypePlayer) && geneType_5A.equals(geneType_5APlayer)) {
+                        count = count.intValue() + 1;
+                        map_match.put(userIdPlayer+name, count);
+                    }
+                }
+            }else if("男".equals(sex) && "COL12A1".equals(geneCode)){
+                continue;
+            }else{
+                for (UserOriginalPlayerResult userOriginalPlayer : userOriginalPlayerList) {
+                    String userIdPlayer = userOriginalPlayer.getUserId();
+                    String name = userOriginalPlayer.getName();
+                    Integer count = map_match.get(userIdPlayer+name);
+                    if(count == null){
+                        count = 0;
+                    }
+                    String geneTypePlayer = this.getGenePlayerType(geneName, userOriginalPlayer);
+                    if (isIncludeGeneName(list, geneName) && geneType.equals(geneTypePlayer)) {
+                        count = count.intValue() + 1;
+                        map_match.put(userIdPlayer+name, count);
+                    }
+                }
+            }
+        }
+        System.out.println(map_match.size());
+        // 遍历map，获取最大的value值
+        Iterator<Entry<String, Integer>> it = map_match.entrySet().iterator();
+        int maxValue = 0;
+        String maxKey = null;
+        for(int i=0;i<map.size();i++){
+            Entry<String, Integer> entry = (Map.Entry<String, Integer>)it.next();
+            Integer value = entry.getValue();
+            if(value > maxValue){
+                maxValue = value;
+                maxKey = entry.getKey().toString();
+            }
+        }
+        System.out.println("maxValue"+maxValue);
+        //获取重复的最大值
+        List<String> userIdList = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : map_match.entrySet()) {
+            Integer value = entry.getValue();
+            if(maxValue == value){
+                userIdList.add(entry.getKey());
+            }
+        }
+        return userIdList;
+    }
     @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override

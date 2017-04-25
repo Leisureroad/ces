@@ -49,6 +49,16 @@
     <result column="gene_name" property="geneName" jdbcType="VARCHAR" />
     <result column="gene_type" property="geneType" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="BaseResultMap_UserOriginalPlayer" type="com.dapeng.ces.dto.UserOriginalPlayerResult" >
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <collection property="genePlayerList"
+		ofType="com.dapeng.ces.dto.GenePlayerResult">
+		<result column="gene_code" property="geneCode" jdbcType="VARCHAR" />
+   		<result column="gene_name" property="geneName" jdbcType="VARCHAR" />
+   		<result column="gene_type" property="geneType" jdbcType="VARCHAR" />
+	</collection>
+  </resultMap>
   
   <resultMap id="BaseResultMap_Player" type="com.dapeng.ces.dto.UserScorePlayerResult" >
     <id column="uuid" property="uuid" jdbcType="VARCHAR" />
@@ -144,6 +154,17 @@
 		user u
 	LEFT JOIN gene g ON u.user_id = g.user_id
 	WHERE u.name = #{name,jdbcType=VARCHAR}
+  </select>
+  <select id="selectUserOriginalPlayer" resultMap="BaseResultMap_UserOriginalPlayer" parameterType="java.util.Map" >
+  	SELECT 
+		u.user_id,
+		u.`name`,
+		g.`name` AS gene_name,
+		g.`code` AS gene_code,
+		g.`value` AS gene_type
+ 	FROM `user` u
+		LEFT JOIN gene g ON u.user_id = g.user_id
+		WHERE u.star = #{star,jdbcType=VARCHAR} AND u.sex = #{sex,jdbcType=VARCHAR}
   </select>
   
   <select id="selectUserPlayer" resultMap="BaseResultMap_Player" parameterType="java.lang.String" >
