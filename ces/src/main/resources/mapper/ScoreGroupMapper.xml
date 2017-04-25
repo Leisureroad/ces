@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dapeng.ces.mapper.ScoreGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.dapeng.ces.model.ScoreGroup" >
+    <id column="uuid" property="uuid" jdbcType="VARCHAR" />
+    <result column="gene_code1" property="geneCode1" jdbcType="VARCHAR" />
+    <result column="gene_name1" property="geneName1" jdbcType="VARCHAR" />
+    <result column="gene_type1" property="geneType1" jdbcType="VARCHAR" />
+    <result column="gene_code2" property="geneCode2" jdbcType="VARCHAR" />
+    <result column="gene_name2" property="geneName2" jdbcType="VARCHAR" />
+    <result column="gene_type2" property="geneType2" jdbcType="VARCHAR" />
+    <result column="fat_reducing_sensitivity" property="fatReducingSensitivity" jdbcType="VARCHAR" />
+    <result column="fat_reducing_sensitivity_score" property="fatReducingSensitivityScore" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uuid, gene_code1, gene_name1, gene_type1, gene_code2, gene_name2, gene_type2, fat_reducing_sensitivity, 
+    fat_reducing_sensitivity_score
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from score_group
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAllScoreGroup" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from score_group
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from score_group
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from score_group
+  </delete>
+  <insert id="insert" parameterType="com.dapeng.ces.model.ScoreGroup" >
+    insert into score_group (uuid, gene_code1, gene_name1, 
+      gene_type1, gene_code2, gene_name2, 
+      gene_type2, fat_reducing_sensitivity, fat_reducing_sensitivity_score
+      )
+    values (#{uuid,jdbcType=VARCHAR}, #{geneCode1,jdbcType=VARCHAR}, #{geneName1,jdbcType=VARCHAR}, 
+      #{geneType1,jdbcType=VARCHAR}, #{geneCode2,jdbcType=VARCHAR}, #{geneName2,jdbcType=VARCHAR}, 
+      #{geneType2,jdbcType=VARCHAR}, #{fatReducingSensitivity,jdbcType=VARCHAR}, #{fatReducingSensitivityScore,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dapeng.ces.model.ScoreGroup" >
+    insert into score_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        uuid,
+      </if>
+      <if test="geneCode1 != null" >
+        gene_code1,
+      </if>
+      <if test="geneName1 != null" >
+        gene_name1,
+      </if>
+      <if test="geneType1 != null" >
+        gene_type1,
+      </if>
+      <if test="geneCode2 != null" >
+        gene_code2,
+      </if>
+      <if test="geneName2 != null" >
+        gene_name2,
+      </if>
+      <if test="geneType2 != null" >
+        gene_type2,
+      </if>
+      <if test="fatReducingSensitivity != null" >
+        fat_reducing_sensitivity,
+      </if>
+      <if test="fatReducingSensitivityScore != null" >
+        fat_reducing_sensitivity_score,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uuid != null" >
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode1 != null" >
+        #{geneCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName1 != null" >
+        #{geneName1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType1 != null" >
+        #{geneType1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode2 != null" >
+        #{geneCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName2 != null" >
+        #{geneName2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType2 != null" >
+        #{geneType2,jdbcType=VARCHAR},
+      </if>
+      <if test="fatReducingSensitivity != null" >
+        #{fatReducingSensitivity,jdbcType=VARCHAR},
+      </if>
+      <if test="fatReducingSensitivityScore != null" >
+        #{fatReducingSensitivityScore,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dapeng.ces.model.ScoreGroup" >
+    update score_group
+    <set >
+      <if test="geneCode1 != null" >
+        gene_code1 = #{geneCode1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName1 != null" >
+        gene_name1 = #{geneName1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType1 != null" >
+        gene_type1 = #{geneType1,jdbcType=VARCHAR},
+      </if>
+      <if test="geneCode2 != null" >
+        gene_code2 = #{geneCode2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneName2 != null" >
+        gene_name2 = #{geneName2,jdbcType=VARCHAR},
+      </if>
+      <if test="geneType2 != null" >
+        gene_type2 = #{geneType2,jdbcType=VARCHAR},
+      </if>
+      <if test="fatReducingSensitivity != null" >
+        fat_reducing_sensitivity = #{fatReducingSensitivity,jdbcType=VARCHAR},
+      </if>
+      <if test="fatReducingSensitivityScore != null" >
+        fat_reducing_sensitivity_score = #{fatReducingSensitivityScore,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dapeng.ces.model.ScoreGroup" >
+    update score_group
+    set gene_code1 = #{geneCode1,jdbcType=VARCHAR},
+      gene_name1 = #{geneName1,jdbcType=VARCHAR},
+      gene_type1 = #{geneType1,jdbcType=VARCHAR},
+      gene_code2 = #{geneCode2,jdbcType=VARCHAR},
+      gene_name2 = #{geneName2,jdbcType=VARCHAR},
+      gene_type2 = #{geneType2,jdbcType=VARCHAR},
+      fat_reducing_sensitivity = #{fatReducingSensitivity,jdbcType=VARCHAR},
+      fat_reducing_sensitivity_score = #{fatReducingSensitivityScore,jdbcType=DOUBLE}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

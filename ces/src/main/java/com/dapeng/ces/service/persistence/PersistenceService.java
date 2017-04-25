@@ -9,6 +9,7 @@ import com.dapeng.ces.dto.UserScoreDtoResult;
 import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.ScoreFemale;
+import com.dapeng.ces.model.ScoreGroup;
 import com.dapeng.ces.model.UserScore;
 
 public interface PersistenceService {
@@ -23,4 +24,5 @@ public interface PersistenceService {
     Map<String, List<String>> subitemCompare(String userName);
     List<ScoreFemale> saveScoreFemale();
     Map<String, List<String>> subitemCompareGene(String userName);
+    List<ScoreGroup> saveScoreGroup();
 }
