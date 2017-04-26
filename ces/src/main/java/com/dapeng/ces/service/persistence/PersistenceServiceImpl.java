@@ -943,7 +943,7 @@ public class PersistenceServiceImpl implements PersistenceService {
         List<String> injuryRiskUserIdList = getMatchGeneUserList_injuryRisk(userName, injuryRiskList);
         resultMap.put("韧带、关节损伤风险", injuryRiskUserIdList);
 
-        List<String> obesityRiskUserIdList = getMatchGeneUserList(userName, obesityRiskList);
+        List<String> obesityRiskUserIdList = getMatchGeneUserList_obesityRisk(userName, obesityRiskList);
         resultMap.put("肥胖风险", obesityRiskUserIdList);
         
         return resultMap;
@@ -1050,6 +1050,87 @@ public class PersistenceServiceImpl implements PersistenceService {
                 }
             }else if("男".equals(sex) && "COL12A1".equals(geneCode)){
                 continue;
+            }else{
+                for (UserOriginalPlayerResult userOriginalPlayer : userOriginalPlayerList) {
+                    String userIdPlayer = userOriginalPlayer.getUserId();
+                    String name = userOriginalPlayer.getName();
+                    Integer count = map_match.get(userIdPlayer+name);
+                    if(count == null){
+                        count = 0;
+                    }
+                    String geneTypePlayer = this.getGenePlayerType(geneName, userOriginalPlayer);
+                    if (isIncludeGeneName(list, geneName) && geneType.equals(geneTypePlayer)) {
+                        count = count.intValue() + 1;
+                        map_match.put(userIdPlayer+name, count);
+                    }
+                }
+            }
+        }
+//        System.out.println(map_match.size());
+        // 遍历map，获取最大的value值
+        Iterator<Entry<String, Integer>> it = map_match.entrySet().iterator();
+        int maxValue = 0;
+        String maxKey = null;
+        for(int i=0;i<map_match.size();i++){
+            Entry<String, Integer> entry = (Map.Entry<String, Integer>)it.next();
+            Integer value = entry.getValue();
+            if(value > maxValue){
+                maxValue = value;
+                maxKey = entry.getKey().toString();
+            }
+        }
+        System.out.println("maxValue="+maxValue);
+        //获取重复的最大值
+        List<String> userIdList = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : map_match.entrySet()) {
+            Integer value = entry.getValue();
+            if(maxValue == value){
+                userIdList.add(entry.getKey());
+            }
+        }
+        return userIdList;
+    }
+    private List<String> getMatchGeneUserList_obesityRisk(String userName, List<String> list) {
+        System.out.println("totalSize="+list.size());
+        //根据姓名查询用户信息
+        User user = userMapper.selectByName(userName);
+        if(user == null){
+            return null;
+        }
+        //获取用户性别
+        String sex = user.getSex();
+        // 获取用户的位点基因信息
+        List<UserOriginalResult> userOriginalList = userMapper.selectUserOriginal(userName);
+        // 获取所有运动员的信息
+        Map<String, String> map = new HashMap<>();
+        map.put("star", "1");
+        map.put("sex", sex);
+        List<UserOriginalPlayerResult> userOriginalPlayerList = userMapper.selectUserOriginalPlayer(map);
+        Map<String, Integer> map_match = new HashMap<>();
+        for (UserOriginalResult userOriginalResult : userOriginalList) {
+            String geneCode = userOriginalResult.getGeneCode();
+            String geneName = userOriginalResult.getGeneName();
+            String geneType = userOriginalResult.getGeneType();
+            if("rs429358".equals(geneName)){
+                //获取人员的rs7412的基因型
+                List<UserScoreDtoResult> geneType_7412List = this.getUserOriginalType(userName, "APOE", "rs7412");
+                String geneType_7412 = ((UserScoreDtoResult)geneType_7412List.get(0)).getGeneType();
+                for (UserOriginalPlayerResult userOriginalPlayer : userOriginalPlayerList) {
+                    String userIdPlayer = userOriginalPlayer.getUserId();
+                    String name = userOriginalPlayer.getName();
+                    Integer count = map_match.get(userIdPlayer+name);
+                    if(count == null){
+                        count = 0;
+                    }
+                    //获取运动员的rs7412的基因型
+                    List<UserScoreDtoResult> geneType_7412PlayerList = this.getUserOriginalType(name, "APOE", "rs7412");
+                    String geneType_7412Player = ((UserScoreDtoResult)geneType_7412PlayerList.get(0)).getGeneType();
+                    String geneTypePlayer = this.getGenePlayerType(geneName, userOriginalPlayer);
+                    if (isIncludeGeneName(list, geneName) && geneType.equals(geneTypePlayer) && geneType_7412.equals(geneType_7412Player)) {
+                        count = count.intValue() + 1;
+                        map_match.put(userIdPlayer+name, count);
+                    }
+                }
             }else{
                 for (UserOriginalPlayerResult userOriginalPlayer : userOriginalPlayerList) {
                     String userIdPlayer = userOriginalPlayer.getUserId();
