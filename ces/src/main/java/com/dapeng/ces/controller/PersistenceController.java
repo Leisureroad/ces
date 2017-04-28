@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dapeng.ces.dto.UserCompareResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreDtoResult;
+import com.dapeng.ces.model.CumulativeScore;
 import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.ScoreFemale;
@@ -35,6 +36,7 @@ public class PersistenceController {
         persistenceService.saveScoreFemale();
         persistenceService.saveScoreGroup();
         persistenceService.saveUserScore();
+        persistenceService.saveCumulativeScore();
         return true;
     }
     
@@ -63,6 +65,11 @@ public class PersistenceController {
         return persistenceService.saveScoreGroup();
     }
     
+    @RequestMapping(value = "saveCumulativeScore",method = RequestMethod.GET,produces = "application/json")
+    public List<CumulativeScore> saveCumulativeScore(){
+        return persistenceService.saveCumulativeScore();
+    }
+    
     @RequestMapping(value = "getUserScore",method = RequestMethod.GET,produces = "application/json")
     public List<UserScoreDtoResult> getUserScore(@RequestParam("userName") String userName){
          return persistenceService.getUserScore(userName);
@@ -89,5 +96,10 @@ public class PersistenceController {
     @RequestMapping(value = "subitemCompareGene",method = RequestMethod.GET,produces = "application/json")
     public Map<String, List<String>> subitemCompareGene(String userName){
         return persistenceService.subitemCompareGene(userName);
+    }
+    
+    @RequestMapping(value = "userCompareRanking",method = RequestMethod.GET,produces = "application/json")
+    public Map<String, String> userCompareRanking(String userName){
+        return persistenceService.userCompareRanking(userName);
     }
 }

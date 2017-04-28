@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dapeng.ces.mapper.CumulativeScoreMapper" >
+  <resultMap id="BaseResultMap" type="com.dapeng.ces.model.CumulativeScore" >
+    <id column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="star" property="star" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="explosive_force_stamina_core_percentage" property="explosiveForceStaminaCorePercentage" jdbcType="DOUBLE" />
+    <result column="injury_recovery_ability_score_percentage" property="injuryRecoveryAbilityScorePercentage" jdbcType="DOUBLE" />
+    <result column="injury_risk_score_percentage" property="injuryRiskScorePercentage" jdbcType="DOUBLE" />
+    <result column="obesity_risk_score_percentage" property="obesityRiskScorePercentage" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, name, star, sex, explosive_force_stamina_core_percentage, injury_recovery_ability_score_percentage, 
+    injury_risk_score_percentage, obesity_risk_score_percentage
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from cumulative_score
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+    <select id="selectByUserName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from cumulative_score
+    where name = #{userName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectUserScore_explosive" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from cumulative_score
+    where star = #{star,jdbcType=VARCHAR} and sex = #{sex,jdbcType=VARCHAR}
+    ORDER BY explosive_force_stamina_core_percentage DESC
+  </select>
+  <select id="selectUserScore_injury" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from cumulative_score
+    where star = #{star,jdbcType=VARCHAR} and sex = #{sex,jdbcType=VARCHAR}
+    ORDER BY injury_recovery_ability_score_percentage DESC
+  </select>
+  <select id="selectUserScore_injury_risk" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from cumulative_score
+    where star = #{star,jdbcType=VARCHAR} and sex = #{sex,jdbcType=VARCHAR}
+    ORDER BY injury_risk_score_percentage DESC
+  </select>
+  <select id="selectUserScore_obesity" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from cumulative_score
+    where star = #{star,jdbcType=VARCHAR} and sex = #{sex,jdbcType=VARCHAR}
+    ORDER BY obesity_risk_score_percentage DESC
+  </select>
+  <delete id="delete" parameterType="java.lang.String" >
+    delete from cumulative_score
+  </delete>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from cumulative_score
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.dapeng.ces.model.CumulativeScore" >
+    insert into cumulative_score (user_id, name, star, 
+      sex, explosive_force_stamina_core_percentage, 
+      injury_recovery_ability_score_percentage, injury_risk_score_percentage, 
+      obesity_risk_score_percentage)
+    values (#{userId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{star,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{explosiveForceStaminaCorePercentage,jdbcType=DOUBLE}, 
+      #{injuryRecoveryAbilityScorePercentage,jdbcType=DOUBLE}, #{injuryRiskScorePercentage,jdbcType=DOUBLE}, 
+      #{obesityRiskScorePercentage,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dapeng.ces.model.CumulativeScore" >
+    insert into cumulative_score
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="star != null" >
+        star,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="explosiveForceStaminaCorePercentage != null" >
+        explosive_force_stamina_core_percentage,
+      </if>
+      <if test="injuryRecoveryAbilityScorePercentage != null" >
+        injury_recovery_ability_score_percentage,
+      </if>
+      <if test="injuryRiskScorePercentage != null" >
+        injury_risk_score_percentage,
+      </if>
+      <if test="obesityRiskScorePercentage != null" >
+        obesity_risk_score_percentage,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        #{star,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="explosiveForceStaminaCorePercentage != null" >
+        #{explosiveForceStaminaCorePercentage,jdbcType=DOUBLE},
+      </if>
+      <if test="injuryRecoveryAbilityScorePercentage != null" >
+        #{injuryRecoveryAbilityScorePercentage,jdbcType=DOUBLE},
+      </if>
+      <if test="injuryRiskScorePercentage != null" >
+        #{injuryRiskScorePercentage,jdbcType=DOUBLE},
+      </if>
+      <if test="obesityRiskScorePercentage != null" >
+        #{obesityRiskScorePercentage,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dapeng.ces.model.CumulativeScore" >
+    update cumulative_score
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        star = #{star,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="explosiveForceStaminaCorePercentage != null" >
+        explosive_force_stamina_core_percentage = #{explosiveForceStaminaCorePercentage,jdbcType=DOUBLE},
+      </if>
+      <if test="injuryRecoveryAbilityScorePercentage != null" >
+        injury_recovery_ability_score_percentage = #{injuryRecoveryAbilityScorePercentage,jdbcType=DOUBLE},
+      </if>
+      <if test="injuryRiskScorePercentage != null" >
+        injury_risk_score_percentage = #{injuryRiskScorePercentage,jdbcType=DOUBLE},
+      </if>
+      <if test="obesityRiskScorePercentage != null" >
+        obesity_risk_score_percentage = #{obesityRiskScorePercentage,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dapeng.ces.model.CumulativeScore" >
+    update cumulative_score
+    set name = #{name,jdbcType=VARCHAR},
+      star = #{star,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      explosive_force_stamina_core_percentage = #{explosiveForceStaminaCorePercentage,jdbcType=DOUBLE},
+      injury_recovery_ability_score_percentage = #{injuryRecoveryAbilityScorePercentage,jdbcType=DOUBLE},
+      injury_risk_score_percentage = #{injuryRiskScorePercentage,jdbcType=DOUBLE},
+      obesity_risk_score_percentage = #{obesityRiskScorePercentage,jdbcType=DOUBLE}
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+</mapper>

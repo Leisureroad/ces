@@ -6,6 +6,7 @@ import java.util.Map;
 import com.dapeng.ces.dto.UserCompareResult;
 import com.dapeng.ces.dto.UserResult;
 import com.dapeng.ces.dto.UserScoreDtoResult;
+import com.dapeng.ces.model.CumulativeScore;
 import com.dapeng.ces.model.NationalRanking;
 import com.dapeng.ces.model.Score;
 import com.dapeng.ces.model.ScoreFemale;
@@ -25,4 +26,6 @@ public interface PersistenceService {
     List<ScoreFemale> saveScoreFemale();
     Map<String, List<String>> subitemCompareGene(String userName);
     List<ScoreGroup> saveScoreGroup();
+    List<CumulativeScore> saveCumulativeScore();
+    Map<String, String> userCompareRanking(String userName);
 }
