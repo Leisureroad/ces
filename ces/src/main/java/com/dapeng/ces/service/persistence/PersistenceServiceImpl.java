@@ -32,6 +32,7 @@ import com.dapeng.ces.dto.UserScoreDtoResult;
 import com.dapeng.ces.dto.UserScoreFemaleResult;
 import com.dapeng.ces.dto.UserScorePerItemResult;
 import com.dapeng.ces.dto.UserScorePlayerResult;
+import com.dapeng.ces.mapper.CumulativeScoreMapper;
 import com.dapeng.ces.mapper.GeneMapper;
 import com.dapeng.ces.mapper.NationalRankingMapper;
 import com.dapeng.ces.mapper.ScoreFemaleMapper;
@@ -41,6 +42,7 @@ import com.dapeng.ces.mapper.UserMapper;
 import com.dapeng.ces.mapper.UserScoreFemaleMapper;
 import com.dapeng.ces.mapper.UserScoreGroupMapper;
 import com.dapeng.ces.mapper.UserScoreMapper;
+import com.dapeng.ces.model.CumulativeScore;
 import com.dapeng.ces.model.Gene;
 import com.dapeng.ces.model.GeneFeature;
 import com.dapeng.ces.model.NationalRanking;
@@ -82,6 +84,8 @@ public class PersistenceServiceImpl implements PersistenceService {
     private ScoreGroupMapper scoreGroupMapper;
     @Autowired
     private UserScoreGroupMapper userScoreGroupMapper;
+    @Autowired
+    private CumulativeScoreMapper cumulativeScoreMapper;
     
     @Value("${total-score.explosiveForceScore}")
     private Double explosiveForceScore_percentage;
@@ -1196,5 +1200,72 @@ public class PersistenceServiceImpl implements PersistenceService {
         } catch (IOException e) {
         }
         return sfList;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
+            isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
+    @Override
+    public List<CumulativeScore> saveCumulativeScore() {
+        cumulativeScoreMapper.delete();
+        List<CumulativeScore> csList = new ArrayList<>();
+        //根据姓名查询用户信息
+        List<User> users = userMapper.selectAllUser();
+        for (User user : users) {
+            //获取用户性别
+            String userId = user.getUserId();
+            String sex = user.getSex();
+            String userName = user.getName();
+            String star = user.getStar();
+            //根据用户查询出此用户的分值等信息
+            UserScorePerItemResult userScorePerItemResult = new UserScorePerItemResult();
+            List<UserScoreDtoResult> userScoreList = userMapper.selectUserScoreInfo(userName);
+            if("女".equals(sex)){
+                UserScoreFemaleResult userScoreFemaleResult = userMapper.selectUserScoreFemale(userName);
+                UserScoreDtoResult usdr = new UserScoreDtoResult();
+                usdr.setUserId(userScoreFemaleResult.getUserId());
+                usdr.setName(userScoreFemaleResult.getName());
+                usdr.setGeneCode(userScoreFemaleResult.getGeneCode1()+"_"+userScoreFemaleResult.getGeneCode2());
+                usdr.setGeneName(userScoreFemaleResult.getGeneName1()+"_"+userScoreFemaleResult.getGeneName2());
+                usdr.setGeneType(userScoreFemaleResult.getGeneType1()+"_"+userScoreFemaleResult.getGeneType2());
+                usdr.setInjuryRisk(userScoreFemaleResult.getInjuryRisk());
+                usdr.setInjuryRiskScore(userScoreFemaleResult.getInjuryRiskScore());
+                userScoreList.add(usdr);
+            }
+            try {
+                userScorePerItemResult = this.calculateCumulativeScore(userScoreList, userName, sex);
+            } catch (IOException e) {
+            }
+            CumulativeScore cs = new CumulativeScore();
+            cs.setUserId(userId);
+            cs.setName(userName);
+            cs.setSex(sex);
+            cs.setStar(star);
+            cs.setExplosiveForceStaminaCorePercentage(userScorePerItemResult.getExplosiveForceScore_percentage()+userScorePerItemResult.getStaminaScore_percentage());
+            cs.setInjuryRecoveryAbilityScorePercentage(userScorePerItemResult.getInjuryRecoveryAbilityScore_percentage());
+            cs.setInjuryRiskScorePercentage(userScorePerItemResult.getInjuryRiskScore_percentage());
+            cs.setObesityRiskScorePercentage(userScorePerItemResult.getObesityRiskScore_percentage());
+            cumulativeScoreMapper.insertSelective(cs);
+            csList.add(cs);
+        }
+
+        return csList;
+    }
+
+    @Override
+    public Map<String, String> userCompareRanking(String userName) {
+        //获取用户的数据
+        CumulativeScore userScore = cumulativeScoreMapper.selectByUserName(userName);
+        String sex = userScore.getSex();
+        Map<String, String> map = new HashMap<>();
+        map.put("sex", sex);
+        map.put("star", "2");
+        List<CumulativeScore> explosiveList = cumulativeScoreMapper.selectUserScore_explosive(map);
+        List<CumulativeScore> injuryList = cumulativeScoreMapper.selectUserScore_injury(map);
+        List<CumulativeScore> injuryRiskList = cumulativeScoreMapper.selectUserScore_injury_risk(map);
+        List<CumulativeScore> obesityList = cumulativeScoreMapper.selectUserScore_obesity(map);
+        //算法搞懵逼了。数据已经整理好入库，并查询出来了
+        
+        
+        return null;
     }
 }

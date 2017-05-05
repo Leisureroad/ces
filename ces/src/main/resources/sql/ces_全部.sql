@@ -10,10 +10,26 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2017-04-22 20:46:52
+Date: 2017-04-28 20:25:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for cumulative_score
+-- ----------------------------
+DROP TABLE IF EXISTS `cumulative_score`;
+CREATE TABLE `cumulative_score` (
+  `user_id` varchar(32) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `star` varchar(100) DEFAULT NULL,
+  `sex` varchar(100) DEFAULT NULL,
+  `explosive_force_stamina_core_percentage` double(100,0) DEFAULT NULL,
+  `injury_recovery_ability_score_percentage` double(100,0) DEFAULT NULL,
+  `injury_risk_score_percentage` double(100,0) DEFAULT NULL,
+  `obesity_risk_score_percentage` double(100,0) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for gene
@@ -93,6 +109,23 @@ CREATE TABLE `score_female` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
+-- Table structure for score_group
+-- ----------------------------
+DROP TABLE IF EXISTS `score_group`;
+CREATE TABLE `score_group` (
+  `uuid` varchar(32) NOT NULL,
+  `gene_code1` varchar(45) DEFAULT NULL,
+  `gene_name1` varchar(45) DEFAULT NULL,
+  `gene_type1` varchar(45) DEFAULT NULL,
+  `gene_code2` varchar(45) DEFAULT NULL,
+  `gene_name2` varchar(45) DEFAULT NULL,
+  `gene_type2` varchar(45) DEFAULT NULL,
+  `fat_reducing_sensitivity` varchar(45) DEFAULT NULL,
+  `fat_reducing_sensitivity_score` double DEFAULT NULL,
+  PRIMARY KEY (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
@@ -127,5 +160,17 @@ CREATE TABLE `user_score_female` (
   `user_id` varchar(100) DEFAULT NULL,
   `gene_uuid` varchar(100) DEFAULT NULL,
   `score_female_uuid` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for user_score_group
+-- ----------------------------
+DROP TABLE IF EXISTS `user_score_group`;
+CREATE TABLE `user_score_group` (
+  `uuid` varchar(32) NOT NULL,
+  `user_id` varchar(45) DEFAULT NULL,
+  `gene_uuid` varchar(45) DEFAULT NULL,
+  `score_group_uuid` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
