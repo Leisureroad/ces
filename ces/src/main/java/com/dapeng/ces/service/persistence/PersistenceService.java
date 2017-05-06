@@ -27,5 +27,5 @@ public interface PersistenceService {
     Map<String, List<String>> subitemCompareGene(String userName);
     List<ScoreGroup> saveScoreGroup();
     List<CumulativeScore> saveCumulativeScore();
-    Map<String, String> userCompareRanking(String userName);
+    String userCompareRanking(String userName);
 }

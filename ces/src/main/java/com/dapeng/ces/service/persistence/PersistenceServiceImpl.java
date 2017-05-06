@@ -1,6 +1,8 @@
 package com.dapeng.ces.service.persistence;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -772,17 +774,17 @@ public class PersistenceServiceImpl implements PersistenceService {
 //      userScorePerItemResult2.setObesityRiskScore(resultMap.get("obesityRiskScore"));
 //      userScorePerItemResult2.setFatReducingSensitivityScore(resultMap.get("fatReducingSensitivityScore"));
         
-        userScorePerItemResult2.setExplosiveForceScore_percentage(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage * 100);
-        userScorePerItemResult2.setStaminaScore_percentage(resultMap.get("staminaScore") / staminaScore_percentage * 100);
-        userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage * 100);
+        userScorePerItemResult2.setExplosiveForceScore_percentage(new BigDecimal(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+        userScorePerItemResult2.setStaminaScore_percentage(new BigDecimal(resultMap.get("staminaScore") / staminaScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+        userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(new BigDecimal(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
         if (!"女".equals(userSex)) {
-        	userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage * 100);
+        	userScorePerItemResult2.setInjuryRiskScore_percentage(new BigDecimal(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
         }
         else {
-        	userScorePerItemResult2.setInjuryRiskScore_percentage(resultMap.get("injuryRiskScore") / injuryRiskScore_female_percentage * 100);
+        	userScorePerItemResult2.setInjuryRiskScore_percentage(new BigDecimal(resultMap.get("injuryRiskScore") / injuryRiskScore_female_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
         }
-        userScorePerItemResult2.setObesityRiskScore_percentage(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage * 100);
-        userScorePerItemResult2.setFatReducingSensitivityScore_percentage(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage * 100);
+        userScorePerItemResult2.setObesityRiskScore_percentage(new BigDecimal(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+        userScorePerItemResult2.setFatReducingSensitivityScore_percentage(new BigDecimal(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
         Map<String, String> map = this.getRankingDataMap(userName);
         userScorePerItemResult2.setExplosiveForceScore_ranking(map.get("explosiveForceScore_ranking"));
         userScorePerItemResult2.setStaminaScore_ranking(map.get("staminaScore_ranking"));
@@ -1252,7 +1254,7 @@ public class PersistenceServiceImpl implements PersistenceService {
     }
 
     @Override
-    public Map<String, String> userCompareRanking(String userName) {
+    public String userCompareRanking(String userName) {
         //获取用户的数据
         CumulativeScore userScore = cumulativeScoreMapper.selectByUserName(userName);
         String sex = userScore.getSex();
@@ -1265,7 +1267,98 @@ public class PersistenceServiceImpl implements PersistenceService {
         List<CumulativeScore> obesityList = cumulativeScoreMapper.selectUserScore_obesity(map);
         //算法搞懵逼了。数据已经整理好入库，并查询出来了
         
-        
-        return null;
+        String ObesityRisk = calculateRankingArray("ObesityRisk", userScore, obesityList);
+        String ExplosiveForceStamina = calculateRankingArray("ExplosiveForceStamina", userScore, explosiveList);
+        String InjuryRecoveryAbility = calculateRankingArray("InjuryRecoveryAbility", userScore, injuryList);
+        String InjuryRisk = calculateRankingArray("InjuryRisk", userScore, injuryRiskList);
+        StringBuffer sb = new StringBuffer();
+        sb.append("爆发力耐力排名： " + ExplosiveForceStamina);
+        sb.append(", ");
+        sb.append("恢复能力排名： " + InjuryRecoveryAbility);
+        sb.append(", ");
+        sb.append("韧带、关节损伤风险排名： " + InjuryRisk);
+        sb.append(", ");
+        sb.append("肥胖风险排名： " + ObesityRisk);
+        String result = sb.toString();
+        return result;
     }
+
+	private String calculateRankingArray(String rankingType, CumulativeScore userScore, List<CumulativeScore> scoreList) {
+		int indexOfCurrentGroup = 0;
+        int countOfCurrentGroup = 1;
+        Double userObesityScore = 0.0;
+        int indexOfUserScore = 0;
+        List<Integer> countList = new ArrayList<Integer>();
+        List<Double> rankingList = new ArrayList<Double>();
+        rankingList.add(new Double(0.0));
+        
+        if (rankingType.equals("ObesityRisk")) {
+        	userObesityScore = userScore.getObesityRiskScorePercentage();
+        }
+        if (rankingType.equals("ExplosiveForceStamina")) {
+        	userObesityScore = userScore.getExplosiveForceStaminaCorePercentage();
+        }
+        if (rankingType.equals("InjuryRecoveryAbility")) {
+        	userObesityScore = userScore.getInjuryRecoveryAbilityScorePercentage();
+        }
+        if (rankingType.equals("InjuryRisk")) {
+        	userObesityScore = userScore.getInjuryRiskScorePercentage();
+        }
+        Double currentScore = null;
+        Double previousScore = null;
+        List<List<CumulativeScore>> obesityListGroupList = new ArrayList<List<CumulativeScore>>();
+        List<CumulativeScore> obesityListGroup = null;
+        for (CumulativeScore cumulativeScore : scoreList) {
+        	if (rankingType.equals("ObesityRisk")) {
+        		currentScore = cumulativeScore.getObesityRiskScorePercentage();
+            }
+        	if (rankingType.equals("ExplosiveForceStamina")) {
+        		currentScore = cumulativeScore.getExplosiveForceStaminaCorePercentage();
+            }
+        	if (rankingType.equals("InjuryRecoveryAbility")) {
+        		currentScore = cumulativeScore.getInjuryRecoveryAbilityScorePercentage();
+            }
+        	if (rankingType.equals("InjuryRisk")) {
+        		currentScore = cumulativeScore.getInjuryRiskScorePercentage();
+            }
+            if (previousScore == null) {
+            	obesityListGroup = new ArrayList<CumulativeScore>();
+            	countOfCurrentGroup = 1;
+            	obesityListGroup.add(cumulativeScore);
+            	previousScore = currentScore;
+            	continue;
+            }
+            if (currentScore.equals(previousScore)) {
+            	countOfCurrentGroup ++;
+            	obesityListGroup.add(cumulativeScore);
+            }
+            else {
+            	obesityListGroupList.add(obesityListGroup);
+            	countList.add(countOfCurrentGroup);
+            	indexOfCurrentGroup ++;
+            	if (userObesityScore.equals(currentScore)) {
+            		indexOfUserScore = indexOfCurrentGroup;
+                }
+            	obesityListGroup = new ArrayList<CumulativeScore>();
+            	countOfCurrentGroup = 1;
+            	obesityListGroup.add(cumulativeScore);
+            	previousScore = currentScore;
+            }
+        }
+        obesityListGroupList.add(obesityListGroup);
+        countList.add(countOfCurrentGroup);
+        int rankingOfGroup = 0;
+        for (Integer integer : countList) {
+        	
+        	rankingOfGroup += integer;
+        	Double ranking = (rankingOfGroup * 1.0 / scoreList.size());
+        	rankingList.add(ranking);
+        	
+		}
+        String[] rankingArray = new String[rankingList.size() - 1];
+        for (int i = 1; i < rankingList.size() ; i ++) {
+        	rankingArray[i-1] = new DecimalFormat("######0.00").format(rankingList.get(i-1) * 100) + "% 至 " + new DecimalFormat("######0.00").format(rankingList.get(i) * 100) + "%"; 
+		}
+		return rankingArray[indexOfUserScore];
+	}
 }

@@ -99,7 +99,7 @@ public class PersistenceController {
     }
     
     @RequestMapping(value = "userCompareRanking",method = RequestMethod.GET,produces = "application/json")
-    public Map<String, String> userCompareRanking(String userName){
+    public String userCompareRanking(String userName){
         return persistenceService.userCompareRanking(userName);
     }
 }
