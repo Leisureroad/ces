@@ -188,6 +188,12 @@ public class PersistenceServiceImpl implements PersistenceService {
             Double obesityRiskScore = scoreResult.getObesityRiskScore();
             String fatReducingSensitivity = scoreResult.getFatReducingSensitivity();
             Double fatReducingSensitivityScore = scoreResult.getFatReducingSensitivityScore();
+            // 新增心肺功能，供能系统
+            String heartLungFunction = scoreResult.getHeartLungFunction();
+            Double heartLungFunctionScore = scoreResult.getHeartLungFunctionScore();
+            String energySupply = scoreResult.getEnergySupply();
+            Double energySupplyScore = scoreResult.getEnergySupplyScore();
+            
             Score score = (Score) dataMap.get(id);
             if (score == null) {
                 score = new Score();
@@ -238,6 +244,18 @@ public class PersistenceServiceImpl implements PersistenceService {
             }
             if (fatReducingSensitivityScore != null) {
                 score.setFatReducingSensitivityScore(fatReducingSensitivityScore);
+            }
+            if (heartLungFunction != null) {
+                score.setHeartLungFunction(heartLungFunction);
+            }
+            if (heartLungFunctionScore != null) {
+                score.setHeartLungFunctionScore(heartLungFunctionScore);
+            }
+            if (energySupply != null) {
+                score.setEnergySupply(energySupply);
+            }
+            if (energySupplyScore != null) {
+                score.setEnergySupplyScore(energySupplyScore);
             }
             dataMap.put(id, score);
         }

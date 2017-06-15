@@ -40,6 +40,14 @@ public class Score {
     private String fatReducingSensitivity;
 
     private Double fatReducingSensitivityScore;
+    
+    private String heartLungFunction;
+    
+    private Double heartLungFunctionScore;
+    
+    private String energySupply;
+    
+    private Double energySupplyScore; 
 
     public String getUuid() {
         return uuid;
@@ -200,4 +208,38 @@ public class Score {
     public void setFatReducingSensitivityScore(Double fatReducingSensitivityScore) {
         this.fatReducingSensitivityScore = fatReducingSensitivityScore;
     }
+
+	public String getHeartLungFunction() {
+		return heartLungFunction;
+	}
+
+	public void setHeartLungFunction(String heartLungFunction) {
+		this.heartLungFunction = heartLungFunction == null ? null : heartLungFunction.trim();
+	}
+
+	public Double getHeartLungFunctionScore() {
+		return heartLungFunctionScore;
+	}
+
+	public void setHeartLungFunctionScore(Double heartLungFunctionScore) {
+		this.heartLungFunctionScore = heartLungFunctionScore;
+	}
+
+	public String getEnergySupply() {
+		return energySupply;
+	}
+
+	public void setEnergySupply(String energySupply) {
+		this.energySupply = energySupply == null ? null : energySupply.trim();
+	}
+
+	public Double getEnergySupplyScore() {
+		return energySupplyScore;
+	}
+
+	public void setEnergySupplyScore(Double energySupplyScore) {
+		this.energySupplyScore = energySupplyScore;
+	}
+    
+    
 }

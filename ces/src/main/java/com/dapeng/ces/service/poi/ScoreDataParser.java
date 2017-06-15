@@ -29,6 +29,8 @@ public class ScoreDataParser {
 		resultList.addAll(parseInjuryRecoveryAbilityData());
 		resultList.addAll(parseInjuryRiskData());
 		resultList.addAll(parseObesityRiskAndFatReducingSensitivityData());
+		resultList.addAll(parseHeartLungFunctionData());
+		resultList.addAll(parseEnergySupplyData());
 		parseObesityRiskAndFatReducingSensitivityData_group();
 		parseInjuryRiskData_Female();
 		return resultList;
@@ -173,7 +175,6 @@ public class ScoreDataParser {
 		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
 		int minRowIx = sheet.getFirstRowNum();
 		int maxRowIx = sheet.getLastRowNum();
-
 		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
 			if (rowIx == 0)
 				continue;
@@ -483,6 +484,78 @@ public class ScoreDataParser {
 		return scoreList;
 	}
 	
+	private static List<ScoreResult> parseHeartLungFunctionData() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+心肺功能.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
+		int minRowIx = sheet.getFirstRowNum();
+		int maxRowIx = sheet.getLastRowNum();
+		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
+			if (rowIx == 0)
+				continue;
+			ScoreResult score = new ScoreResult();
+			Row row = sheet.getRow(rowIx);
+			int minColIx = row.getFirstCellNum();
+			int maxColIx = row.getLastCellNum();
+			for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+				Cell cell = row.getCell(new Integer(colIx));
+				CellValue cellValue = evaluator.evaluate(cell);
+				if (cellValue == null) {
+					continue;
+				}
+				getBasicProps(score, colIx, cellValue);
+				if (colIx == 4) {
+					score.setHeartLungFunction(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 5) {
+					score.setHeartLungFunctionScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+			}
+			scoreList.add(score);
+		}
+		return scoreList;
+	}
+	
+	private static List<ScoreResult> parseEnergySupplyData() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+供能系统.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
+		int minRowIx = sheet.getFirstRowNum();
+		int maxRowIx = sheet.getLastRowNum();
+		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
+			if (rowIx == 0)
+				continue;
+			ScoreResult score = new ScoreResult();
+			Row row = sheet.getRow(rowIx);
+			int minColIx = row.getFirstCellNum();
+			int maxColIx = row.getLastCellNum();
+			for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+				Cell cell = row.getCell(new Integer(colIx));
+				CellValue cellValue = evaluator.evaluate(cell);
+				if (cellValue == null) {
+					continue;
+				}
+				getBasicProps(score, colIx, cellValue);
+				if (colIx == 4) {
+					score.setEnergySupply(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 5) {
+					score.setEnergySupplyScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+			}
+			scoreList.add(score);
+		}
+		return scoreList;
+	}
+	
 	private static void getBasicProps(ScoreResult score, int colIx, CellValue cellValue) {
 		String score_id;
 		if (colIx == 0) {
@@ -553,6 +626,9 @@ public class ScoreDataParser {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		System.out.println(ScoreDataParser.parseObesityRiskAndFatReducingSensitivityData_group());
+		System.out.println(ScoreDataParser.parseExplosiveForceData());
+		System.out.println(ScoreDataParser.parseEnergySupplyData());
+		System.out.println(ScoreDataParser.parseHeartLungFunctionData());
+		
 	}
 }
