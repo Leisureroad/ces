@@ -20,6 +20,11 @@ public class UserScorePerItemResult {
     private String obesityRiskScore_ranking;
     private Double fatReducingSensitivityScore_percentage;
     private String fatReducingSensitivityScore_ranking;
+    private Double heartLungFunctionScore_percentage;
+    private String heartLungFunctionScore_ranking;
+    private Double energySupplyScore_percentage;
+    private String energySupplyScore_ranking;
+    
 //    private Double fatReducingSensitivityScore;
 	public String getUserId() {
 		return userId;
@@ -105,6 +110,30 @@ public class UserScorePerItemResult {
 	public void setFatReducingSensitivityScore_ranking(String fatReducingSensitivityScore_ranking) {
 		this.fatReducingSensitivityScore_ranking = fatReducingSensitivityScore_ranking;
 	}
+	public Double getHeartLungFunctionScore_percentage() {
+		return heartLungFunctionScore_percentage;
+	}
+	public void setHeartLungFunctionScore_percentage(Double heartLungFunctionScore_percentage) {
+		this.heartLungFunctionScore_percentage = heartLungFunctionScore_percentage;
+	}
+	public String getHeartLungFunctionScore_ranking() {
+		return heartLungFunctionScore_ranking;
+	}
+	public void setHeartLungFunctionScore_ranking(String heartLungFunctionScore_ranking) {
+		this.heartLungFunctionScore_ranking = heartLungFunctionScore_ranking;
+	}
+	public Double getEnergySupplyScore_percentage() {
+		return energySupplyScore_percentage;
+	}
+	public void setEnergySupplyScore_percentage(Double energySupplyScore_percentage) {
+		this.energySupplyScore_percentage = energySupplyScore_percentage;
+	}
+	public String getEnergySupplyScore_ranking() {
+		return energySupplyScore_ranking;
+	}
+	public void setEnergySupplyScore_ranking(String energySupplyScore_ranking) {
+		this.energySupplyScore_ranking = energySupplyScore_ranking;
+	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -136,7 +165,16 @@ public class UserScorePerItemResult {
 		builder.append(fatReducingSensitivityScore_percentage);
 		builder.append(", fatReducingSensitivityScore_ranking=");
 		builder.append(fatReducingSensitivityScore_ranking);
+		builder.append(", heartLungFunctionScore_percentage=");
+		builder.append(heartLungFunctionScore_percentage);
+		builder.append(", heartLungFunctionScore_ranking=");
+		builder.append(heartLungFunctionScore_ranking);
+		builder.append(", energySupplyScore_percentage=");
+		builder.append(energySupplyScore_percentage);
+		builder.append(", energySupplyScore_ranking=");
+		builder.append(energySupplyScore_ranking);
 		builder.append("]");
 		return builder.toString();
 	}
+	
 }

@@ -16,6 +16,10 @@ public class CumulativeScore {
     private Double injuryRiskScorePercentage;
 
     private Double obesityRiskScorePercentage;
+    
+    private Double heartLungFunctionScorePercentage;
+    
+    private Double energySupplyScorePercentage;
 
     public String getUserId() {
         return userId;
@@ -80,4 +84,20 @@ public class CumulativeScore {
     public void setObesityRiskScorePercentage(Double obesityRiskScorePercentage) {
         this.obesityRiskScorePercentage = obesityRiskScorePercentage;
     }
+
+	public Double getHeartLungFunctionScorePercentage() {
+		return heartLungFunctionScorePercentage;
+	}
+
+	public void setHeartLungFunctionScorePercentage(Double heartLungFunctionScorePercentage) {
+		this.heartLungFunctionScorePercentage = heartLungFunctionScorePercentage;
+	}
+
+	public Double getEnergySupplyScorePercentage() {
+		return energySupplyScorePercentage;
+	}
+
+	public void setEnergySupplyScorePercentage(Double energySupplyScorePercentage) {
+		this.energySupplyScorePercentage = energySupplyScorePercentage;
+	}
 }

@@ -110,6 +110,12 @@ public class PersistenceServiceImpl implements PersistenceService {
     @Value("${total-score.fatReducingSensitivityScore}")
     private Double fatReducingSensitivityScore_percentage;
     
+	@Value("${total-score.heartLungFunctionScore}")
+	private Double heartLungFunctionScore_percentage;
+	
+	@Value("${total-score.energySupplyScore}")
+	private Double energySupplyScore_percentage;
+    
     @Transactional(propagation = Propagation.REQUIRES_NEW, // 创建一个新的事务，如果当前存在事务，则把当前事务挂起。
             isolation = Isolation.READ_COMMITTED) // 该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。
     @Override
@@ -745,6 +751,9 @@ public class PersistenceServiceImpl implements PersistenceService {
             Double injuryRiskScore = userScoreNewResult.getInjuryRiskScore();
             Double obesityRiskScore = userScoreNewResult.getObesityRiskScore();
             Double fatReducingSensitivityScore = userScoreNewResult.getFatReducingSensitivityScore();
+            Double heartLungFunctionScore = userScoreNewResult.getHeartLungFunctionScore();
+            Double energySupplyScore = userScoreNewResult.getEnergySupplyScore();
+            
             if (resultMap.get("explosiveForceScore") == null && explosiveForceScore != null) {
                 resultMap.put("explosiveForceScore", explosiveForceScore);
             }
@@ -768,6 +777,18 @@ public class PersistenceServiceImpl implements PersistenceService {
             }
             else if (resultMap.get("injuryRiskScore") != null && injuryRiskScore != null) {
                 resultMap.put("injuryRiskScore", resultMap.get("injuryRiskScore") + injuryRiskScore);
+            }
+            if (resultMap.get("heartLungFunctionScore") == null && heartLungFunctionScore != null) {
+                resultMap.put("heartLungFunctionScore", heartLungFunctionScore);
+            }
+            else if (resultMap.get("heartLungFunctionScore") != null && heartLungFunctionScore != null) {
+                resultMap.put("heartLungFunctionScore", resultMap.get("heartLungFunctionScore") + heartLungFunctionScore);
+            }
+            if (resultMap.get("energySupplyScore") == null && energySupplyScore != null) {
+                resultMap.put("energySupplyScore", energySupplyScore);
+            }
+            else if (resultMap.get("energySupplyScore") != null && energySupplyScore != null) {
+                resultMap.put("energySupplyScore", resultMap.get("energySupplyScore") + energySupplyScore);
             }
             if (resultMap.get("obesityRiskScore") == null && obesityRiskScore != null) {
                 resultMap.put("obesityRiskScore", obesityRiskScore);
@@ -803,6 +824,10 @@ public class PersistenceServiceImpl implements PersistenceService {
         }
         userScorePerItemResult2.setObesityRiskScore_percentage(new BigDecimal(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
         userScorePerItemResult2.setFatReducingSensitivityScore_percentage(new BigDecimal(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+        userScorePerItemResult2.setHeartLungFunctionScore_percentage(new BigDecimal(resultMap.get("heartLungFunctionScore") / heartLungFunctionScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+        userScorePerItemResult2.setEnergySupplyScore_percentage(new BigDecimal(resultMap.get("energySupplyScore") / energySupplyScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+        
+        
         Map<String, String> map = this.getRankingDataMap(userName);
         userScorePerItemResult2.setExplosiveForceScore_ranking(map.get("explosiveForceScore_ranking"));
         userScorePerItemResult2.setStaminaScore_ranking(map.get("staminaScore_ranking"));
@@ -810,6 +835,9 @@ public class PersistenceServiceImpl implements PersistenceService {
         userScorePerItemResult2.setInjuryRiskScore_ranking(map.get("injuryRiskScore_ranking"));
         userScorePerItemResult2.setObesityRiskScore_ranking(map.get("fatReducingSensitivityScore_ranking"));
         userScorePerItemResult2.setFatReducingSensitivityScore_ranking(map.get("fatReducingSensitivityScore_ranking"));
+        userScorePerItemResult2.setHeartLungFunctionScore_ranking(map.get("heartLungFunctionScore_ranking"));
+        userScorePerItemResult2.setEnergySupplyScore_ranking(map.get("energySupplyScore_ranking"));
+        
 //        resultList.add(userScorePerItemResult2);
         return userScorePerItemResult2;
     }
@@ -872,7 +900,12 @@ public class PersistenceServiceImpl implements PersistenceService {
                     resultMap.put("injuryRiskScore_ranking", ranking);
                 }else if("F".equals(item_type)){
                     resultMap.put("fatReducingSensitivityScore_ranking", ranking);
-                }else{
+                }else if("H".equals(item_type)){
+                    resultMap.put("heartLungScore_ranking", ranking);
+                }else if("S".equals(item_type)){
+                    resultMap.put("enerygySupplyScore_ranking", ranking);
+                }
+                else{
                     
                 }
             }
@@ -1264,6 +1297,9 @@ public class PersistenceServiceImpl implements PersistenceService {
             cs.setInjuryRecoveryAbilityScorePercentage(userScorePerItemResult.getInjuryRecoveryAbilityScore_percentage());
             cs.setInjuryRiskScorePercentage(userScorePerItemResult.getInjuryRiskScore_percentage());
             cs.setObesityRiskScorePercentage(userScorePerItemResult.getObesityRiskScore_percentage());
+            cs.setHeartLungFunctionScorePercentage(userScorePerItemResult.getHeartLungFunctionScore_percentage());
+            cs.setEnergySupplyScorePercentage(userScorePerItemResult.getEnergySupplyScore_percentage());
+            
             cumulativeScoreMapper.insertSelective(cs);
             csList.add(cs);
         }
@@ -1283,6 +1319,7 @@ public class PersistenceServiceImpl implements PersistenceService {
         List<CumulativeScore> injuryList = cumulativeScoreMapper.selectUserScore_injury(map);
         List<CumulativeScore> injuryRiskList = cumulativeScoreMapper.selectUserScore_injury_risk(map);
         List<CumulativeScore> obesityList = cumulativeScoreMapper.selectUserScore_obesity(map);
+        
         //算法搞懵逼了。数据已经整理好入库，并查询出来了
         
         String ObesityRisk = calculateRankingArray("ObesityRisk", userScore, obesityList);
@@ -1322,6 +1359,13 @@ public class PersistenceServiceImpl implements PersistenceService {
         if (rankingType.equals("InjuryRisk")) {
         	userObesityScore = userScore.getInjuryRiskScorePercentage();
         }
+        if (rankingType.equals("heartLungFunction")) {
+        	userObesityScore = userScore.getHeartLungFunctionScorePercentage();
+        }
+        if (rankingType.equals("energySupply")) {
+        	userObesityScore = userScore.getEnergySupplyScorePercentage();
+        }
+        
         Double currentScore = null;
         Double previousScore = null;
         List<List<CumulativeScore>> obesityListGroupList = new ArrayList<List<CumulativeScore>>();
@@ -1338,6 +1382,12 @@ public class PersistenceServiceImpl implements PersistenceService {
             }
         	if (rankingType.equals("InjuryRisk")) {
         		currentScore = cumulativeScore.getInjuryRiskScorePercentage();
+            }
+        	if (rankingType.equals("heartLungFunction")) {
+        		currentScore = cumulativeScore.getHeartLungFunctionScorePercentage();
+            }
+        	if (rankingType.equals("energySupply")) {
+        		currentScore = cumulativeScore.getEnergySupplyScorePercentage();
             }
             if (previousScore == null) {
             	obesityListGroup = new ArrayList<CumulativeScore>();

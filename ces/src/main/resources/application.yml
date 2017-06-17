@@ -32,3 +32,5 @@ total-score:
   injuryRiskScore_female: 8.0
   obesityRiskScore: 5.0 
   fatReducingSensitivityScore: 7.0
+  heartLungFunctionScore: 6.0
+  energySupplyScore: 8.0
