@@ -48,7 +48,7 @@ public class WordAction {
 //		fileName = "用freemarker导出的Word文档.doc";
 
 		/** 生成word */
-		WordUtil.createWord(dataMap, "五维运动DNA检测报告.ftl", filePath, fileOnlyName);
+		WordUtil.createWord(dataMap, "五维运动DNA检测报告 新.ftl", filePath, fileOnlyName);
 
 		return "createWordSuccess";
 	}
