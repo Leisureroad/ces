@@ -26,13 +26,15 @@
     <result column="energy_supply_score" property="energySupplyScore" jdbcType="DOUBLE" />
     <result column="heart_lung_function" property="heartLungFunction" jdbcType="VARCHAR" />
     <result column="heart_lung_function_score" property="heartLungFunctionScore" jdbcType="DOUBLE" />
+    <result column="joint_risk" property="jointRisk" jdbcType="VARCHAR" />
+    <result column="joint_risk_score" property="jointRiskScore" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="Base_Column_List" >
     uuid, score_id, number, gene_code, gene_name, gene_type, explosive_force, explosive_force_score, 
     stamina, stamina_score, motion_sensitivity, motion_sensitivity_score, injury_recovery_ability, 
     injury_recovery_ability_score, injury_risk, injury_risk_score, obesity_risk, obesity_risk_score, 
     fat_reducing_sensitivity, fat_reducing_sensitivity_score, energy_supply, energy_supply_score, 
-    heart_lung_function, heart_lung_function_score
+    heart_lung_function, heart_lung_function_score, joint_risk, joint_risk_score
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -61,7 +63,8 @@
       injury_risk, injury_risk_score, obesity_risk, 
       obesity_risk_score, fat_reducing_sensitivity, 
       fat_reducing_sensitivity_score, energy_supply, 
-      energy_supply_score, heart_lung_function, heart_lung_function_score
+      energy_supply_score, heart_lung_function, heart_lung_function_score, joint_risk, 
+      joint_risk_score
       )
     values (#{uuid,jdbcType=VARCHAR}, #{scoreId,jdbcType=VARCHAR}, #{number,jdbcType=VARCHAR}, 
       #{geneCode,jdbcType=VARCHAR}, #{geneName,jdbcType=VARCHAR}, #{geneType,jdbcType=VARCHAR}, 
@@ -71,7 +74,8 @@
       #{injuryRisk,jdbcType=VARCHAR}, #{injuryRiskScore,jdbcType=DOUBLE}, #{obesityRisk,jdbcType=VARCHAR}, 
       #{obesityRiskScore,jdbcType=DOUBLE}, #{fatReducingSensitivity,jdbcType=VARCHAR}, 
       #{fatReducingSensitivityScore,jdbcType=DOUBLE}, #{energySupply,jdbcType=VARCHAR}, 
-      #{energySupplyScore,jdbcType=DOUBLE}, #{heartLungFunction,jdbcType=VARCHAR}, #{heartLungFunctionScore,jdbcType=DOUBLE}
+      #{energySupplyScore,jdbcType=DOUBLE}, #{heartLungFunction,jdbcType=VARCHAR}, #{heartLungFunctionScore,jdbcType=DOUBLE}, 
+      #{jointRisk,jdbcType=VARCHAR},#{jointRiskScore,jdbcType=DOUBLE}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.dapeng.ces.model.Score" >
@@ -149,6 +153,12 @@
       <if test="heartLungFunctionScore != null" >
         heart_lung_function_score,
       </if>
+      <if test="jointRisk != null" >
+        joint_risk,
+      </if>
+      <if test="jointRiskScore != null" >
+        joint_risk_score,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="uuid != null" >
@@ -222,6 +232,12 @@
       </if>
       <if test="heartLungFunctionScore != null" >
         #{heartLungFunctionScore,jdbcType=DOUBLE},
+      </if>
+      <if test="jointRisk != null" >
+        #{jointRisk,jdbcType=VARCHAR},
+      </if>
+      <if test="jointRiskScore != null" >
+        #{jointRiskScore,jdbcType=DOUBLE}
       </if>
     </trim>
   </insert>
@@ -297,6 +313,12 @@
       <if test="heartLungFunctionScore != null" >
         heart_lung_function_score = #{heartLungFunctionScore,jdbcType=DOUBLE},
       </if>
+      <if test="jointRisk != null" >
+        joint_risk = #{jointRisk,jdbcType=VARCHAR},
+      </if>
+      <if test="jointRiskScore != null" >
+        joint_risk_score = #{jointRiskScore,jdbcType=DOUBLE}
+      </if>      
     </set>
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
@@ -324,7 +346,9 @@
       energy_supply = #{energySupply,jdbcType=VARCHAR},
       energy_supply_score = #{energySupplyScore,jdbcType=DOUBLE},
       heart_lung_function = #{heartLungFunction,jdbcType=VARCHAR},
-      heart_lung_function_score = #{heartLungFunctionScore,jdbcType=DOUBLE}
+      heart_lung_function_score = #{heartLungFunctionScore,jdbcType=DOUBLE},
+      joint_risk = #{jointRisk,jdbcType=VARCHAR},
+      joint_risk_score = #{jointRiskScore,jdbcType=DOUBLE}
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
 </mapper>

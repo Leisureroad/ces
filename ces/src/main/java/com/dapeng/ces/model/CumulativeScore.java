@@ -20,6 +20,8 @@ public class CumulativeScore {
     private Double heartLungFunctionScorePercentage;
     
     private Double energySupplyScorePercentage;
+    
+    private Double jointRiskScorePercentage;
 
     public String getUserId() {
         return userId;
@@ -99,5 +101,13 @@ public class CumulativeScore {
 
 	public void setEnergySupplyScorePercentage(Double energySupplyScorePercentage) {
 		this.energySupplyScorePercentage = energySupplyScorePercentage;
+	}
+
+	public Double getJointRiskScorePercentage() {
+		return jointRiskScorePercentage;
+	}
+
+	public void setJointRiskScorePercentage(Double jointRiskScorePercentage) {
+		this.jointRiskScorePercentage = jointRiskScorePercentage;
 	}
 }

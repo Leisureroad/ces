@@ -46,7 +46,11 @@ public class UserScoreDtoResult {
     private String energySupply;
     
     private Double energySupplyScore;
-
+    
+    private String jointRisk;
+    
+    private Double jointRiskScore;
+    
 	public String getUserId() {
 		return userId;
 	}
@@ -231,6 +235,22 @@ public class UserScoreDtoResult {
 		this.energySupplyScore = energySupplyScore;
 	}
 
+	public String getJointRisk() {
+		return jointRisk;
+	}
+
+	public void setJointRisk(String jointRisk) {
+		this.jointRisk = jointRisk;
+	}
+
+	public Double getJointRiskScore() {
+		return jointRiskScore;
+	}
+
+	public void setJointRiskScore(Double jointRiskScore) {
+		this.jointRiskScore = jointRiskScore;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -280,7 +300,11 @@ public class UserScoreDtoResult {
 		builder.append(energySupply);
 		builder.append(", energySupplyScore=");
 		builder.append(energySupplyScore);
+		builder.append(", jointRisk=");
+		builder.append(jointRisk);
+		builder.append(", jointRiskScore=");
+		builder.append(jointRiskScore);
 		builder.append("]");
 		return builder.toString();
-	} 
+	}
 }

@@ -18,7 +18,7 @@ public class ScoreResult {
 	//运动损伤的恢复能力
 	private String injuryRecoveryAbility;
 	private Double injuryRecoveryAbilityScore;
-	//韧带、关节损伤风险
+	//韧带损伤风险
 	private String injuryRisk;
 	private Double injuryRiskScore;
 	//肥胖风险
@@ -33,6 +33,10 @@ public class ScoreResult {
 	//供能系统
 	private String energySupply;
 	private Double energySupplyScore;
+	// 关节损伤风险
+	private String jointRisk;
+	private Double jointRiskScore;
+	
 	public String getId() {
 		return id;
 	}
@@ -171,6 +175,18 @@ public class ScoreResult {
 	public void setEnergySupplyScore(Double energySupplyScore) {
 		this.energySupplyScore = energySupplyScore;
 	}
+	public String getJointRisk() {
+		return jointRisk;
+	}
+	public void setJointRisk(String jointRisk) {
+		this.jointRisk = jointRisk;
+	}
+	public Double getJointRiskScore() {
+		return jointRiskScore;
+	}
+	public void setJointRiskScore(Double jointRiskScore) {
+		this.jointRiskScore = jointRiskScore;
+	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -220,6 +236,10 @@ public class ScoreResult {
 		builder.append(energySupply);
 		builder.append(", energySupplyScore=");
 		builder.append(energySupplyScore);
+		builder.append(", jointRisk=");
+		builder.append(jointRisk);
+		builder.append(", jointRiskScore=");
+		builder.append(jointRiskScore);
 		builder.append("]");
 		return builder.toString();
 	}

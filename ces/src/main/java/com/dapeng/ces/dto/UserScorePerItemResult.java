@@ -24,7 +24,8 @@ public class UserScorePerItemResult {
     private String heartLungFunctionScore_ranking;
     private Double energySupplyScore_percentage;
     private String energySupplyScore_ranking;
-    
+    private Double jointRiskScore_percentage;
+    private String jointRiskScore_ranking;
 //    private Double fatReducingSensitivityScore;
 	public String getUserId() {
 		return userId;
@@ -134,6 +135,18 @@ public class UserScorePerItemResult {
 	public void setEnergySupplyScore_ranking(String energySupplyScore_ranking) {
 		this.energySupplyScore_ranking = energySupplyScore_ranking;
 	}
+	public Double getJointRiskScore_percentage() {
+		return jointRiskScore_percentage;
+	}
+	public void setJointRiskScore_percentage(Double jointRiskScore_percentage) {
+		this.jointRiskScore_percentage = jointRiskScore_percentage;
+	}
+	public String getJointRiskScore_ranking() {
+		return jointRiskScore_ranking;
+	}
+	public void setJointRiskScore_ranking(String jointRiskScore_ranking) {
+		this.jointRiskScore_ranking = jointRiskScore_ranking;
+	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -173,6 +186,10 @@ public class UserScorePerItemResult {
 		builder.append(energySupplyScore_percentage);
 		builder.append(", energySupplyScore_ranking=");
 		builder.append(energySupplyScore_ranking);
+		builder.append(", jointRiskScore_percentage=");
+		builder.append(jointRiskScore_percentage);
+		builder.append(", jointRiskScore_ranking=");
+		builder.append(jointRiskScore_ranking);
 		builder.append("]");
 		return builder.toString();
 	}

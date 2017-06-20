@@ -45,6 +45,8 @@
     <result column="heart_lung_function_score" property="heartLungFunctionScore" jdbcType="DOUBLE" />
     <result column="energy_supply" property="energySupply" jdbcType="VARCHAR" />
     <result column="energy_supply_score" property="energySupplyScore" jdbcType="DOUBLE" />
+    <result column="joint_risk" property="jointRisk" jdbcType="VARCHAR" />
+    <result column="joint_risk_score" property="jointRiskScore" jdbcType="DOUBLE" />
   </resultMap>
   <resultMap id="BaseResultMap_UserOriginal" type="com.dapeng.ces.dto.UserOriginalResult" >
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
@@ -98,6 +100,8 @@
 	    <result column="heart_lung_function_score" property="heartLungFunctionScore" jdbcType="DOUBLE" />
 	    <result column="energy_supply" property="energySupply" jdbcType="VARCHAR" />
 	    <result column="energy_supply_score" property="energySupplyScore" jdbcType="DOUBLE" />
+	    <result column="joint_risk" property="jointRisk" jdbcType="VARCHAR" />
+	    <result column="joint_risk_score" property="jointRiskScore" jdbcType="DOUBLE" />
 	</collection>
   </resultMap>
   <sql id="Base_Column_List" >
@@ -147,7 +151,9 @@
 		s.heart_lung_function,
 		s.heart_lung_function_score,
 		s.energy_supply,
-		s.energy_supply_score
+		s.energy_supply_score,
+		s.joint_risk,
+		s.joint_risk_score
 	FROM
 		user u
 	LEFT JOIN user_score us ON u.user_id = us.user_id
@@ -211,7 +217,9 @@
 		s.heart_lung_function,
 		s.heart_lung_function_score,
 		s.energy_supply,
-		s.energy_supply_score
+		s.energy_supply_score,
+		s.joint_risk,
+		s.joint_risk_score,
 	FROM
 		user u
 	LEFT JOIN user_score us ON u.user_id = us.user_id

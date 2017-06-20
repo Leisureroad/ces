@@ -31,6 +31,7 @@ public class ScoreDataParser {
 		resultList.addAll(parseObesityRiskAndFatReducingSensitivityData());
 		resultList.addAll(parseHeartLungFunctionData());
 		resultList.addAll(parseEnergySupplyData());
+		resultList.addAll(parseJointRiskData());
 		parseObesityRiskAndFatReducingSensitivityData_group();
 		parseInjuryRiskData_Female();
 		return resultList;
@@ -175,6 +176,8 @@ public class ScoreDataParser {
 		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
 		int minRowIx = sheet.getFirstRowNum();
 		int maxRowIx = sheet.getLastRowNum();
+		System.out.println(minRowIx);
+		System.out.println(maxRowIx);
 		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
 			if (rowIx == 0)
 				continue;
@@ -277,14 +280,15 @@ public class ScoreDataParser {
 	}
 	
 	private static List<ScoreResult> parseInjuryRiskData() throws IOException {
-		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+韧带、关节损伤风险+男.xls"));
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+韧带损伤风险+男.xls"));
 		Sheet sheet = workbook.getSheetAt(0);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
 		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
 		int minRowIx = sheet.getFirstRowNum();
 		int maxRowIx = sheet.getLastRowNum();
-
+		System.out.println(minRowIx);
+		System.out.println(maxRowIx);
 		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
 			if (rowIx == 0)
 				continue;
@@ -314,7 +318,7 @@ public class ScoreDataParser {
 	}
 	
 	public static List<ScoreFemaleExcel> parseInjuryRiskData_Female() throws IOException {
-		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+韧带、关节损伤风险+女.xls"));
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+韧带损伤风险+女.xls"));
 		Sheet sheet = workbook.getSheetAt(0);
 		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
@@ -492,6 +496,8 @@ public class ScoreDataParser {
 		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
 		int minRowIx = sheet.getFirstRowNum();
 		int maxRowIx = sheet.getLastRowNum();
+		System.out.println(minRowIx);
+		System.out.println(maxRowIx);
 		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
 			if (rowIx == 0)
 				continue;
@@ -548,6 +554,42 @@ public class ScoreDataParser {
 				}
 				if (colIx == 5) {
 					score.setEnergySupplyScore(Double.valueOf(cellValue.getNumberValue()));
+					continue;
+				}
+			}
+			scoreList.add(score);
+		}
+		return scoreList;
+	}
+	
+	private static List<ScoreResult> parseJointRiskData() throws IOException {
+		Workbook workbook = ExcelDataImporter.importDataFromExcel(new File("./data/总体体质评估表+关节损伤风险.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+		List<ScoreResult> scoreList = new ArrayList<ScoreResult>();
+		int minRowIx = sheet.getFirstRowNum();
+		int maxRowIx = sheet.getLastRowNum();
+		for (int rowIx = minRowIx; rowIx < maxRowIx; rowIx++) {
+			if (rowIx == 0)
+				continue;
+			ScoreResult score = new ScoreResult();
+			Row row = sheet.getRow(rowIx);
+			int minColIx = row.getFirstCellNum();
+			int maxColIx = row.getLastCellNum();
+			for (int colIx = minColIx; colIx <= maxColIx; colIx++) {
+				Cell cell = row.getCell(new Integer(colIx));
+				CellValue cellValue = evaluator.evaluate(cell);
+				if (cellValue == null) {
+					continue;
+				}
+				getBasicProps(score, colIx, cellValue);
+				if (colIx == 4) {
+					score.setJointRisk(cellValue.getStringValue().trim());
+					continue;
+				}
+				if (colIx == 5) {
+					score.setJointRiskScore(Double.valueOf(cellValue.getNumberValue()));
 					continue;
 				}
 			}
@@ -626,9 +668,12 @@ public class ScoreDataParser {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		System.out.println(ScoreDataParser.parseExplosiveForceData());
-		System.out.println(ScoreDataParser.parseEnergySupplyData());
-		System.out.println(ScoreDataParser.parseHeartLungFunctionData());
+		
+//		System.out.println(ScoreDataParser.parseInjuryRiskData());
+//		System.out.println(ScoreDataParser.parseExplosiveForceData());
+//		System.out.println(ScoreDataParser.parseEnergySupplyData());
+//		System.out.println(ScoreDataParser.parseHeartLungFunctionData());
+		System.out.println(parseJointRiskData());
 		
 	}
 }

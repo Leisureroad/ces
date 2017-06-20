@@ -34,3 +34,4 @@ total-score:
   fatReducingSensitivityScore: 7.0
   heartLungFunctionScore: 6.0
   energySupplyScore: 8.0
+  jointRiskScore: 3.0

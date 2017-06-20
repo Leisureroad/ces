@@ -48,6 +48,10 @@ public class Score {
     private String energySupply;
     
     private Double energySupplyScore; 
+    
+    private String jointRisk;
+    
+    private Double jointRiskScore; 
 
     public String getUuid() {
         return uuid;
@@ -239,6 +243,22 @@ public class Score {
 
 	public void setEnergySupplyScore(Double energySupplyScore) {
 		this.energySupplyScore = energySupplyScore;
+	}
+
+	public String getJointRisk() {
+		return jointRisk;
+	}
+
+	public void setJointRisk(String jointRisk) {
+		this.jointRisk = jointRisk == null ? null : jointRisk.trim();
+	}
+
+	public Double getJointRiskScore() {
+		return jointRiskScore;
+	}
+
+	public void setJointRiskScore(Double jointRiskScore) {
+		this.jointRiskScore = jointRiskScore;
 	}
     
     
