@@ -837,21 +837,36 @@ public class PersistenceServiceImpl implements PersistenceService {
 //      userScorePerItemResult2.setObesityRiskScore(resultMap.get("obesityRiskScore"));
 //      userScorePerItemResult2.setFatReducingSensitivityScore(resultMap.get("fatReducingSensitivityScore"));
         
-        userScorePerItemResult2.setExplosiveForceScore_percentage(new BigDecimal(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
-        userScorePerItemResult2.setStaminaScore_percentage(new BigDecimal(resultMap.get("staminaScore") / staminaScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
-        userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(new BigDecimal(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+//        userScorePerItemResult2.setExplosiveForceScore_percentage(new BigDecimal(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+//        userScorePerItemResult2.setStaminaScore_percentage(new BigDecimal(resultMap.get("staminaScore") / staminaScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+//        userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(new BigDecimal(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+//        if (!"女".equals(userSex)) {
+//        	userScorePerItemResult2.setInjuryRiskScore_percentage(new BigDecimal(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+//        }
+//        else {
+//        	userScorePerItemResult2.setInjuryRiskScore_percentage(new BigDecimal(resultMap.get("injuryRiskScore") / injuryRiskScore_female_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+//        }
+//        userScorePerItemResult2.setObesityRiskScore_percentage(new BigDecimal(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+//        userScorePerItemResult2.setFatReducingSensitivityScore_percentage(new BigDecimal(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+//        userScorePerItemResult2.setHeartLungFunctionScore_percentage(new BigDecimal(resultMap.get("heartLungFunctionScore") / heartLungFunctionScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+//        userScorePerItemResult2.setEnergySupplyScore_percentage(new BigDecimal(resultMap.get("energySupplyScore") / energySupplyScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+//        userScorePerItemResult2.setJointRiskScore_percentage(new BigDecimal(resultMap.get("jointRiskScore") / jointRiskScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+        
+        userScorePerItemResult2.setExplosiveForceScore_percentage(Math.ceil(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage) * 100);
+        userScorePerItemResult2.setStaminaScore_percentage(Math.ceil(resultMap.get("staminaScore") / staminaScore_percentage) * 100);
+        userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(Math.ceil(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage) * 100);
         if (!"女".equals(userSex)) {
-        	userScorePerItemResult2.setInjuryRiskScore_percentage(new BigDecimal(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+        	userScorePerItemResult2.setInjuryRiskScore_percentage(Math.ceil(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage) * 100);
         }
         else {
-        	userScorePerItemResult2.setInjuryRiskScore_percentage(new BigDecimal(resultMap.get("injuryRiskScore") / injuryRiskScore_female_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
+        	userScorePerItemResult2.setInjuryRiskScore_percentage(Math.ceil(resultMap.get("injuryRiskScore") / injuryRiskScore_female_percentage) * 100);
         }
-        userScorePerItemResult2.setObesityRiskScore_percentage(new BigDecimal(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
-        userScorePerItemResult2.setFatReducingSensitivityScore_percentage(new BigDecimal(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
-        userScorePerItemResult2.setHeartLungFunctionScore_percentage(new BigDecimal(resultMap.get("heartLungFunctionScore") / heartLungFunctionScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
-        userScorePerItemResult2.setEnergySupplyScore_percentage(new BigDecimal(resultMap.get("energySupplyScore") / energySupplyScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
-        userScorePerItemResult2.setJointRiskScore_percentage(new BigDecimal(resultMap.get("jointRiskScore") / jointRiskScore_percentage).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() * 100);
-        
+        userScorePerItemResult2.setObesityRiskScore_percentage(Math.ceil(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage) * 100);
+        userScorePerItemResult2.setFatReducingSensitivityScore_percentage(Math.ceil(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage) * 100);
+        userScorePerItemResult2.setHeartLungFunctionScore_percentage(Math.ceil(resultMap.get("heartLungFunctionScore") / heartLungFunctionScore_percentage) * 100);
+        userScorePerItemResult2.setEnergySupplyScore_percentage(Math.ceil(resultMap.get("energySupplyScore") / energySupplyScore_percentage) * 100);
+        userScorePerItemResult2.setJointRiskScore_percentage(Math.ceil(resultMap.get("jointRiskScore") / jointRiskScore_percentage) * 100);
+
         
         Map<String, String> map = this.getRankingDataMap(userName);
         userScorePerItemResult2.setExplosiveForceScore_ranking(map.get("explosiveForceScore_ranking"));

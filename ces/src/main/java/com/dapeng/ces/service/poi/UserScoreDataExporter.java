@@ -270,20 +270,20 @@ public class UserScoreDataExporter {
 		
 //		累加分，百分制
 		DecimalFormat df = new DecimalFormat("#.00");
-		userScorePerItemResult2.setExplosiveForceScore_percentage(Double.valueOf(df.format(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage * 100)));
-		userScorePerItemResult2.setStaminaScore_percentage(Double.valueOf(df.format(resultMap.get("staminaScore") / staminaScore_percentage * 100)));
-		userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(Double.valueOf(df.format(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage * 100)));
+		userScorePerItemResult2.setExplosiveForceScore_percentage(Math.ceil(Double.valueOf(df.format(resultMap.get("explosiveForceScore") / explosiveForceScore_percentage * 100))));
+		userScorePerItemResult2.setStaminaScore_percentage(Math.ceil(Double.valueOf(df.format(resultMap.get("staminaScore") / staminaScore_percentage * 100))));
+		userScorePerItemResult2.setInjuryRecoveryAbilityScore_percentage(Math.ceil(Double.valueOf(df.format(resultMap.get("injuryRecoveryAbilityScore") / injuryRecoveryAbilityScore_percentage * 100))));
 		if (!"女".equals(userSex)) {
-			userScorePerItemResult2.setInjuryRiskScore_percentage(Double.valueOf(df.format(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage * 100)));
+			userScorePerItemResult2.setInjuryRiskScore_percentage(Math.ceil(Double.valueOf(df.format(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage * 100))));
 		}
 		else {
-			userScorePerItemResult2.setInjuryRiskScore_percentage(Double.valueOf(df.format(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage_female * 100)));
+			userScorePerItemResult2.setInjuryRiskScore_percentage(Math.ceil(Double.valueOf(df.format(resultMap.get("injuryRiskScore") / injuryRiskScore_percentage_female * 100))));
 		}
-		userScorePerItemResult2.setObesityRiskScore_percentage(Double.valueOf(df.format(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage * 100)));
-		userScorePerItemResult2.setFatReducingSensitivityScore_percentage(Double.valueOf(df.format(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage * 100)));
-		userScorePerItemResult2.setHeartLungFunctionScore_percentage(Double.valueOf(df.format(resultMap.get("heartLungFunctionScore") / heartLungFunctionScore_percentage * 100)));
-		userScorePerItemResult2.setEnergySupplyScore_percentage(Double.valueOf(df.format(resultMap.get("energySupplyScore") / energySupplyScore_percentage * 100)));
-		userScorePerItemResult2.setJointRiskScore_percentage(Double.valueOf(df.format(resultMap.get("jointRiskScore") / jointRiskScore_percentage * 100)));
+		userScorePerItemResult2.setObesityRiskScore_percentage(Math.ceil(Double.valueOf(df.format(resultMap.get("obesityRiskScore") / obesityRiskScore_percentage * 100))));
+		userScorePerItemResult2.setFatReducingSensitivityScore_percentage(Math.ceil(Double.valueOf(df.format(resultMap.get("fatReducingSensitivityScore") / fatReducingSensitivityScore_percentage * 100))));
+		userScorePerItemResult2.setHeartLungFunctionScore_percentage(Math.ceil(Double.valueOf(df.format(resultMap.get("heartLungFunctionScore") / heartLungFunctionScore_percentage * 100))));
+		userScorePerItemResult2.setEnergySupplyScore_percentage(Math.ceil(Double.valueOf(df.format(resultMap.get("energySupplyScore") / energySupplyScore_percentage * 100))));
+		userScorePerItemResult2.setJointRiskScore_percentage(Math.ceil(Double.valueOf(df.format(resultMap.get("jointRiskScore") / jointRiskScore_percentage * 100))));
 		
 		Map<String, String> map = getRankingDataMap(userName, persistenceService);
 		userScorePerItemResult2.setExplosiveForceScore_ranking(map.get("explosiveForceScore_ranking"));

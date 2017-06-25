@@ -42,13 +42,13 @@ public class WordAction {
 		filePath = "./";
 
 		// 文件唯一名称
-		fileOnlyName = "五维运动DNA检测报告_" + userName + ".doc";
+		fileOnlyName = "肌因健身DNA检测报告_" + userName + ".doc";
 
 		// 文件名称
 //		fileName = "用freemarker导出的Word文档.doc";
 
 		/** 生成word */
-		WordUtil.createWord(dataMap, "五维运动DNA检测报告 新.ftl", filePath, fileOnlyName);
+		WordUtil.createWord(dataMap, "肌因健身DNA检测报告 新.ftl", filePath, fileOnlyName);
 
 		return "createWordSuccess";
 	}
